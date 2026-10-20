@@ -31,7 +31,8 @@ motion-studio/
 │   └── components/        ← reusable pieces shared across videos
 ├── public/
 │   ├── brand/             ← logos, brand fonts, brand imagery
-│   └── audio/             ← music, voiceover, SFX
+│   ├── audio/             ← music, voiceover, SFX
+│   └── data/              ← CSVs, captions JSON, scraped briefs
 ├── out/                   ← rendered videos (git-ignored)
 └── .claude/skills/        ← Remotion agent skills (see §7)
 ```
@@ -143,6 +144,7 @@ The "Detected differing memory amounts" warning in containers is harmless.
 
 ## 9. Workflow for every new video request
 
+0. **Match the request to a playbook in §10** and follow it.
 1. **Confirm the brief:** topic, length, format(s), copy, brand assets and audio. Fill gaps with sensible defaults and say which ones you chose.
 2. **Read the matching skill(s)** in `.claude/skills/`.
 3. **Build** the video in `src/videos/`, register it in `Root.tsx`, and put reusable parts in `src/components/`.
@@ -150,7 +152,82 @@ The "Detected differing memory amounts" warning in containers is harmless.
 5. **Render** the full video to `out/<Id>.mp4` and share it.
 6. **Commit** the source, not `out/`. Use short, imperative commit messages, for example "Add Promo 9:16 composition".
 
-## 10. Don'ts
+## 10. Playbooks: the six core prompts
+
+Each video in this studio is code. A headless browser renders it frame by frame, so every export comes out the same. The six playbooks below cover the usual requests. **When a request matches one, follow its steps.** Copy-paste prompts are in the quote blocks; replace the `<placeholders>`.
+
+### 10.1 Scenes are just code
+
+> Build a `<length>`-second `<format>` video about `<topic>` with these scenes: `<scene 1>`, `<scene 2>`, `<scene 3>`. Use the house style.
+
+1. Write a scene list first: each scene's purpose, duration in seconds, on-screen copy and the transition into the next scene.
+2. Build each scene as its own component, `src/videos/<Name>/Scene<N>.tsx`, rooted in `AbsoluteFill`. Assemble them with `<Series>` or `<TransitionSeries>`.
+3. Keep all copy and colours in props with a zod schema, so the same video can be re-rendered with new text.
+4. Skills: `remotion-create`, `remotion-markup` (sequencing.md, transitions.md, timing.md).
+
+### 10.2 Kinetic titles that land on the beat
+
+> Make kinetic typography for these lines: `<lines>`, timed to the beat of `public/audio/<track>.mp3` (BPM `<bpm, if known>`).
+
+1. **Find the beat grid.** If the BPM is given, the beat frame is `round(n * 60 / bpm * fps)` plus an offset to the first downbeat. If it isn't given, analyse the track with `@remotion/media-utils` (`useAudioData` + `visualizeAudio`, low-frequency bins) to find the kick hits, and confirm by rendering stills.
+2. Store the beats as an array of frame numbers in `src/videos/<Name>/beats.ts`. Every title, cut and accent snaps to a beat.
+3. Each word or line **lands** on its beat: a short `spring` (damping 200, or around 12 for a punchier look) for scale or translate, with motion finishing on the beat frame, not starting on it. Add small accents on off-beats, such as underlines, flashes or letter-spacing.
+4. Add the track with `<Audio src={staticFile("audio/<track>.mp3")} />` and set the duration to the track length.
+5. Skills: `remotion-markup` (audio.md, audio-visualization.md, text-highlights.md, measuring-text.md, timing.md).
+
+### 10.3 Hero motion for your landing page
+
+> Make a seamless looping hero animation for my landing page: `<brand/product>`, `<colours>`, `<size, e.g. 1920×1080>`, `<length, e.g. 6 s>`.
+
+1. **It must loop seamlessly.** The last frame flows into the first. Drive the motion with periodic functions of `frame / durationInFrames` (sine or cosine of 2π·t), not with one-way entrances.
+2. Keep it calm and quiet: slow motion, no text that would compete with the page's own headline, safe for dark or light page backgrounds as specified.
+3. Export for the web, using the flags in remotion-render/transparent-videos.md:
+   - Opaque: H.264 MP4 (`--codec=h264 --crf=23`) plus a VP9 WebM (`--codec=vp9`) for the page's `<video autoplay muted loop playsinline>`.
+   - Transparent overlay: VP9 WebM with alpha (`--codec=vp9 --image-format=png --pixel-format=yuva420p`), or ProRes 4444 for editors (`--codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le`, output `.mov`).
+   - A poster image with `npx remotion still <Id> out/<Id>-poster.jpg --frame=0`.
+4. Alternative: if the user wants it live in a React or Next.js site, embed it with `@remotion/player` instead of a video file (see the `remotion-saas` skill).
+5. Skills: `remotion-render` (transparent-videos.md), `remotion-saas` (player.md), `remotion-markup`.
+
+### 10.4 A full SaaS intro from your website link (flagship)
+
+> Here's my SaaS website: `<url>`. Make a `<20–30>`-second product intro in `<format(s)>`.
+
+1. **Fetch the page** with WebFetch, or with the Firecrawl scrape tool for JS-heavy sites; ask for branding as well as content. Extract the following into `src/videos/<Name>/brief.json`:
+   product name, one-line value proposition, 3–4 key features or benefits, social proof (logos, numbers, quotes), the primary CTA text and URL, brand colours and fonts, and the logo URL.
+   Use only what's on the page. Don't invent claims, numbers or testimonials; mark anything missing as `null` and ask about it.
+2. Download the logo or screenshots into `public/brand/`.
+3. **Plan the scenes** and show the plan before building:
+   Hook (problem or bold claim, 3 s) → Product reveal and logo (3 s) → 2–3 feature scenes with UI mock-ups or real screenshots (4 s each) → Social proof (3 s) → CTA with URL (4 s).
+4. Build each scene as in 10.1, with every string read from `brief.json` through props. Theme the video from the extracted brand tokens; those override the house style.
+5. Render 16:9, plus 9:16 and 1:1 if asked, each as its own `<Composition>`.
+6. Skills: `remotion-create`, `remotion-markup` (multi-scene-video.md, transitions.md, google-fonts.md, images.md).
+
+### 10.5 Titles synced to your audio
+
+> Add animated titles/captions synced to `public/audio/<voiceover>.mp3` (or `<video>.mp4`).
+
+1. **Transcribe** to word-level timestamps in the `Caption` JSON format, following remotion-captions/transcribe-captions.md (Whisper via `@remotion/install-whisper-cpp`). If the user supplies a `.srt` file, import it instead (import-srt-captions.md). Save the result to `public/data/<name>.captions.json`.
+2. Group the words into pages of 3–6 words with `createTikTokStyleCaptions`, and highlight the active word.
+3. Convert ms to frames with `Math.round(ms / 1000 * fps)`. Never hard-code timings; they all come from the JSON.
+4. Use `calculateMetadata` to set the duration from the audio length.
+5. Keep captions inside the safe area: away from the bottom 20% on 9:16 videos, where platform UI sits.
+6. Skills: `remotion-captions`, `remotion-markup` (calculate-metadata.md, voiceover.md, text-highlights.md).
+
+### 10.6 Animated charts from a CSV
+
+> Turn `public/data/<file>.csv` into an animated `<bar/line/donut>` chart: `<title>`, highlight `<series/point>`.
+
+1. Load the CSV (put it in `public/data/`). Parse it with `staticFile` + `fetch` inside `calculateMetadata`, or read it at build time into a typed `data.ts`. **Check the columns, types and units, and report anything odd before animating.**
+2. Choose the chart from the data's shape: bars to compare categories, a line for change over time, a donut for parts of a whole (6 slices or fewer). Before choosing colours, read the global `dataviz` skill if it's available.
+3. Animate with meaning: axes first, then bars growing or the line drawing (`evolvePath` from `@remotion/paths`), then labels counting up (`interpolate`, rounded to the data's precision), then the highlight. Stagger elements by about 3–5 frames.
+4. Draw the chart as SVG from your own scales; don't add a chart library that animates on its own clock. Every number on screen must match the CSV exactly.
+5. Skills: `remotion-markup` (measuring-text.md, timing.md), `remotion-render`.
+
+### Bonus ideas
+
+These combine the playbooks. For a launch reel, use 10.4 for the content and 10.2 to time it to music. For a data story, combine 10.6 with 10.5 voiceover captions. For a website, pair 10.3 hero loops with 10.4 cut-downs for social media.
+
+## 11. Don'ts
 
 - Don't edit `src/index.ts` or the files in `.claude/skills/`.
 - Don't commit `out/`, `node_modules/` or `.env`.
