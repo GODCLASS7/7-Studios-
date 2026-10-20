@@ -1,8 +1,13 @@
 # Motion Studio — Project Instructions
 
-Motion Studio is a Remotion project for making videos with React. Each video is a React component. It is registered as a `<Composition>` and rendered to MP4 by the Remotion CLI.
+Motion Studio is an agentic design studio that runs on Claude. It produces **still and motion graphics of every kind**, up to 4K video, ProRes masters and 300 DPI print. It works like a real studio: brief → time estimate → **storyboard you approve** → **design previews you approve** → production → review cut → masters → QC → delivery.
+
+- **Remotion** (React → frames → video/stills) makes everything exact: typography, layout, data, motion, timing, captions, grade and mix.
+- **Generative models** reached through Claude's connectors make the realistic footage and imagery. Higgsfield gives access to Seedance, Kling, Veo, Cinema Studio, FLUX, Nano Banana, Seedream, GPT Image and Topaz upscaling. See `.claude/skills/studio/providers.md`.
 
 These instructions are for anyone working in this repo, whether a person or Claude.
+
+> **For every design request, run the `studio` skill (`.claude/skills/studio/SKILL.md`).** It is the pipeline and the source of truth for phases, gates, estimates and QC. The sections below are the reference it relies on.
 
 ---
 
@@ -15,43 +20,62 @@ These instructions are for anyone working in this repo, whether a person or Clau
 | TypeScript | 5.9.3, `strict`, `noUnusedLocals` |
 | Node | `^20.19.0 \|\| ^22.13.0 \|\| >=24` |
 | Bundler | Rspack (`Config.setRspack(true)` in `remotion.config.ts`) |
-| Frame format | JPEG, output overwrites, 2 s default premount |
+| Frame format | JPEG by default (fast drafts); final presets switch to PNG |
+| Finishing kit | `@remotion/transitions`, `motion-blur`, `light-leaks`, `noise`, `paths`, `shapes`, `layout-utils`, `media-utils`, `captions`, `fonts`, `zod-types`; `zod` 4 |
+| Fonts | Bundled in `public/brand/fonts` (Inter variable, SIL OFL) and loaded with `@remotion/fonts` |
 
 ## 2. Layout
 
 ```
 motion-studio/
-├── CLAUDE.md              ← this file
-├── remotion.config.ts     ← CLI render/bundle config
+├── CLAUDE.md                 ← this file
+├── remotion.config.ts        ← CLI render/bundle config
 ├── src/
-│   ├── index.ts           ← registerRoot(RemotionRoot) — do not edit
-│   ├── Root.tsx           ← registers every video as a <Composition>
-│   ├── videos/            ← one file (or folder) per video
-│   │   └── StudioCheck.tsx  ← 4 s test card; safe to delete
-│   └── components/        ← reusable pieces shared across videos
+│   ├── index.ts              ← registerRoot(RemotionRoot) — do not edit
+│   ├── Root.tsx              ← registers every <Composition> and <Still>
+│   ├── lib/                  ← THE DESIGN SYSTEM: tokens, formats, Grade, Grain, FootageShot, KineticTitle
+│   ├── storyboard/           ← storyboard schema, panel drawing, approval sheet, animatic
+│   ├── videos/               ← one folder per deliverable (scenes, stills, concepts)
+│   │   └── StudioCheck.tsx   ← 4 s test card (used by the benchmark; keep it)
+│   └── components/           ← job-specific components shared across videos
+├── scripts/                  ← render presets, storyboard, estimate, bench, qc, fetch-asset, new-job
+├── jobs/<id>/                ← job documents: brief, job.json, storyboard.json, estimate, approvals, assets, qc
 ├── public/
-│   ├── brand/             ← logos, brand fonts, brand imagery
-│   ├── audio/             ← music, voiceover, SFX
-│   └── data/              ← CSVs, captions JSON, scraped briefs
-├── out/                   ← rendered videos (git-ignored)
-└── .claude/skills/        ← Remotion agent skills (see §7)
+│   ├── brand/                ← studio brand: fonts/, luts/, logos
+│   ├── jobs/<id>/            ← job media: footage/, stills/, panels/, audio/, data/, brand/
+│   ├── audio/ data/          ← shared music/SFX and datasets
+├── production/               ← bench.json (this machine's speed) and timings.jsonl (learning log)
+├── out/                      ← renders (git-ignored)
+└── .claude/
+    ├── skills/studio*/       ← the studio pipeline skills (see §7)
+    ├── skills/remotion-*/    ← vendored Remotion skills
+    └── agents/               ← subagents: motion-designer, still-designer, ai-cinematographer, finisher
 ```
 
 ## 3. Commands
 
 ```bash
-npm i --loglevel=error          # install dependencies
-npm run dev                     # open Remotion Studio (live preview) in the browser
-npm run lint                    # eslint src && tsc — must pass before rendering/committing
-npx remotion render <Id> out/<Id>.mp4   # render one composition
-npx remotion still <Id> out/<Id>.png --frame=60   # render one frame to check a layout
-npx remotion compositions       # list registered composition IDs
-npm run upgrade                 # upgrade Remotion (all @remotion/* together)
+npm i --loglevel=error                 # install dependencies
+npm run setup:cloud                    # once per Claude Code cloud container (see §8)
+npm run dev                            # Remotion Studio: live preview in the browser
+npm run lint                           # eslint + tsc; must pass before rendering or committing
+
+npm run new-job -- <id> "<Title>" --format=16x9      # scaffold jobs/<id>/ and public/jobs/<id>/
+npm run estimate -- <id> [--tz=Area/City]            # phase-by-phase time estimate with ready-by times
+npm run estimate -- --log <id> <phase> <minutes>     # record actual time so estimates learn
+npm run storyboard -- <id> [--animatic] [--draft]    # approval sheet PNG (+ timed animatic MP4)
+npm run render -- <Comp> <preset> [--props=…] [--frame=…] [--frames=…] [--out=…]
+npm run qc -- <file> --expect=3840x2160 --fps=30 --seconds=20 [--job=<id>]
+npm run fetch-asset -- <url> <id> <footage|stills|audio|data|brand|panels> <file> [--model=… --prompt=… --credits=…]
+npm run bench                          # measure this machine's render speed (about 2 min)
+npx remotion compositions              # list composition IDs
 ```
 
-## 4. How to add a new video
+**Render presets:** `draft` · `review` · `4k` · `4k-hevc` · `master` (ProRes 422 HQ) · `alpha` (ProRes 4444) · `webm-alpha` · `still` · `still-4k` · `still-print`. See the `studio-finishing` skill.
 
-1. Create `src/videos/<Name>.tsx` and export a `React.FC`.
+## 4. How to add a new video or still
+
+1. Create `src/videos/<Name>/<Name>.tsx` (or one file per scene) and export a `React.FC`. For a still graphic, register it with `<Still id=… component=… width=… height=…>` using a size from `src/lib/formats.ts`.
 2. Register it in `src/Root.tsx`:
    ```tsx
    <Composition
@@ -74,6 +98,9 @@ npm run upgrade                 # upgrade Remotion (all @remotion/* together)
 | 9:16 | 1080×1920 | Reels, Shorts, TikTok, Stories |
 | 1:1 | 1080×1080 | Feed posts |
 | 4:5 | 1080×1350 | Instagram portrait feed |
+| 21:9 | 2560×1080 | Cinematic / ultrawide |
+
+Author video at these sizes. The `4k`, `master` and `alpha` presets render them at 2× (3840×2160 for 16:9). Stills, social and print sizes, including 300 DPI print, are in `src/lib/formats.ts`.
 
 The default is **30 fps**. Use 60 fps only for fast motion or UI capture.
 
@@ -87,7 +114,7 @@ These rules are required. Remotion renders each frame on its own, possibly in pa
 - **Easing:** use `spring({ config: { damping: 200 } })` for smooth, non-bouncy entrances. Use `Easing.bezier(0.65, 0, 0.35, 1)` for wipes and lines. `StudioCheck.tsx` shows this house style.
 - **Sequence scenes with `<Sequence>` / `<Series>`**, and use `@remotion/transitions` for cuts between scenes. Inside a `<Sequence>`, `useCurrentFrame()` counts from 0 at the start of that sequence.
 - **Assets:** put files in `public/` and reference them with `staticFile("brand/logo.svg")`. Use `<Img>`, `<Video>`/`<OffthreadVideo>` and `<Audio>` from Remotion, not plain HTML tags, so that rendering waits for each asset to load.
-- **Fonts:** load them with `@remotion/google-fonts` or `@remotion/fonts` (local files go in `public/brand/`). Don't rely on system fonts in a final render.
+- **Fonts:** bundle the font files in `public/brand/fonts/` (or `public/jobs/<id>/brand/`) and load them with `@remotion/fonts`, as `src/lib/tokens.ts` does. Don't load fonts from Google's servers at render time, because the cloud container's Chromium can't reach them. Don't rely on system fonts in a final render.
 - **Data/props:** pass content such as titles, numbers and colours as props with a `zod` schema (`schema` + `defaultProps` on the `<Composition>`). That lets you edit them in Studio and reuse the same video with different content.
 - Use `AbsoluteFill` as the root of every scene, and give each scene an explicit background colour.
 
@@ -102,11 +129,22 @@ These rules are required. Remotion renders each frame on its own, possibly in pa
 | Type | Heavy (900) uppercase titles with letter-spacing that tightens in; 600-weight spaced subtitles | |
 | Exit | 0.5 s fade out at the end | |
 
-Keep shared tokens in `src/components/` (for example `theme.ts`) once more than one video uses them. When brand assets arrive in `public/brand/`, they take priority over these tokens.
+These tokens live in `src/lib/tokens.ts`: colour, font, type scale, `space()`, easing and springs. A job's brand tokens, from its brief or scraped site, take priority over them.
 
-## 7. Agent skills (`.claude/skills/`)
+## 7. Agent skills (`.claude/skills/`) and subagents (`.claude/agents/`)
 
-These are pinned from `remotion-dev/skills`; `skills-lock.json` records their hashes. **Before writing Remotion code, read the relevant skill.** If you're unsure which one applies, start with `remotion-best-practices`, which routes to the others.
+**Studio skills.** These are written for this project, and you can edit them:
+
+| Skill | Use it for |
+|---|---|
+| `studio` | **Every design request.** The full gated pipeline, design checklist and status updates. Includes `providers.md`, the map of every connected API |
+| `studio-ai-footage` | Playbook 7: AI keyframes and video (Seedance, Kling, Veo…), costs, review, upscale, composite |
+| `studio-stills` | Posters, social, thumbnails, banners and print at 300 DPI; concepts, typography, export |
+| `studio-finishing` | 4K/ProRes/alpha presets, grading, LUTs, grain, polish packages, audio loudness, platform specs, QC |
+
+**Subagents**, for parallel work on larger jobs: `motion-designer` (one per scene), `still-designer` (one per still or size set), `ai-cinematographer` (all generation, only after an approved credit quote) and `finisher` (renders and QC).
+
+**Remotion skills.** These are pinned from `remotion-dev/skills`, and `skills-lock.json` records their hashes. **Before writing Remotion code, read the relevant one.** If you're unsure which applies, start with `remotion-best-practices`, which routes to the others.
 
 | Skill | Use it for |
 |---|---|
@@ -123,36 +161,35 @@ These are pinned from `remotion-dev/skills`; `skills-lock.json` records their ha
 | `remotion-docs` | Searching the official docs |
 | `remotion-upgrade` | Upgrading Remotion |
 
-Don't edit files in `.claude/skills/`. They are vendored, and edits would be overwritten on update.
+Don't edit the `remotion-*` skills. They are vendored, and edits would be overwritten on update.
 
 ## 8. Rendering in a Linux cloud container (Claude Code on the web)
 
-Rendering works on a normal Mac, Windows or Linux desktop with no extra setup. In the cloud container, two fixes are needed:
+Rendering works on a normal Mac, Windows or Linux desktop with no extra setup. In the cloud container:
 
-1. **Compositor binary.** `package-lock.json` only includes the Alpine Linux (musl) build of the compositor, but the container uses standard Linux (glibc). After `npm i`, run:
-   ```bash
-   npm i --no-save --loglevel=error @remotion/compositor-linux-x64-gnu@4.0.537
-   ```
-   If the Remotion version changes, keep this version number in sync with it.
-2. **Browser.** Use the pre-installed headless Chromium instead of downloading one:
-   ```bash
-   npx remotion render <Id> out/<Id>.mp4 \
-     --browser-executable=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell
-   ```
+1. **Run `npm run setup:cloud` once.** `package-lock.json` only includes the Alpine Linux (musl) build of the compositor, and the container uses standard Linux (glibc). The script installs the matching glibc build.
+2. **Use the pre-installed headless Chromium.** `scripts/render.mjs` and `scripts/bench.mjs` detect it and use it automatically.
+3. **Network fonts fail.** The container's Chromium doesn't trust the network proxy's certificate. That's why fonts are bundled locally (§5). Download any new font with `curl` into `public/brand/fonts/`. Never disable certificate checks.
 
 The "Detected differing memory amounts" warning in containers is harmless.
 
-## 9. Workflow for every new video request
+## 9. Workflow for every request
 
-0. **Match the request to a playbook in §10** and follow it.
-1. **Confirm the brief:** topic, length, format(s), copy, brand assets and audio. Fill gaps with sensible defaults and say which ones you chose.
-2. **Read the matching skill(s)** in `.claude/skills/`.
-3. **Build** the video in `src/videos/`, register it in `Root.tsx`, and put reusable parts in `src/components/`.
-4. **Check:** `npm run lint` must pass. Render stills at key frames (each scene start, mid-animation and the last frame), look at them, and fix any layout problems.
-5. **Render** the full video to `out/<Id>.mp4` and share it.
-6. **Commit** the source, not `out/`. Use short, imperative commit messages, for example "Add Promo 9:16 composition".
+Run the **`studio` skill**. In short:
 
-## 10. Playbooks: the six core prompts
+1. Intake.
+2. Plan and estimate.
+3. Storyboard and animatic (⏸ approval).
+4. Style frames and design previews (⏸ approval; no credits are spent before this).
+5. Production, matched to a playbook in §10.
+6. Review cut (⏸ approval).
+7. Masters.
+8. QC.
+9. Delivery, with actual times logged.
+
+Commit the source and job documents, not `out/`. Use short, imperative commit messages, for example "Add Promo 9:16 composition".
+
+## 10. Playbooks: the seven core prompts
 
 Each video in this studio is code. A headless browser renders it frame by frame, so every export comes out the same. The six playbooks below cover the usual requests. **When a request matches one, follow its steps.** Copy-paste prompts are in the quote blocks; replace the `<placeholders>`.
 
@@ -192,10 +229,10 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 
 > Here's my SaaS website: `<url>`. Make a `<20–30>`-second product intro in `<format(s)>`.
 
-1. **Fetch the page** with WebFetch, or with the Firecrawl scrape tool for JS-heavy sites; ask for branding as well as content. Extract the following into `src/videos/<Name>/brief.json`:
+1. **Fetch the page** with WebFetch, or with the Firecrawl scrape tool for JS-heavy sites; ask for branding as well as content. Extract the following into `jobs/<id>/brief.json`:
    product name, one-line value proposition, 3–4 key features or benefits, social proof (logos, numbers, quotes), the primary CTA text and URL, brand colours and fonts, and the logo URL.
    Use only what's on the page. Don't invent claims, numbers or testimonials; mark anything missing as `null` and ask about it.
-2. Download the logo or screenshots into `public/brand/`.
+2. Download the logo or screenshots into `public/jobs/<id>/brand/`.
 3. **Plan the scenes** and show the plan before building:
    Hook (problem or bold claim, 3 s) → Product reveal and logo (3 s) → 2–3 feature scenes with UI mock-ups or real screenshots (4 s each) → Social proof (3 s) → CTA with URL (4 s).
 4. Build each scene as in 10.1, with every string read from `brief.json` through props. Theme the video from the extracted brand tokens; those override the house style.
@@ -223,14 +260,30 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 4. Draw the chart as SVG from your own scales; don't add a chart library that animates on its own clock. Every number on screen must match the CSV exactly.
 5. Skills: `remotion-markup` (measuring-text.md, timing.md), `remotion-render`.
 
+### 10.7 AI footage with a motion-graphics finish (4K)
+
+> Make a `<length>`-second cinematic `<format>` piece about `<subject>`: AI footage for `<the shots>`, with titles, captions and a 4K master. Budget: `<credits>`.
+
+1. Follow the **`studio-ai-footage`** skill. The storyboard marks which panels are `ai-video` or `ai-image`.
+2. Before generating anything: check the Higgsfield `balance`, quote the credits and get approval. Generate and approve **keyframe images** before any video.
+3. Generate the shots, using `seedance_2_0` or `cinematic_studio_3_0` for native 4K, or Kling/Veo for their strengths. Review each take, upscale the chosen takes to 4K and fetch them with provenance.
+4. Composite in Remotion with `FootageShot` + `Grade` + `Grain`, then add titles, captions, transitions and sound. Every text, logo and number is set in Remotion.
+5. Finish with `4k` + `master`, QC, and deliver with a credits report.
+
 ### Bonus ideas
 
-These combine the playbooks. For a launch reel, use 10.4 for the content and 10.2 to time it to music. For a data story, combine 10.6 with 10.5 voiceover captions. For a website, pair 10.3 hero loops with 10.4 cut-downs for social media.
+These combine the playbooks:
+- **Launch reel:** 10.4 for the content and 10.2 to time it to music.
+- **Data story:** 10.6 with 10.5 voiceover captions.
+- **Website:** 10.3 hero loops with 10.4 cut-downs for social media.
+- **Cinematic brand film:** 10.7 footage with 10.2 beat-cut titles and 10.5 captions.
 
 ## 11. Don'ts
 
-- Don't edit `src/index.ts` or the files in `.claude/skills/`.
-- Don't commit `out/`, `node_modules/` or `.env`.
+- Don't edit `src/index.ts` or the vendored `remotion-*` skills.
+- Don't commit `out/`, `build/`, `node_modules/` or `.env`.
 - Don't mix `@remotion/*` versions.
 - Don't use non-deterministic animation (see §5).
+- Don't spend generation credits without an approved quote, and don't skip an approval gate.
+- Don't let AI models render final text, logos, numbers or UI.
 - Note that some companies need a paid Remotion company licence: https://remotion.dev/license

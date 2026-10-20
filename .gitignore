@@ -5,3 +5,8 @@ dist
 
 # Ignore the output video from Git but not videos you import into src/.
 out
+build
+
+# Per-machine benchmark and timing history (keep timings if you want estimates to learn across machines)
+production/bench.json
+jobs/*/.storyboard.resolved.json

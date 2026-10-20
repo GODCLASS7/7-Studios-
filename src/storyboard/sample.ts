@@ -1,0 +1,92 @@
+import type { Storyboard } from "./schema";
+
+// Default props for the storyboard compositions in Studio. Real jobs pass
+// their own jobs/<id>/storyboard.json with --props.
+export const sampleStoryboard: Storyboard = {
+  project: "Motion Studio — Launch Teaser",
+  client: "In-house",
+  version: 1,
+  date: "2026-10-20",
+  format: "16x9",
+  fps: 30,
+  status: "for-approval",
+  notes: "20-second teaser: AI footage for mood, motion graphics for the message, 4K master.",
+  panels: [
+    {
+      id: "1",
+      title: "Cold open",
+      seconds: 4,
+      shot: "Wide",
+      camera: "push-in",
+      source: "ai-video",
+      action: "Dark studio, a single beam of warm light sweeps across a desk of screens.",
+      audio: "Low drone swells; first kick at 3.5 s",
+      exit: "Cut on beat",
+      draw: [
+        { type: "horizon", y: 72 },
+        { type: "device", kind: "laptop", x: 30, y: 42, w: 40, h: 30 },
+        { type: "arrow", x1: 8, y1: 10, x2: 40, y2: 40, label: "light beam" },
+      ],
+    },
+    {
+      id: "2",
+      title: "Title slam",
+      seconds: 3,
+      shot: "Graphic",
+      camera: "static",
+      source: "motion",
+      action: "Words land one per beat; gold rule draws under them.",
+      onScreenText: "Design at the speed of thought",
+      audio: "Kicks on every word",
+      draw: [
+        { type: "text", x: 50, y: 42, text: "DESIGN AT THE", size: 10 },
+        { type: "text", x: 50, y: 56, text: "SPEED OF THOUGHT", size: 10 },
+        { type: "rect", x: 30, y: 66, w: 40, h: 2, fill: "#2B2B30" },
+      ],
+    },
+    {
+      id: "3",
+      title: "Storyboard to screen",
+      seconds: 5,
+      shot: "Medium",
+      camera: "pan-right",
+      source: "motion",
+      action: "A sketch panel morphs into the finished frame as the camera pans.",
+      onScreenText: "Storyboard → approval → 4K",
+      draw: [
+        { type: "rect", x: 8, y: 25, w: 36, h: 45, label: "sketch" },
+        { type: "arrow", x1: 46, y1: 48, x2: 56, y2: 48 },
+        { type: "rect", x: 58, y: 25, w: 36, h: 45, fill: "#CFCAC0", label: "final" },
+      ],
+    },
+    {
+      id: "4",
+      title: "Results",
+      seconds: 4,
+      shot: "Graphic",
+      camera: "static",
+      source: "motion",
+      action: "Bar chart grows; last bar highlights with a counter.",
+      onScreenText: "10× faster turnaround",
+      draw: [
+        { type: "chart", kind: "bar", x: 20, y: 22, w: 60, h: 55 },
+        { type: "text", x: 80, y: 18, text: "10×", size: 12 },
+      ],
+    },
+    {
+      id: "5",
+      title: "End card",
+      seconds: 4,
+      shot: "Graphic",
+      camera: "pull-out",
+      source: "motion",
+      action: "Logo resolves, CTA under it, fade to black.",
+      onScreenText: "Start your first job",
+      audio: "Final hit, ring out",
+      draw: [
+        { type: "logo", x: 35, y: 32, w: 30, h: 18, text: "MOTION" },
+        { type: "text", x: 50, y: 66, text: "Start your first job", size: 6, weight: 600 },
+      ],
+    },
+  ],
+};

@@ -1,0 +1,55 @@
+import { Easing, staticFile } from "remotion";
+import { loadFont } from "@remotion/fonts";
+
+// House design tokens. A job's brand tokens (from its brief) override these.
+
+// Fonts are bundled in public/brand/fonts so renders never depend on the
+// network and look identical on every machine. Inter is a variable font
+// (one file covers weights 100–900); licence: SIL OFL.
+const INTER = "Inter";
+loadFont({
+  family: INTER,
+  url: staticFile("brand/fonts/Inter-Variable-latin.woff2"),
+  weight: "100 900",
+});
+const inter = { fontFamily: `${INTER}, Helvetica, Arial, sans-serif` };
+
+export const color = {
+  bg: "#0B0B0D",
+  surface: "#17171B",
+  text: "#F4EFE6",
+  muted: "#9A958C",
+  accent: "#E8B44A",
+  line: "#2A2A30",
+  paper: "#F7F5F0",
+  ink: "#1C1C1F",
+} as const;
+
+export const font = {
+  display: inter.fontFamily,
+  body: inter.fontFamily,
+} as const;
+
+// Type scale in px at the 1080p authoring size (rendered 2x for 4K).
+export const type = {
+  hero: 140,
+  h1: 96,
+  h2: 64,
+  h3: 44,
+  body: 32,
+  caption: 24,
+} as const;
+
+export const space = (n: number) => n * 8;
+
+export const ease = {
+  inOut: Easing.bezier(0.65, 0, 0.35, 1),
+  out: Easing.bezier(0.16, 1, 0.3, 1),
+  in: Easing.bezier(0.7, 0, 0.84, 0),
+} as const;
+
+export const springs = {
+  smooth: { damping: 200 },
+  snappy: { damping: 20, stiffness: 200 },
+  punch: { damping: 12, stiffness: 180 },
+} as const;

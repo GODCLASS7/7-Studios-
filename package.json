@@ -1,7 +1,7 @@
 {
   "name": "motion-studio",
   "version": "1.0.0",
-  "description": "My Remotion video",
+  "description": "Motion Studio: an agentic design studio for stills and motion graphics, from storyboard to 4K master",
   "repository": {},
   "license": "UNLICENSED",
   "engines": {
@@ -9,10 +9,22 @@
   },
   "private": true,
   "dependencies": {
+    "@remotion/captions": "4.0.537",
     "@remotion/cli": "4.0.537",
+    "@remotion/fonts": "4.0.537",
+    "@remotion/layout-utils": "4.0.537",
+    "@remotion/light-leaks": "4.0.537",
+    "@remotion/media-utils": "4.0.537",
+    "@remotion/motion-blur": "4.0.537",
+    "@remotion/noise": "4.0.537",
+    "@remotion/paths": "4.0.537",
+    "@remotion/shapes": "4.0.537",
+    "@remotion/transitions": "4.0.537",
+    "@remotion/zod-types": "4.0.537",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "remotion": "4.0.537"
+    "remotion": "4.0.537",
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@remotion/eslint-config-flat": "4.0.537",
@@ -26,7 +38,15 @@
     "dev": "remotion studio",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc"
+    "lint": "eslint src && tsc",
+    "setup:cloud": "bash scripts/setup-cloud.sh",
+    "render": "node scripts/render.mjs",
+    "storyboard": "node scripts/storyboard.mjs",
+    "estimate": "node scripts/estimate.mjs",
+    "bench": "node scripts/bench.mjs",
+    "qc": "node scripts/qc.mjs",
+    "fetch-asset": "node scripts/fetch-asset.mjs",
+    "new-job": "node scripts/new-job.mjs"
   },
   "allowScripts": {
     "esbuild": false

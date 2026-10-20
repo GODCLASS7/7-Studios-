@@ -1,0 +1,152 @@
+{
+  "job": "demo",
+  "start": "2026-10-20T15:00:00.000Z",
+  "tz": "UTC",
+  "totalMin": [
+    109.03377499999999,
+    223.55066250000002
+  ],
+  "phases": [
+    {
+      "key": "brief",
+      "learnKey": "brief",
+      "label": "Brief, questions & assumptions",
+      "who": "Claude",
+      "low": 5,
+      "high": 10,
+      "learned": false
+    },
+    {
+      "key": "plan",
+      "learnKey": "plan",
+      "label": "Production plan & estimate",
+      "who": "Claude",
+      "low": 2,
+      "high": 4,
+      "learned": false
+    },
+    {
+      "key": "storyboard",
+      "learnKey": "storyboard",
+      "label": "Storyboard (5 panels) + animatic",
+      "who": "Claude",
+      "low": 9,
+      "high": 18,
+      "learned": false
+    },
+    {
+      "key": "gate-3",
+      "label": "Approve storyboard",
+      "who": "You",
+      "gate": true,
+      "low": 0,
+      "high": 0
+    },
+    {
+      "key": "style",
+      "learnKey": "style",
+      "label": "Style frames / design previews (3 deliverables)",
+      "who": "Claude",
+      "low": 15,
+      "high": 30,
+      "learned": false
+    },
+    {
+      "key": "gate-5",
+      "label": "Approve style frames",
+      "who": "You",
+      "gate": true,
+      "low": 0,
+      "high": 0
+    },
+    {
+      "key": "ai-images",
+      "learnKey": "ai-images",
+      "label": "AI keyframes / images (2)",
+      "who": "Provider",
+      "low": 1,
+      "high": 3,
+      "learned": false
+    },
+    {
+      "key": "ai-video",
+      "learnKey": "ai-video",
+      "label": "AI video shots (2, up to 4 in parallel)",
+      "who": "Provider",
+      "low": 4,
+      "high": 12,
+      "learned": false
+    },
+    {
+      "key": "upscale",
+      "learnKey": "upscale",
+      "label": "Upscale to 4K (1 shot)",
+      "who": "Provider",
+      "low": 4,
+      "high": 10,
+      "learned": false
+    },
+    {
+      "key": "build",
+      "learnKey": "build",
+      "label": "Build compositions (motion + stills)",
+      "who": "Claude",
+      "low": 38,
+      "high": 76,
+      "learned": false
+    },
+    {
+      "key": "draft-render",
+      "learnKey": "draft-render",
+      "label": "Draft preview render",
+      "who": "Machine",
+      "low": 1.776533333333333,
+      "high": 2.6647999999999996,
+      "learned": false
+    },
+    {
+      "key": "review-render",
+      "learnKey": "review-render",
+      "label": "1080p review cut",
+      "who": "Machine",
+      "low": 5.396908333333334,
+      "high": 8.0953625,
+      "learned": false
+    },
+    {
+      "key": "gate-12",
+      "label": "Approve review cut",
+      "who": "You",
+      "gate": true,
+      "low": 0,
+      "high": 0
+    },
+    {
+      "key": "qc",
+      "learnKey": "qc",
+      "label": "QC & fixes",
+      "who": "Claude",
+      "low": 8.8,
+      "high": 25.200000000000003,
+      "learned": false
+    },
+    {
+      "key": "final-render",
+      "learnKey": "final-render",
+      "label": "Final masters (4k, 4k, still-4k)",
+      "who": "Machine",
+      "low": 13.06033333333333,
+      "high": 19.590499999999995,
+      "learned": false
+    },
+    {
+      "key": "delivery",
+      "learnKey": "delivery",
+      "label": "QC check & delivery",
+      "who": "Claude",
+      "low": 2,
+      "high": 5,
+      "learned": false
+    }
+  ]
+}
