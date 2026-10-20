@@ -31,6 +31,10 @@ const D = {
   aiImageBatch: [1, 3], // per batch of up to 4 parallel images
   aiVideoBatch: [4, 12], // per batch of up to 4 parallel shots (provider queue + generation)
   upscaleBatch: [4, 10],
+  // SetField (optional local engine): one job at a time on the user's GPU.
+  // Vendor figures: a still ~20 s, a 5 s clip ~2.5 min on an RTX 4090; smaller cards are slower.
+  localImage: [0.3, 1.5], // per image
+  localVideo: [2.5, 10], // per shot
   qcBase: [5, 10],
   qcShareOfBuild: [0.1, 0.2],
 };
@@ -135,9 +139,17 @@ if (motion.length) {
 }
 add("style", `Style frames / design previews (${spec.deliverables.length} deliverable${spec.deliverables.length > 1 ? "s" : ""})`, "Claude", scale(D.styleFrames, Math.max(1, motion.length) + stills.length * 0.5));
 gate("Approve style frames");
-if (totalImages) add("ai-images", `AI keyframes / images (${totalImages})`, "Provider", scale(D.aiImageBatch, Math.ceil(totalImages / PARALLEL)));
+// AI generation: Higgsfield (default, cloud, parallel) or SetField (optional, local GPU, sequential).
+const local = spec.aiProvider === "setfield";
+if (totalImages) {
+  local
+    ? add("ai-images-local", `AI keyframes / images on SetField (${totalImages}, one at a time)`, "Your GPU", scale(D.localImage, totalImages))
+    : add("ai-images", `AI keyframes / images (${totalImages})`, "Provider", scale(D.aiImageBatch, Math.ceil(totalImages / PARALLEL)));
+}
 if (totalShots) {
-  add("ai-video", `AI video shots (${totalShots}, up to ${PARALLEL} in parallel)`, "Provider", scale(D.aiVideoBatch, Math.ceil(totalShots / PARALLEL)));
+  local
+    ? add("ai-video-local", `AI video shots on SetField (${totalShots}, one at a time)`, "Your GPU", scale(D.localVideo, totalShots))
+    : add("ai-video", `AI video shots (${totalShots}, up to ${PARALLEL} in parallel)`, "Provider", scale(D.aiVideoBatch, Math.ceil(totalShots / PARALLEL)));
 }
 if (totalUpscales) add("upscale", `Upscale to 4K (${totalUpscales} shot${totalUpscales > 1 ? "s" : ""})`, "Provider", scale(D.upscaleBatch, Math.ceil(totalUpscales / PARALLEL)));
 

@@ -10,7 +10,8 @@ AI models make the realistic pixels. Remotion makes everything exact: type, logo
 ## 0. Preconditions
 
 - Gate G1 (storyboard) is approved, and the AI panels are marked `source: "ai-video"` or `"ai-image"`.
-- `balance` (Higgsfield) has been checked, and a **credit quote** for the full shot list has been approved by the user. Re-quote if the plan changes.
+- **Provider:** Higgsfield by default. If the job sets `"aiProvider": "setfield"`, the optional local engine, follow the SetField section of `studio/providers.md` instead. There's no credit quote, render times are local, and the approval gates are the same. Keyframe and prompt rules in this playbook apply to both.
+- For Higgsfield: `balance` has been checked, and a **credit quote** for the full shot list has been approved by the user. Re-quote if the plan changes.
 
 ## 1. Shot list
 
@@ -56,6 +57,7 @@ For each AI panel, add a shot to `jobs/<id>/shots.json`:
 
 - `npm run fetch-asset -- "<url>" <job> footage S01_t2.mp4 --model=seedance_2_0 --prompt="…" --provider-job=<id> --credits=<n>`
 - If the shot isn't native 4K, upscale the **chosen take only** (`topaz_video` 2160p or `bytedance_video_upscale` 4K), then fetch the upscaled file. Deflicker if needed.
+- SetField takes are local files: `npm run fetch-asset -- "file:///<path>/take.mp4" <job> footage S01_t1.mp4 --model=setfield-<engine> --note="local render"`. They're 480p/720p, so upscale before any 4K master, or keep them for drafts.
 
 ## 6. Composite in Remotion
 

@@ -40,6 +40,7 @@ writeFileSync(
 - **Audio:** (music, voiceover, SFX)
 - **Look & feel references:**
 - **Deadline:**
+- **AI provider:** Higgsfield (default) / SetField (optional, local GPU)
 - **Budget for AI generation (credits):**
 - **Assumptions Claude made:** (filled in by Claude, confirmed by client)
 `,
@@ -53,6 +54,8 @@ writeFileSync(
       title,
       created: new Date().toISOString(),
       researchUrl: null,
+      // "higgsfield" (default, cloud, credits) or "setfield" (optional, local GPU, no credits).
+      aiProvider: "higgsfield",
       deliverables: [
         {
           name: "Main video",

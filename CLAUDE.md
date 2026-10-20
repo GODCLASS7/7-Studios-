@@ -3,7 +3,7 @@
 Motion Studio is an agentic design studio that runs on Claude. It produces **still and motion graphics of every kind**, up to 4K video, ProRes masters and 300 DPI print. It works like a real studio: brief → time estimate → **storyboard you approve** → **design previews you approve** → production → review cut → masters → QC → delivery.
 
 - **Remotion** (React → frames → video/stills) makes everything exact: typography, layout, data, motion, timing, captions, grade and mix.
-- **Generative models** reached through Claude's connectors make the realistic footage and imagery. Higgsfield gives access to Seedance, Kling, Veo, Cinema Studio, FLUX, Nano Banana, Seedream, GPT Image and Topaz upscaling. See `.claude/skills/studio/providers.md`.
+- **Generative models** reached through Claude's connectors make the realistic footage and imagery. Higgsfield is the main route, with Seedance, Kling, Veo, Cinema Studio, FLUX, Nano Banana, Seedream, GPT Image and Topaz upscaling. **SetField** is an optional local engine: offline, unlimited takes on your own GPU, at 480p/720p; set it per job with `"aiProvider": "setfield"`. See `.claude/skills/studio/providers.md`.
 
 These instructions are for anyone working in this repo, whether a person or Claude.
 
@@ -267,7 +267,7 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 > Make a `<length>`-second cinematic `<format>` piece about `<subject>`: AI footage for `<the shots>`, with titles, captions and a 4K master. Budget: `<credits>`.
 
 1. Follow the **`studio-ai-footage`** skill. The storyboard marks which panels are `ai-video` or `ai-image`.
-2. Before generating anything: check the Higgsfield `balance`, quote the credits and get approval. Generate and approve **keyframe images** before any video.
+2. Before generating anything: check the Higgsfield `balance`, quote the credits and get approval. Generate and approve **keyframe images** before any video. *Optional:* if the job sets `"aiProvider": "setfield"`, render the shots locally on SetField instead. There's no credit quote, but it needs the same computer and an upscale for 4K (providers.md §3).
 3. Generate the shots, using `seedance_2_0` or `cinematic_studio_3_0` for native 4K, or Kling/Veo for their strengths. Review each take, upscale the chosen takes to 4K and fetch them with provenance.
 4. Composite in Remotion with `FootageShot` + `Grade` + `Grain`, then add titles, captions, transitions and sound. Every text, logo and number is set in Remotion.
 5. Finish with `4k` + `master`, QC, and deliver with a credits report.

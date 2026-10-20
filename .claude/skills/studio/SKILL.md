@@ -25,7 +25,9 @@ Stills-only jobs skip phase 2 and 5. The concept sheet in phase 3 is their first
 
 1. Fill the `deliverables` in `jobs/<id>/job.json`: type, format, seconds/count, preset, complexity, and the number of AI shots, images and upscales.
 2. `npm run estimate -- <id> --tz=<user's time zone if known>` writes `jobs/<id>/estimate.md`. Send the user the table, with the total and ready-by times.
-3. If the plan uses AI generation, check the account balance with the Higgsfield `balance` tool. Get prices from the model's details (`models_explore` `get`) and write a credit quote into the plan. If credits are short, say so now. Then offer a Remotion-only plan, or ask the user to top up.
+3. If the plan uses AI generation, set `aiProvider` in `job.json`:
+   - **`higgsfield` (default):** check the balance with the Higgsfield `balance` tool, get prices from the model's details (`models_explore` `get`), and write a credit quote into the plan. If credits are short, say so now, then offer a Remotion-only plan, ask the user to top up, or mention the optional local engine.
+   - **`setfield` (optional):** only if the user chose it and runs this studio in Claude Code on the same computer as the SetField app, with its MCP connected (see `providers.md` §3). There's no credit quote; the estimate uses local GPU render times. Its clips are 480p/720p, so plan an upscale for 4K finals.
 
 ## Phase 2: Storyboard (⏸ G1)
 

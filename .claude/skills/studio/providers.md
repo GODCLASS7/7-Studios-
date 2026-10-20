@@ -66,7 +66,30 @@ Some workflows have their own instructions; follow them. Use `get_workflow_instr
 3. Record each asset's provenance with `npm run fetch-asset`.
 4. No likeness of real people without consent. No generated third-party logos or trademarks.
 
-## 3. Other connectors (use when the job calls for them)
+## 3. SetField: optional local engine (off by default)
+
+Higgsfield is the studio's main AI render route. Use SetField **only** when the user chooses it for a job (`"aiProvider": "setfield"` in `jobs/<id>/job.json`) or asks for it by name.
+
+| | |
+|---|---|
+| What | An offline app ([setfield.io](https://setfield.io/)) that renders AI video, stills, voice-over and score on the user's own graphics card. One-time licence, no credits, unlimited retakes. |
+| Good for | Drafts and previs, many retakes of one shot, exploring keyframes, keeping a character or product consistent across shots, voice-over (54 voices), and score beds at a set BPM with a riser and hit. |
+| Not for | 4K finals on its own. Clips are 4–8 s at 24 fps, at 480p on most cards and 720p on 24 GB cards. Upscale the chosen takes (Higgsfield `topaz_video` / `bytedance_video_upscale`), or use SetField only for drafts. |
+| Needs | Claude Code running on the **same computer** as SetField, with the app open; its API and MCP server listen on 127.0.0.1 only, so a cloud session can't reach it. Windows needs an NVIDIA RTX card (16 GB VRAM recommended); Mac needs Apple silicon (32 GB+ for every engine). |
+| Connect | Windows: `claude mcp add setfield "C:\Users\<you>\AppData\Local\Programs\SetField\SetField-mcp.exe"`. Mac: point it at the `SetField-mcp` program installed beside the app. Check the connection with `/mcp`. |
+| Tools | `mcp__setfield__*`: 18 tools. The vendor's example flow is `vocabulary` → `create_set` → `add_reference` → `lock_reference` → `add_shot` → `generate` (still, then final) → `set_timeline` → `export_cut`. Before the first call, read the live tool list and the API reference at `GET http://127.0.0.1:<port>/v1/system/api.md`. |
+| HTTP | `POST /v1/generate/video`, `/image`, `/voice` and `/music` on 127.0.0.1. |
+
+**Rules for SetField:**
+1. Use it only when it's chosen for the job; otherwise use Higgsfield.
+2. No credit quote is needed. The estimate uses local render times, about 2½ min per 5 s clip on an RTX 4090 and longer on smaller cards; `npm run estimate` does this when `aiProvider` is `setfield`.
+3. The gates still apply: keyframe stills are approved at G2 before any video is rolled.
+4. SetField's own timeline is for drafts only. Final cuts, titles, grade, captions and loudness are done in Remotion so they match the rest of the studio.
+5. Bring takes into the job with `npm run fetch-asset -- "file:///<path to take.mp4>" <job> footage S01_t1.mp4 --model=setfield-<engine>`, so provenance is recorded.
+6. Check each engine pack's licence in the app (under Licenses) for commercial use and territory. The Hero engine isn't licensed for local use in the US, EU, UK or South Korea.
+7. These capability figures come from SetField's own website (2026-10-20), not independent testing. Confirm them on the user's machine.
+
+## 4. Other connectors (use when the job calls for them)
 
 | Connector | Use it for | Notes |
 |---|---|---|
@@ -77,6 +100,6 @@ Some workflows have their own instructions; follow them. Use `get_workflow_instr
 | **Figma / Canva** | Hand-off for clients who edit in those tools (e.g. `html_to_figma`, Canva `import-design-from-url`) | Only when asked |
 | **Hugging Face** | Finding open models (e.g. Wan, LTX, HunyuanVideo) | They need a GPU host; the cloud container has none |
 
-## 4. What stays local on purpose
+## 5. What stays local on purpose
 
 Final typography, logos, numbers, charts, captions, colour grade and audio mix always come from Remotion and ffmpeg. That's what makes the output brand-exact, editable and identical on every render. That precision is the studio's edge over a generation-only tool.
