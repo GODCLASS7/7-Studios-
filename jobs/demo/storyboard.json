@@ -1,55 +1,64 @@
 {
   "project": "Motion Studio — Launch Teaser",
   "client": "In-house demo",
-  "version": 1,
+  "version": 2,
   "date": "2026-10-20",
   "format": "16x9",
   "fps": 30,
-  "status": "for-approval",
-  "notes": "20-second teaser. Panels 1 and 5 use AI footage for mood; panels 2–4 are motion graphics. Panel 2 already shows the built scene.",
+  "status": "approved",
+  "notes": "v2: Remotion-only plan (0 AI credits), so panels 1 and 5 are motion graphics instead of AI footage. Synthesized 120 BPM track; every cut and title lands on the beat grid.",
   "panels": [
     {
-      "id": "1", "title": "Cold open", "seconds": 4, "shot": "Wide", "camera": "push-in", "source": "ai-video",
-      "action": "Dark studio; a single beam of warm light sweeps across a desk of screens.",
-      "audio": "Low drone swells; first kick at 3.5 s", "exit": "Cut on beat",
+      "id": "1", "title": "Cold open", "seconds": 4, "shot": "Wide", "camera": "push-in", "source": "motion",
+      "action": "Dark studio of floating screens; a warm light beam sweeps across them. Screens pulse on the first kick (3.5 s).",
+      "onScreenText": "A design studio that runs on Claude",
+      "audio": "Drone swell + riser; first kick at 3.5 s", "exit": "Hard cut on the 4.0 s kick",
       "draw": [
-        { "type": "horizon", "y": 72 },
-        { "type": "device", "kind": "laptop", "x": 30, "y": 42, "w": 40, "h": 30 },
-        { "type": "arrow", "x1": 20, "y1": 18, "x2": 42, "y2": 40, "label": "light beam" }
+        { "type": "rect", "x": 12, "y": 22, "w": 22, "h": 22 },
+        { "type": "rect", "x": 39, "y": 16, "w": 22, "h": 22 },
+        { "type": "rect", "x": 66, "y": 22, "w": 22, "h": 22 },
+        { "type": "rect", "x": 22, "y": 54, "w": 22, "h": 22 },
+        { "type": "rect", "x": 56, "y": 54, "w": 22, "h": 22 },
+        { "type": "arrow", "x1": 6, "y1": 88, "x2": 92, "y2": 8, "label": "light beam sweep" }
       ]
     },
     {
       "id": "2", "title": "Title slam", "seconds": 3, "shot": "Graphic", "camera": "static", "source": "motion",
-      "action": "Words land one per beat; gold rule draws under them.",
-      "onScreenText": "Design at the speed of thought", "audio": "Kicks on every word",
+      "action": "Six words land on 8th notes (4.25–5.5 s); gold rule draws under them.",
+      "onScreenText": "Design at the speed of thought", "audio": "Kicks on quarters, ticks on word landings",
       "capture": { "composition": "DemoTitle", "frame": 75 }
     },
     {
       "id": "3", "title": "Storyboard to screen", "seconds": 5, "shot": "Medium", "camera": "pan-right", "source": "motion",
-      "action": "A sketch panel morphs into the finished frame as the camera pans.",
+      "action": "Sketch frame appears; APPROVED stamp hits on the 9.0 s beat; wipe reveals the rendered 4K frame.",
       "onScreenText": "Storyboard → approval → 4K",
+      "audio": "Clap on the stamp",
       "draw": [
-        { "type": "rect", "x": 8, "y": 25, "w": 36, "h": 45, "label": "sketch" },
-        { "type": "arrow", "x1": 46, "y1": 48, "x2": 56, "y2": 48 },
-        { "type": "rect", "x": 58, "y": 25, "w": 36, "h": 45, "fill": "#CFCAC0", "label": "final" }
+        { "type": "rect", "x": 22, "y": 18, "w": 56, "h": 56, "label": "sketch → final" },
+        { "type": "text", "x": 66, "y": 26, "text": "APPROVED", "size": 6 },
+        { "type": "text", "x": 50, "y": 88, "text": "Storyboard → approval → 4K", "size": 6, "weight": 600 }
       ]
     },
     {
-      "id": "4", "title": "Results", "seconds": 4, "shot": "Graphic", "camera": "static", "source": "motion",
-      "action": "Bar chart grows; the last bar highlights with a counter.",
+      "id": "4", "title": "Every format", "seconds": 4, "shot": "Graphic", "camera": "static", "source": "motion",
+      "action": "Five format tiles land on beats: 16:9, 9:16, 1:1, 4:5, A3 print, each with its true pixel size.",
       "onScreenText": "One brief. Every format.",
       "draw": [
-        { "type": "chart", "kind": "bar", "x": 20, "y": 22, "w": 60, "h": 55 },
-        { "type": "text", "x": 82, "y": 18, "text": "4K", "size": 12 }
+        { "type": "text", "x": 50, "y": 16, "text": "One brief. Every format.", "size": 7 },
+        { "type": "rect", "x": 6, "y": 44, "w": 26, "h": 26, "label": "16:9" },
+        { "type": "rect", "x": 35, "y": 34, "w": 9, "h": 36, "label": "9:16" },
+        { "type": "rect", "x": 47, "y": 50, "w": 13, "h": 20, "label": "1:1" },
+        { "type": "rect", "x": 63, "y": 46, "w": 13, "h": 24, "label": "4:5" },
+        { "type": "rect", "x": 79, "y": 36, "w": 15, "h": 34, "label": "A3" }
       ]
     },
     {
-      "id": "5", "title": "End card", "seconds": 4, "shot": "Wide", "camera": "pull-out", "source": "ai-video",
-      "action": "AI studio plate pulls back; logo and CTA resolve over it; fade to black.",
-      "onScreenText": "Start your first job", "audio": "Final hit, ring out",
+      "id": "5", "title": "End card", "seconds": 4, "shot": "Graphic", "camera": "pull-out", "source": "motion",
+      "action": "Final hit at 16 s: wordmark punches in, gold rule draws, CTA, fade to black.",
+      "onScreenText": "Start your first job", "audio": "Final hit, chord rings out",
       "draw": [
-        { "type": "logo", "x": 35, "y": 30, "w": 30, "h": 18, "text": "MOTION" },
-        { "type": "text", "x": 50, "y": 64, "text": "Start your first job", "size": 6, "weight": 600 }
+        { "type": "logo", "x": 25, "y": 32, "w": 50, "h": 16, "text": "MOTION STUDIO" },
+        { "type": "text", "x": 50, "y": 66, "text": "Start your first job", "size": 6, "weight": 600 }
       ]
     }
   ]

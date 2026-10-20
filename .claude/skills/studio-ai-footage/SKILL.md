@@ -45,7 +45,7 @@ For each AI panel, add a shot to `jobs/<id>/shots.json`:
 
 1. Confirm the model's parameters with `models_explore` `get`. Upload the keyframes as references (`media_upload` → `media_confirm`).
 2. Submit all shots with `generate_video_batch`, then `jobs_wait`, which waits up to 15 s per call; loop it.
-3. **Review every take.** Download it, extract a contact sheet with `npx remotion ffmpeg -i take.mp4 -vf fps=2,scale=480:-1,tile=4x2 sheet.png`, Read it, and check:
+3. **Review every take.** Download it, extract a contact sheet with `ffmpeg -i take.mp4 -vf fps=2,scale=480:-1,tile=4x2 -frames:v 1 sheet.png` (system ffmpeg: Remotion's bundled build lacks `fps`/`tile`), Read it, and check:
    - morphing hands or faces, warped geometry or flicker;
    - the camera move matches the panel;
    - there's room for titles;

@@ -72,7 +72,7 @@ Stills-only jobs skip phase 2 and 5. The concept sheet in phase 3 is their first
 
 ## Phase 6: Finals
 
-Render each deliverable with its preset. The `studio-finishing` skill covers grading, grain, LUTs and loudness.
+Render each deliverable with its preset. Then run `npm run loudnorm -- <render> <delivery file>` on anything with audio. The `studio-finishing` skill covers grading, grain, LUTs and loudness.
 
 | Need | Preset |
 |---|---|
@@ -88,9 +88,10 @@ Run `npm run qc -- <file> --expect=<WxH> --fps=<n> --seconds=<n> --job=<id>` on 
 ## Phase 8: Delivery
 
 1. Name files `<job>_<deliverable>_<format>_<resolution>_v<N>.<ext>`.
-2. Send the files and summarise: what was made, the specs, the credits spent (from `assets.json`) and where the source files are.
-3. Log the actual time for each phase so future estimates improve: `npm run estimate -- --log <id> <phase> <minutes>`.
-4. Commit the source (the job docs and compositions), not `out/`.
+2. Make a **final-frames sheet**: copy `storyboard.json` to `frames.json` and give each panel `capture: { composition: "<final comp>", frame: <n> }`. Then run `npm run storyboard -- <id> --name=frames`. Send it next to the approved storyboard so the client sees plan versus result.
+3. Send the files and summarise: what was made, the specs, the credits spent (from `assets.json`) and where the source files are.
+4. Log the actual time for each phase so future estimates improve: `npm run estimate -- --log <id> <phase> <minutes>`.
+5. Commit the source (the job docs and compositions), not `out/`.
 
 ## Design checklist (run it on every frame you show)
 

@@ -31,13 +31,13 @@ Use `--frames=0-89` to render part of a video, and `--props=jobs/<id>/props.json
 ## Look and grade
 
 1. **In-composition:** `<Grade look="film|warm|cool|punchy|noir|faded" vignette={0.3}>` around footage scenes. Use one look across the whole piece.
-2. **LUT on the master** (true colour grade). Put `.cube` files in `public/brand/luts/`, then:
+2. **LUT on the master** (true colour grade). Put `.cube` files in `public/brand/luts/`, then use a **full ffmpeg build**. Remotion's bundled `npx remotion ffmpeg` is minimal: it has `loudnorm` and `scale` but not `lut3d`, `blackdetect`, `tile` or `fps`.
    ```bash
-   npx remotion ffmpeg -i out/X-master.mov -vf "lut3d=file=public/brand/luts/look.cube" -c:v prores_ks -profile:v 3 -c:a copy out/X-graded.mov
+   ffmpeg -i out/X-master.mov -vf "lut3d=file=public/brand/luts/look.cube" -c:v prores_ks -profile:v 3 -c:a copy out/X-graded.mov
    ```
 3. Then encode the delivery file from the graded master:
    ```bash
-   npx remotion ffmpeg -i out/X-graded.mov -c:v libx264 -crf 16 -preset slow -pix_fmt yuv420p -colorspace bt709 -color_primaries bt709 -color_trc bt709 -c:a aac -b:a 320k out/X-4k.mp4
+   ffmpeg -i out/X-graded.mov -c:v libx264 -crf 16 -preset slow -pix_fmt yuv420p -colorspace bt709 -color_primaries bt709 -color_trc bt709 -c:a aac -b:a 320k out/X-4k.mp4
    ```
 
 ## Polish packages (installed)
@@ -59,9 +59,9 @@ Use `--frames=0-89` to render part of a video, and `--props=jobs/<id>/props.json
 
 - Layer the mix: music bed, voiceover (ducks the music by about 8–10 dB with a volume curve on `<Audio volume={(f) => …}>`), SFX on cuts and hits.
 - Clean recorded voiceover with the Adobe connector's `media_enhance_speech` before mixing.
-- **Loudness:** −14 LUFS integrated, true peak −1 dBTP, for YouTube and social. Normalise the final mix:
+- **Loudness:** −14 LUFS integrated, true peak at most −1 dBTP, for YouTube and social. Normalise the final render (pass 1 measures, pass 2 applies a linear gain, then the audio is trimmed to the video length so AAC padding does not make the file longer than the edit):
   ```bash
-  npx remotion ffmpeg -i in.mp4 -af loudnorm=I=-14:TP=-1:LRA=11 -c:v copy -c:a aac -b:a 320k out.mp4
+  npm run loudnorm -- in.mp4 out.mp4            # two-pass, exact length, video stream copied (--lufs=-14 --tp=-1.5)
   ```
   For broadcast, use −23 LUFS (EBU R128).
 

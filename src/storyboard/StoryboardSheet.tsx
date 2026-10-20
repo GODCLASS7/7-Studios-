@@ -41,7 +41,8 @@ export const StoryboardSheet: React.FC<Storyboard> = (sb) => {
   const { panelW, panelH } = layout(sb);
   const starts = startTimes(sb.panels);
   const total = totalSeconds(sb.panels);
-  const status = STATUS[sb.status];
+  const frames = sb.kind === "frames";
+  const status = frames ? { text: "DELIVERED", color: "#1F9D6B" } : STATUS[sb.status];
   const meta = [sb.client, `v${sb.version}`, sb.date, sb.format.replace("x", ":"), `${sb.fps} fps`, `${sb.panels.length} panels`, `runtime ${timecode(total)}`]
     .filter(Boolean)
     .join("  ·  ");
@@ -50,7 +51,7 @@ export const StoryboardSheet: React.FC<Storyboard> = (sb) => {
     <AbsoluteFill style={{ backgroundColor: "#FFFFFF", fontFamily: font.body, color: SKETCH.ink, padding: MARGIN, paddingBottom: 0 }}>
       <div style={{ height: HEADER, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <div style={{ fontSize: 30, fontWeight: 600, letterSpacing: "0.25em", color: "#8A8680" }}>STORYBOARD</div>
+          <div style={{ fontSize: 30, fontWeight: 600, letterSpacing: "0.25em", color: "#8A8680" }}>{frames ? "FINAL FRAMES" : "STORYBOARD"}</div>
           <div style={{ fontSize: 84, fontWeight: 900, lineHeight: 1.05, marginTop: 8 }}>{sb.project}</div>
           <div style={{ fontSize: 30, fontWeight: 600, marginTop: 14, color: "#5E5B56" }}>{meta}</div>
           {sb.notes ? <div style={{ fontSize: 26, marginTop: 10, color: "#5E5B56", maxWidth: 1700 }}>{sb.notes}</div> : null}
@@ -64,7 +65,7 @@ export const StoryboardSheet: React.FC<Storyboard> = (sb) => {
         {sb.panels.map((p, i) => (
           <div key={p.id} style={{ width: panelW }}>
             <div style={{ width: panelW, height: panelH, border: `4px solid ${SKETCH.ink}`, borderRadius: 10, overflow: "hidden", position: "relative" }}>
-              <PanelArt panel={p} aspect={ASPECT[sb.format]} />
+              <PanelArt panel={p} aspect={ASPECT[sb.format]} showCamera={!frames} />
               <div
                 style={{
                   position: "absolute",
@@ -127,7 +128,15 @@ export const StoryboardSheet: React.FC<Storyboard> = (sb) => {
 
       <div style={{ position: "absolute", left: MARGIN, right: MARGIN, bottom: 0, height: FOOTER, borderTop: "3px solid #E2DED5", paddingTop: 24, display: "flex", justifyContent: "space-between", fontSize: 26 }}>
         <div style={{ maxWidth: 1350, color: "#5E5B56" }}>
-          <b style={{ color: SKETCH.ink }}>To approve:</b> reply “approve storyboard v{sb.version}”. <b style={{ color: SKETCH.ink }}>To change:</b> comment by panel number, e.g. “3: warmer light, slower push-in”.
+          {frames ? (
+            <>
+              <b style={{ color: SKETCH.ink }}>Delivered frames</b>, one per storyboard panel. Compare with the approved storyboard v{sb.version}.
+            </>
+          ) : (
+            <>
+              <b style={{ color: SKETCH.ink }}>To approve:</b> reply “approve storyboard v{sb.version}”. <b style={{ color: SKETCH.ink }}>To change:</b> comment by panel number, e.g. “3: warmer light, slower push-in”.
+            </>
+          )}
         </div>
         <div style={{ display: "flex", gap: 18, alignItems: "flex-start", fontWeight: 700, fontSize: 22 }}>
           {["motion", "ai-video", "ai-image", "footage", "still"].map((s) => (

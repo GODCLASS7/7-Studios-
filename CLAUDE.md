@@ -64,8 +64,10 @@ npm run new-job -- <id> "<Title>" --format=16x9      # scaffold jobs/<id>/ and p
 npm run estimate -- <id> [--tz=Area/City]            # phase-by-phase time estimate with ready-by times
 npm run estimate -- --log <id> <phase> <minutes>     # record actual time so estimates learn
 npm run storyboard -- <id> [--animatic] [--draft]    # approval sheet PNG (+ timed animatic MP4)
+npm run storyboard -- <id> --name=frames             # final-frames sheet from jobs/<id>/frames.json
 npm run render -- <Comp> <preset> [--props=…] [--frame=…] [--frames=…] [--out=…]
 npm run qc -- <file> --expect=3840x2160 --fps=30 --seconds=20 [--job=<id>]
+npm run loudnorm -- <in.mp4> <out.mp4> [--lufs=-14]     # two-pass loudness to target, exact length
 npm run fetch-asset -- <url> <id> <footage|stills|audio|data|brand|panels> <file> [--model=… --prompt=… --credits=…]
 npm run bench                          # measure this machine's render speed (about 2 min)
 npx remotion compositions              # list composition IDs

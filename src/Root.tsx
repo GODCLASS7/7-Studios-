@@ -1,6 +1,9 @@
 import { Composition, Still } from "remotion";
 import { StudioCheck } from "./videos/StudioCheck";
 import { DemoTitle } from "./videos/Demo/DemoTitle";
+import { Teaser } from "./videos/Teaser/Teaser";
+import { TeaserThumb } from "./videos/Teaser/Thumbnail";
+import { f, SCENES } from "./videos/Teaser/beats";
 import { calcAnimatic, StoryboardAnimatic } from "./storyboard/Animatic";
 import { sampleStoryboard } from "./storyboard/sample";
 import { storyboardSchema } from "./storyboard/schema";
@@ -30,6 +33,27 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
+
+      {/* Demo job showcase: launch teaser 16:9 (20 s), 9:16 cut-down (16 s), YouTube thumbnail. */}
+      <Composition
+        id="Teaser-16x9"
+        component={Teaser}
+        defaultProps={{ variant: "full" as const }}
+        durationInFrames={f(SCENES.coldOpen + SCENES.title + SCENES.sketch + SCENES.formats + SCENES.end)}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Teaser-9x16"
+        component={Teaser}
+        defaultProps={{ variant: "cutdown" as const }}
+        durationInFrames={f(SCENES.title + SCENES.sketch + SCENES.formats + SCENES.end)}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Still id="TeaserThumb" component={TeaserThumb} width={1280} height={720} />
 
       {/* Studio pipeline: storyboard approval sheet + timed animatic. */}
       <Still

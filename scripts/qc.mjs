@@ -18,10 +18,17 @@ if (!file || !existsSync(file)) {
 }
 const opt = Object.fromEntries(rest.filter((a) => a.startsWith("--")).map((a) => a.slice(2).split("=")));
 
+// Prefer a full system ffmpeg/ffprobe build. Remotion's bundled build is
+// minimal (no blackdetect, lut3d, tile or fps filters).
+const systemFfmpeg = spawnSync("ffmpeg", ["-hide_banner", "-filters"], { encoding: "utf8" });
+const hasSystem = systemFfmpeg.status === 0;
 const tool = (name, args) => {
-  const r = spawnSync("npx", ["remotion", name, ...args], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+  const r = hasSystem
+    ? spawnSync(name, args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })
+    : spawnSync("npx", ["remotion", name, ...args], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
   return { out: r.stdout || "", err: r.stderr || "", ok: r.status === 0 };
 };
+const hasBlackdetect = hasSystem && /\bblackdetect\b/.test(systemFfmpeg.stdout || "");
 
 const probe = JSON.parse(tool("ffprobe", ["-v", "error", "-show_streams", "-show_format", "-of", "json", file]).out || "{}");
 const v = (probe.streams || []).find((s) => s.codec_type === "video");
@@ -49,9 +56,13 @@ if (!v) {
       true,
     );
 
-    const black = tool("ffmpeg", ["-hide_banner", "-i", file, "-vf", "blackdetect=d=0.5:pix_th=0.05", "-an", "-f", "null", "-"]).err;
-    const segs = [...black.matchAll(/black_start:([\d.]+) black_end:([\d.]+)/g)].map((m) => `${Number(m[1]).toFixed(1)}–${Number(m[2]).toFixed(1)} s`);
-    check("Black frames", segs.length === 0, segs.length ? `black at ${segs.join(", ")} (fine if it is an intended fade)` : "none", true);
+    if (hasBlackdetect) {
+      const black = tool("ffmpeg", ["-hide_banner", "-i", file, "-vf", "blackdetect=d=0.25:pix_th=0.05", "-an", "-f", "null", "-"]).err;
+      const segs = [...black.matchAll(/black_start:([\d.]+) black_end:([\d.]+)/g)].map((m) => `${Number(m[1]).toFixed(2)}–${Number(m[2]).toFixed(2)} s`);
+      check("Black frames", segs.length === 0, segs.length ? `black at ${segs.join(", ")} (fine if it is an intended fade)` : "none ≥ 0.25 s", true);
+    } else {
+      check("Black frames", false, "not checked: needs a full ffmpeg build on PATH (brew/apt install ffmpeg)", true);
+    }
   }
 }
 

@@ -46,7 +46,8 @@
     "bench": "node scripts/bench.mjs",
     "qc": "node scripts/qc.mjs",
     "fetch-asset": "node scripts/fetch-asset.mjs",
-    "new-job": "node scripts/new-job.mjs"
+    "new-job": "node scripts/new-job.mjs",
+    "loudnorm": "node scripts/loudnorm.mjs"
   },
   "allowScripts": {
     "esbuild": false

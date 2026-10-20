@@ -4,8 +4,41 @@
   "created": "2026-10-20T14:30:00.000Z",
   "researchUrl": null,
   "deliverables": [
-    { "name": "Teaser 16:9", "type": "motion", "composition": "DemoTeaser-16x9", "format": "16x9", "seconds": 20, "fps": 30, "preset": "4k", "complexity": "medium", "aiVideoShots": 2, "aiImages": 2, "upscaleShots": 1 },
-    { "name": "Teaser 9:16 cut-down", "type": "motion", "composition": "DemoTeaser-9x16", "format": "9x16", "seconds": 15, "fps": 30, "preset": "4k", "complexity": "medium", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 },
-    { "name": "YouTube thumbnail", "type": "still", "composition": "DemoThumb", "count": 1, "preset": "still-4k", "complexity": "medium", "aiImages": 0 }
-  ]
+    {
+      "name": "Teaser 16:9",
+      "type": "motion",
+      "composition": "Teaser-16x9",
+      "format": "16x9",
+      "seconds": 20,
+      "fps": 30,
+      "preset": "4k",
+      "complexity": "medium",
+      "aiVideoShots": 0,
+      "aiImages": 0,
+      "upscaleShots": 0
+    },
+    {
+      "name": "Teaser 9:16 cut-down",
+      "type": "motion",
+      "composition": "Teaser-9x16",
+      "format": "9x16",
+      "seconds": 16,
+      "fps": 30,
+      "preset": "4k",
+      "complexity": "medium",
+      "aiVideoShots": 0,
+      "aiImages": 0,
+      "upscaleShots": 0
+    },
+    {
+      "name": "YouTube thumbnail",
+      "type": "still",
+      "composition": "TeaserThumb",
+      "count": 1,
+      "preset": "still-4k",
+      "complexity": "medium",
+      "aiImages": 0
+    }
+  ],
+  "notes": "v2 plan: Remotion-only (Higgsfield balance 0 credits)."
 }

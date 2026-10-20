@@ -15,7 +15,8 @@ The studio's "APIs" are the connectors attached to the user's Claude account (MC
 | 4K / ProRes / alpha masters | `scripts/render.mjs` presets |
 | Storyboards and animatics | `scripts/storyboard.mjs` |
 | QC: resolution, fps, duration, colour, black frames, loudness | `scripts/qc.mjs` (bundled ffprobe/ffmpeg) |
-| Grading with LUTs, loudness normalisation | `npx remotion ffmpeg` (see the `studio-finishing` skill) |
+| Loudness normalisation | `npx remotion ffmpeg` (bundled, minimal build) |
+| LUT grading, black-frame QC, contact sheets | system `ffmpeg` (full build; `brew install ffmpeg` / `apt install ffmpeg`) |
 
 ## 2. Higgsfield connector: generation hub (`mcp__Higgsfield__*`)
 

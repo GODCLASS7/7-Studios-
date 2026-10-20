@@ -67,6 +67,8 @@ export const panelSchema = z.object({
 });
 
 export const storyboardSchema = z.object({
+  // "frames" = a sheet of final rendered frames (no camera notation, no approval prompt).
+  kind: z.enum(["storyboard", "frames"]).optional(),
   project: z.string(),
   client: z.string().optional(),
   version: z.number(),
