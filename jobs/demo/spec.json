@@ -1,0 +1,129 @@
+{
+  "hardRules": [
+    "House style only: near-black stage, warm off-white type, one gold accent (src/lib/tokens.ts). No other colours.",
+    "Every cut, word landing and accent sits on the 120 BPM grid in src/videos/Teaser/beats.ts (beat = 0.5 s). Audio and picture are built from the same numbers.",
+    "No AI footage in this cut: the plan was Remotion-only (0 generation credits). Any regenerated shot needs a new storyboard version and an approved quote.",
+    "Headlines break into balanced lines with no orphan word, in every format; portrait lines are set explicitly where needed.",
+    "The 9:16 cut-down starts on the title (no cold open), keeps every later scene the same length, and trims the audio by 4.0 s so the final hit still lands on the end card."
+  ],
+  "credits": [
+    {
+      "layer": "Music + SFX",
+      "madeWith": "Synthesised in Node (jobs/demo/sound.mjs)",
+      "notes": "Deterministic; fully owned, no licence needed"
+    },
+    {
+      "layer": "Narration",
+      "madeWith": "None",
+      "notes": "Music-led piece"
+    }
+  ],
+  "visualNotes": [
+    "Stage: radial gradient #1F1D1A → #0B0B0D, film look (`<Grade look=\"film\">`), vignette 0.3–0.45, animated grain 5–7% over everything.",
+    "Headlines: Inter 900, tight leading; the key word in gold (\"speed\", \"format.\").",
+    "Overlines and sublines: Inter 600, letter-spacing 0.2–0.32em, uppercase, muted #9A958C.",
+    "Pills and badges: gold #E8B44A fill, near-black text, fully rounded."
+  ],
+  "motionVocabulary": [
+    {
+      "name": "Beam sweep",
+      "how": "A 100° linear-gradient band (screen blend) travels −35% → 135% of the width over 0.3–3.3 s with ease.inOut; each screen's glow = exp(−((x−beam)/0.22w)²)."
+    },
+    {
+      "name": "Kick pulse",
+      "how": "On the 3.5 s kick: screen borders turn gold and brightness spikes, decaying as exp(−frames/5); a 12% gold screen-blend flash."
+    },
+    {
+      "name": "Title slam",
+      "how": "KineticTitle with `landOn` = the beat frames; each word springs (snappy) 0.45 s before it lands; the gold rule draws over 0.7 s after the last word."
+    },
+    {
+      "name": "Stamp",
+      "how": "FOR APPROVAL (orange) fades in at 0.4 s; APPROVED (green) punches in at 9.0 s, scale 1.7 → 1 with the punch spring, rotated −8°."
+    },
+    {
+      "name": "Wipe reveal",
+      "how": "clip-path inset reveals the frozen rendered frame (frame 75 of DemoTitle) over the sketch, 2.5–3.5 s, with a glowing gold edge."
+    },
+    {
+      "name": "Tile pop",
+      "how": "Format tiles land on beats 12.5–14.5 s: translateY 60 → 0 and scale 0.7 → 1 (snappy), 8 frames of travel."
+    },
+    {
+      "name": "Wordmark punch",
+      "how": "On the 16 s hit: letter-spacing 0.45 → 0.06em and scale 1.15 → 1, gold flash 0.5 → 0 over 8 frames, slow pull-out 1.08 → 1, fade to black in the last 0.6 s."
+    }
+  ],
+  "adaptations": [
+    {
+      "format": "9:16 (1080×1920 → 2160×3840)",
+      "composition": "Teaser-9x16",
+      "notes": "Starts at the title (16 s). Title at 104 px in a 900 px box (two lines). Sketch frame 86% width. Heading set as two explicit lines; tiles in two rows ([16:9, 1:1], [9:16, 4:5, A3]). End card wordmark on two lines, subline on two lines."
+    }
+  ],
+  "music": {
+    "madeWith": "Node synthesis: kick, hats, clap, drone, riser, A-major chord",
+    "bpm": 120,
+    "licence": "Fully owned",
+    "file": "public/jobs/demo/audio/teaser-120bpm.wav (node jobs/demo/sound.mjs)",
+    "notes": "Drone bed swells 0–3.5 s and dips before the hit; noise riser 2.0–3.5 s; kicks on quarter notes 3.5–15.5 s; final hit at 16 s with a chord that rings to 20 s."
+  },
+  "soundDesign": [
+    {
+      "at": "3.5",
+      "cue": "First kick",
+      "purpose": "Screens pulse"
+    },
+    {
+      "at": "4.25–5.5",
+      "cue": "Ticks on 8th notes",
+      "purpose": "Each title word lands"
+    },
+    {
+      "at": "9.0",
+      "cue": "Clap",
+      "purpose": "APPROVED stamp"
+    },
+    {
+      "at": "12.5–14.5",
+      "cue": "Ticks",
+      "purpose": "Format tiles land"
+    },
+    {
+      "at": "16.0",
+      "cue": "Big kick + clap + chord",
+      "purpose": "Wordmark punch; rings out to the fade"
+    }
+  ],
+  "mix": {
+    "targetLufs": -14,
+    "truePeak": -1.5,
+    "notes": [
+      "The synthesised track measures about −12 LUFS raw; finishing brings it to −14.",
+      "AAC padding made the first master 20.10 s; the loudnorm script trims audio to the picture length."
+    ]
+  },
+  "buildNotes": [
+    "Regenerate the soundtrack first if it's missing: `node jobs/demo/sound.mjs`.",
+    "4K renders on a 4-vCPU cloud container took 8 min 17 s (16:9) and 6 min 55 s (9:16)."
+  ],
+  "prebuild": [
+    "node jobs/demo/sound.mjs                 # soundtrack (deterministic)"
+  ],
+  "qaChecklist": [
+    "Every word lands on its beat (check stills at 4.25, 4.5 … 5.5 s).",
+    "No near-black frame at the 12 s cut other than the sparse heading frame (blackdetect may flag 12.00–12.27 s; that is expected).",
+    "The 9:16 heading reads \"One brief.\" / \"Every format.\"; no orphan words anywhere."
+  ],
+  "pitfalls": [
+    "`<Freeze>` inside a single-frame `<Still>` shows frame 0. Land animations in the past (negative `landOn`) instead.",
+    "Google Fonts can't load in the cloud container's Chromium (proxy certificate). Fonts are bundled locally.",
+    "Remotion's bundled ffmpeg lacks blackdetect, lut3d, tile and fps. QC and contact sheets use a system ffmpeg.",
+    "blackdetect flags sparse dark frames (a few words on near-black) as black; review the flagged frames before acting.",
+    "In portrait, flex-wrapped headlines broke as \"One brief. Every / format.\"; set the lines explicitly."
+  ],
+  "cover": {
+    "demo_teaser_16x9_2160p_v1.mp4": 6.6,
+    "demo_teaser_9x16_2160x3840_v1.mp4": 11.2
+  }
+}

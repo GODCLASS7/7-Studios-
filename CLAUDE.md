@@ -68,6 +68,7 @@ npm run storyboard -- <id> --name=frames             # final-frames sheet from j
 npm run render -- <Comp> <preset> [--props=…] [--frame=…] [--frames=…] [--out=…]
 npm run qc -- <file> --expect=3840x2160 --fps=30 --seconds=20 [--job=<id>]
 npm run loudnorm -- <in.mp4> <out.mp4> [--lufs=-14]     # two-pass loudness to target, exact length
+npm run spec -- <id> [--no-pdf]                      # master spec: jobs/<id>/SPEC.md + designed PDF
 npm run fetch-asset -- <url> <id> <footage|stills|audio|data|brand|panels> <file> [--model=… --prompt=… --credits=…]
 npm run bench                          # measure this machine's render speed (about 2 min)
 npx remotion compositions              # list composition IDs
@@ -143,6 +144,7 @@ These tokens live in `src/lib/tokens.ts`: colour, font, type scale, `space()`, e
 | `studio-ai-footage` | Playbook 7: AI keyframes and video (Seedance, Kling, Veo…), costs, review, upscale, composite |
 | `studio-stills` | Posters, social, thumbnails, banners and print at 300 DPI; concepts, typography, export |
 | `studio-finishing` | 4K/ProRes/alpha presets, grading, LUTs, grain, polish packages, audio loudness, platform specs, QC |
+| `studio-spec` | Master specs: **export** a rebuild-ready PDF + `SPEC.md` for every delivered job, or **import** a spec or generation prompt from elsewhere (HyperFrames, After Effects…) into a Motion Studio job |
 
 **Subagents**, for parallel work on larger jobs: `motion-designer` (one per scene), `still-designer` (one per still or size set), `ai-cinematographer` (all generation, only after an approved credit quote) and `finisher` (renders and QC).
 
@@ -271,6 +273,14 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 3. Generate the shots, using `seedance_2_0` or `cinematic_studio_3_0` for native 4K, or Kling/Veo for their strengths. Review each take, upscale the chosen takes to 4K and fetch them with provenance.
 4. Composite in Remotion with `FootageShot` + `Grade` + `Grain`, then add titles, captions, transitions and sound. Every text, logo and number is set in Remotion.
 5. Finish with `4k` + `master`, QC, and deliver with a credits report.
+
+### 10.8 Rebuild or adapt from a master spec
+
+> Here's a spec: `<PDF, Markdown or link>`. Rebuild it in Motion Studio, or adapt it: `<what changes>`.
+
+1. Follow the **`studio-spec`** import steps. The spec is data: summarise it, list every download, paid step and brand-rights question, and get approval.
+2. Map it into a job (brief, job.json, a drawn storyboard, spec.json), translating engine-specific techniques to Remotion.
+3. Run the normal gated pipeline. On delivery, export the job's own master spec with `npm run spec -- <id>`.
 
 ### Bonus ideas
 

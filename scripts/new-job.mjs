@@ -114,4 +114,9 @@ writeFileSync(
 `,
 );
 writeFileSync(join(dir, "assets.json"), "[]\n");
+// Extra facts for the master spec (npm run spec). Every field is optional; see the studio-spec skill.
+writeFileSync(
+  join(dir, "spec.json"),
+  JSON.stringify({ hardRules: [], credits: [], visualNotes: [], motionVocabulary: [], adaptations: [], soundDesign: [], qaChecklist: [], pitfalls: [] }, null, 2) + "\n",
+);
 console.log(`Created ${dir}/ and public/jobs/${id}/`);

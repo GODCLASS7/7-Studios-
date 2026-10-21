@@ -47,7 +47,8 @@
     "qc": "node scripts/qc.mjs",
     "fetch-asset": "node scripts/fetch-asset.mjs",
     "new-job": "node scripts/new-job.mjs",
-    "loudnorm": "node scripts/loudnorm.mjs"
+    "loudnorm": "node scripts/loudnorm.mjs",
+    "spec": "node scripts/spec.mjs"
   },
   "allowScripts": {
     "esbuild": false
