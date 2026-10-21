@@ -1,0 +1,53 @@
+{
+  "overline": "THE WAIT CULTURE",
+  "reference": "Wings (demo) · The Wait Culture",
+  "version": "",
+  "intro": {
+    "title": "Wings",
+    "sub": "THE WAIT CULTURE"
+  },
+  "phrases": [
+    {
+      "text": "But they that wait|upon the LORD",
+      "start": 2.7,
+      "seconds": 2.74,
+      "emphasis": [
+        "wait"
+      ]
+    },
+    {
+      "text": "shall renew|their strength;",
+      "start": 5.54,
+      "seconds": 1.18,
+      "emphasis": [
+        "renew"
+      ]
+    },
+    {
+      "text": "they shall mount up|with wings as eagles;",
+      "start": 6.82,
+      "seconds": 3.06,
+      "emphasis": [
+        "wings"
+      ]
+    },
+    {
+      "text": "they shall run,|and not be weary;",
+      "start": 9.98,
+      "seconds": 2.74,
+      "emphasis": [
+        "run"
+      ]
+    },
+    {
+      "text": "and they shall walk,|and not faint.",
+      "start": 12.82,
+      "seconds": 4.1,
+      "emphasis": [
+        "walk"
+      ]
+    }
+  ],
+  "endSeconds": 3.08,
+  "audio": "jobs/wait-isaiah-40-31/audio/pad-isaiah-40-31.wav"
+}

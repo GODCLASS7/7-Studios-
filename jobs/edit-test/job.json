@@ -1,0 +1,24 @@
+{
+  "id": "edit-test",
+  "title": "Edit pipeline test",
+  "created": "2026-10-21T11:16:39.849Z",
+  "preset": null,
+  "recipes": [],
+  "researchUrl": null,
+  "aiProvider": "higgsfield",
+  "deliverables": [
+    {
+      "name": "Main video",
+      "type": "motion",
+      "composition": "",
+      "format": "9x16",
+      "seconds": 20,
+      "fps": 30,
+      "preset": "4k",
+      "complexity": "medium",
+      "aiVideoShots": 0,
+      "aiImages": 0,
+      "upscaleShots": 0
+    }
+  ]
+}

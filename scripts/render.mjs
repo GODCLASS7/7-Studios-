@@ -6,6 +6,7 @@
 // Presets (compositions are authored at 1080p; `scale` multiplies that):
 //   draft      540p, fast, every 2nd frame            -> quick motion check
 //   review     1080p H.264                            -> client preview for approval
+//   hd         1080p H.264, PNG frames, CRF 16, BT.709 -> final when the footage is 1080p (phone, webcam)
 //   4k         2160p H.264, PNG frames, CRF 16        -> 4K delivery (web, YouTube)
 //   4k-hevc    2160p H.265, PNG frames, CRF 18        -> smaller 4K delivery
 //   master     2160p ProRes 422 HQ (.mov)             -> editing master
@@ -25,6 +26,7 @@ import { dirname, join } from "node:path";
 const PRESETS = {
   draft: { ext: "mp4", args: ["--scale=0.5", "--crf=30", "--every-nth-frame=2", "--codec=h264"] },
   review: { ext: "mp4", args: ["--scale=1", "--crf=20", "--codec=h264"] },
+  hd: { ext: "mp4", args: ["--scale=1", "--crf=16", "--codec=h264", "--image-format=png", "--color-space=bt709"] },
   "4k": { ext: "mp4", args: ["--scale=2", "--crf=16", "--codec=h264", "--image-format=png", "--color-space=bt709"] },
   "4k-hevc": { ext: "mp4", args: ["--scale=2", "--crf=18", "--codec=h265", "--image-format=png", "--color-space=bt709"] },
   master: { ext: "mov", args: ["--scale=2", "--codec=prores", "--prores-profile=hq", "--image-format=png"] },

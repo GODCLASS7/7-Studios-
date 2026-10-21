@@ -103,3 +103,15 @@ Higgsfield is the studio's main AI render route. Use SetField **only** when the 
 ## 5. What stays local on purpose
 
 Final typography, logos, numbers, charts, captions, colour grade and audio mix always come from Remotion and ffmpeg. That's what makes the output brand-exact, editable and identical on every render. That precision is the studio's edge over a generation-only tool.
+
+## 6. Transcription and footage editing (`studio-edit` skill)
+
+| Tool | Use it for | Setup / notes |
+|---|---|---|
+| **ElevenLabs Scribe** (speech-to-text, `npm run transcribe`) | Word-level transcripts of footage, voiceover and interviews, with speaker labels and audio events, to cut talking heads and time captions | API key with **Speech to Text: Access** in `.env` (`ELEVENLABS_API_KEY`; template in `.env.example`). Never ask for the key in chat or commit it. Paid per audio minute: state the minutes first. Cloud sessions need `api.elevenlabs.io` allowed in the network settings and the key as an environment secret |
+| **ElevenLabs forced alignment** (`transcribe --align=lyrics.txt`) | Matching lyrics or a script you already have to the audio: timed lyric cards for songs | Same key |
+| **Whisper** (`--engine=whisper`, via `@remotion/install-whisper-cpp`) | Free, offline transcription on the user's computer | First run installs whisper.cpp and downloads the model from huggingface.co into `production/whisper/`; needs git and a C compiler. Weaker on singing |
+| **Imported transcripts** (`--from=…`) | ElevenLabs JSON, Remotion caption JSON, SRT/VTT, LRC | SRT and LRC give cue- or line-level times; word times are spread evenly |
+| **TranscriptX** connector | Transcribing a public link (YouTube, TikTok) when files can't be downloaded | Credits per video: quote first |
+| **yt-dlp** (`analyze-reference --fetch`) | Downloading reference videos to learn an editing style | User's computer only; downloads are for study, never reused in deliveries |
+| **video-use** (browser-use, MIT) | The method the edit lane follows (transcript-first, edit list, self-check at every cut) | Not installed; Motion Studio runs the same steps natively so edits get its gates, 4K finishing, QC and specs |

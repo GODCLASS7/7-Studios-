@@ -1,7 +1,10 @@
 {
   "name": "testimony-doc",
   "label": "Testimony / HSM story mini-doc + Short",
-  "recipes": ["testimony-doc", "atmosphere"],
+  "recipes": [
+    "testimony-doc",
+    "atmosphere"
+  ],
   "brief": {
     "Goal (one sentence)": "Tell one person's story so viewers feel the turning point and remember it.",
     "Deliverables": "3–5 min 16:9 mini-doc + 30 s 9:16 Short from the strongest moment",
@@ -11,23 +14,174 @@
     "Look & feel references": "Steven Ndukwu: hook, journey, turning point, payoff"
   },
   "deliverables": [
-    { "name": "Mini-doc 16:9", "type": "motion", "composition": "", "format": "16x9", "seconds": 240, "fps": 30, "preset": "4k", "complexity": "medium", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 },
-    { "name": "Short 9:16", "type": "motion", "composition": "", "format": "9x16", "seconds": 30, "fps": 30, "preset": "4k", "complexity": "simple", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 }
+    {
+      "name": "Mini-doc 16:9",
+      "type": "motion",
+      "composition": "FootageEdit-16x9",
+      "format": "16x9",
+      "seconds": 240,
+      "fps": 30,
+      "preset": "4k",
+      "complexity": "medium",
+      "aiVideoShots": 0,
+      "aiImages": 0,
+      "upscaleShots": 0,
+      "rawMinutes": 45
+    },
+    {
+      "name": "Short 9:16",
+      "type": "motion",
+      "composition": "FootageEdit-9x16",
+      "format": "9x16",
+      "seconds": 30,
+      "fps": 30,
+      "preset": "4k",
+      "complexity": "simple",
+      "aiVideoShots": 0,
+      "aiImages": 0,
+      "upscaleShots": 0,
+      "rawMinutes": 0
+    }
   ],
   "storyboard": {
     "format": "16x9",
     "fps": 30,
     "panels": [
-      { "id": "1", "title": "Hook", "seconds": 10, "shot": "Close", "camera": "static", "source": "footage", "action": "The strongest line of the interview, cold.", "onScreenText": "<the line>", "audio": "Voice only", "draw": [{ "type": "figure", "x": 60, "y": 95, "h": 70 }, { "type": "text", "x": 28, "y": 80, "text": "“…”", "size": 10 }] },
-      { "id": "2", "title": "Journey", "seconds": 90, "shot": "Medium", "camera": "static", "source": "footage", "action": "Who they are and where they started; B-roll cut on the words it shows.", "onScreenText": "<Name> · <context>", "audio": "Voice + soft bed", "draw": [{ "type": "figure", "x": 35, "y": 90, "h": 60 }, { "type": "rect", "x": 58, "y": 25, "w": 34, "h": 40, "label": "B-roll" }, { "type": "rect", "x": 8, "y": 82, "w": 30, "h": 6, "label": "name" }] },
-      { "id": "3", "title": "Turning point", "seconds": 60, "shot": "Close", "camera": "push-in", "source": "footage", "action": "The moment it changed; hold 1–2 s of silence after it.", "audio": "Bed drops out, then returns", "draw": [{ "type": "figure", "x": 50, "y": 98, "h": 80 }] },
-      { "id": "4", "title": "Payoff", "seconds": 60, "shot": "Wide", "camera": "pull-out", "source": "footage", "action": "Where they are now; music swells.", "audio": "Music swell", "draw": [{ "type": "horizon", "y": 72 }, { "type": "figure", "x": 50, "y": 72, "h": 30 }] },
-      { "id": "5", "title": "End card", "seconds": 20, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Series title and where to find more.", "onScreenText": "<series> · <channel>", "draw": [{ "type": "text", "x": 50, "y": 50, "text": "SERIES TITLE", "size": 7 }] }
+      {
+        "id": "1",
+        "title": "Hook",
+        "seconds": 10,
+        "shot": "Close",
+        "camera": "static",
+        "source": "footage",
+        "action": "The strongest line of the interview, cold.",
+        "onScreenText": "<the line>",
+        "audio": "Voice only",
+        "draw": [
+          {
+            "type": "figure",
+            "x": 60,
+            "y": 95,
+            "h": 70
+          },
+          {
+            "type": "text",
+            "x": 28,
+            "y": 80,
+            "text": "“…”",
+            "size": 10
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "title": "Journey",
+        "seconds": 90,
+        "shot": "Medium",
+        "camera": "static",
+        "source": "footage",
+        "action": "Who they are and where they started; B-roll cut on the words it shows.",
+        "onScreenText": "<Name> · <context>",
+        "audio": "Voice + soft bed",
+        "draw": [
+          {
+            "type": "figure",
+            "x": 35,
+            "y": 90,
+            "h": 60
+          },
+          {
+            "type": "rect",
+            "x": 58,
+            "y": 25,
+            "w": 34,
+            "h": 40,
+            "label": "B-roll"
+          },
+          {
+            "type": "rect",
+            "x": 8,
+            "y": 82,
+            "w": 30,
+            "h": 6,
+            "label": "name"
+          }
+        ]
+      },
+      {
+        "id": "3",
+        "title": "Turning point",
+        "seconds": 60,
+        "shot": "Close",
+        "camera": "push-in",
+        "source": "footage",
+        "action": "The moment it changed; hold 1–2 s of silence after it.",
+        "audio": "Bed drops out, then returns",
+        "draw": [
+          {
+            "type": "figure",
+            "x": 50,
+            "y": 98,
+            "h": 80
+          }
+        ]
+      },
+      {
+        "id": "4",
+        "title": "Payoff",
+        "seconds": 60,
+        "shot": "Wide",
+        "camera": "pull-out",
+        "source": "footage",
+        "action": "Where they are now; music swells.",
+        "audio": "Music swell",
+        "draw": [
+          {
+            "type": "horizon",
+            "y": 72
+          },
+          {
+            "type": "figure",
+            "x": 50,
+            "y": 72,
+            "h": 30
+          }
+        ]
+      },
+      {
+        "id": "5",
+        "title": "End card",
+        "seconds": 20,
+        "shot": "Graphic",
+        "camera": "static",
+        "source": "motion",
+        "action": "Series title and where to find more.",
+        "onScreenText": "<series> · <channel>",
+        "draw": [
+          {
+            "type": "text",
+            "x": 50,
+            "y": 50,
+            "text": "SERIES TITLE",
+            "size": 7
+          }
+        ]
+      }
     ]
   },
   "spec": {
-    "hardRules": ["Consent recorded for everyone on camera.", "Names, places and dates checked with the speaker.", "The story works audio-only."],
-    "visualNotes": ["Recipe: testimony-doc (Steven Ndukwu); Grade look=\"film\"; word-synced captions on the Short (playbook 10.5)."],
-    "qaChecklist": ["Hook is the strongest line and lands in the first 10 s.", "Turning point at 60–70% of the runtime.", "Captions match the audio word for word."]
+    "hardRules": [
+      "Consent recorded for everyone on camera.",
+      "Names, places and dates checked with the speaker.",
+      "The story works audio-only."
+    ],
+    "visualNotes": [
+      "Recipe: testimony-doc (Steven Ndukwu); Grade look=\"film\". Edit from the interview transcript with the studio-edit skill (FootageEdit); pop captions on the Short, line captions or none on the doc."
+    ],
+    "qaChecklist": [
+      "Hook is the strongest line and lands in the first 10 s.",
+      "Turning point at 60–70% of the runtime.",
+      "Captions match the audio word for word."
+    ]
   }
 }

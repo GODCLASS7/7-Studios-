@@ -1,0 +1,28 @@
+{
+  "project": "Edit pipeline test",
+  "version": 1,
+  "date": "2026-10-21",
+  "format": "9x16",
+  "fps": 30,
+  "status": "draft",
+  "panels": [
+    {
+      "id": "1",
+      "title": "Opening",
+      "seconds": 3,
+      "shot": "Wide",
+      "camera": "push-in",
+      "source": "motion",
+      "action": "Describe what happens.",
+      "draw": [
+        {
+          "type": "text",
+          "x": 50,
+          "y": 50,
+          "text": "TITLE",
+          "size": 12
+        }
+      ]
+    }
+  ]
+}

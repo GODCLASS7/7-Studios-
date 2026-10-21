@@ -12,6 +12,7 @@
     "@remotion/captions": "4.0.537",
     "@remotion/cli": "4.0.537",
     "@remotion/fonts": "4.0.537",
+    "@remotion/install-whisper-cpp": "4.0.537",
     "@remotion/layout-utils": "4.0.537",
     "@remotion/light-leaks": "4.0.537",
     "@remotion/media-utils": "4.0.537",
@@ -48,7 +49,15 @@
     "fetch-asset": "node scripts/fetch-asset.mjs",
     "new-job": "node scripts/new-job.mjs",
     "loudnorm": "node scripts/loudnorm.mjs",
-    "spec": "node scripts/spec.mjs"
+    "spec": "node scripts/spec.mjs",
+    "transcribe": "node scripts/transcribe.mjs",
+    "pack": "node scripts/pack.mjs",
+    "autocut": "node scripts/autocut.mjs",
+    "edl": "node scripts/edl.mjs",
+    "timeline": "node scripts/timeline.mjs",
+    "cutcheck": "node scripts/cutcheck.mjs",
+    "lyrics": "node scripts/lyrics.mjs",
+    "analyze-reference": "node scripts/analyze-reference.mjs"
   },
   "allowScripts": {
     "esbuild": false

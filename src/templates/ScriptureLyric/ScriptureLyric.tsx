@@ -9,12 +9,19 @@ import { CutoutStrip, font, Grain, InkText, onTwos, PAPER, PaperTexture } from "
 //
 // Text: "\n" always breaks a line; "|" marks the preferred break, used in portrait
 // (9:16, 4:5) and in landscape for phrases longer than 30 characters.
+//
+// Timing: phrases play back to back for `seconds` each (verses, beatless pads),
+// or, when phrases have `start`, each card lands at its own time and holds for
+// `seconds` (songs: times come from scripts/lyrics.mjs). Gaps between cards
+// (intros, instrumentals) show the empty page; `intro` adds a title card
+// before the first line.
 
 export const scriptureSchema = z.object({
   overline: z.string(),
   reference: z.string(),
   version: z.string().optional(),
-  phrases: z.array(z.object({ text: z.string(), seconds: z.number(), emphasis: z.array(z.string()).optional() })),
+  phrases: z.array(z.object({ text: z.string(), seconds: z.number(), start: z.number().optional(), emphasis: z.array(z.string()).optional() })),
+  intro: z.object({ title: z.string(), sub: z.string().optional() }).optional(),
   endSeconds: z.number(),
   audio: z.string().optional(),
   // Still mode: show this phrase fully landed (for posters and scripture cards).
@@ -22,8 +29,19 @@ export const scriptureSchema = z.object({
 });
 export type ScriptureProps = z.infer<typeof scriptureSchema>;
 
+// Start time (s) of every phrase, and when the end card begins.
+const timeline = (phrases: ScriptureProps["phrases"]) => {
+  let at = 0;
+  const starts = phrases.map((p) => {
+    const s = p.start ?? at;
+    at = s + p.seconds;
+    return s;
+  });
+  return { starts, end: Math.max(0, ...phrases.map((p, i) => starts[i] + p.seconds)) };
+};
+
 export const calcScripture: CalculateMetadataFunction<ScriptureProps> = ({ props }) => ({
-  durationInFrames: Math.max(1, Math.round((props.phrases.reduce((t, p) => t + p.seconds, 0) + props.endSeconds) * 30)),
+  durationInFrames: Math.max(1, Math.round((timeline(props.phrases).end + props.endSeconds) * 30)),
 });
 
 const useLayout = () => {
@@ -93,10 +111,10 @@ const EndCard: React.FC<{ reference: string; version?: string; overline: string;
       <CutoutStrip seed="end" inAt={0} outAt={99999} tilt={-2} padding="0.35em 0.8em 0.45em">
         <InkText
           id="ref"
-          text={reference}
+          text={reference.length > 20 ? reference.replace(" · ", "\n") : reference}
           startAt={6}
           charFrames={0.9}
-          style={{ fontFamily: font.serif, fontStyle: "italic", fontWeight: 600, fontSize: (portrait ? 120 : 132) * u, lineHeight: 1.05 }}
+          style={{ fontFamily: font.serif, fontStyle: "italic", fontWeight: 600, fontSize: (portrait ? 120 : 132) * u * Math.min(1, (portrait ? 14 : 24) / Math.max(1, reference.length)) ** 0.7, lineHeight: 1.08, textAlign: "center", maxWidth: (portrait ? 820 : 1500) * u }}
         />
       </CutoutStrip>
       {version ? (
@@ -123,9 +141,25 @@ const EndCard: React.FC<{ reference: string; version?: string; overline: string;
   );
 };
 
+const IntroCard: React.FC<{ title: string; sub?: string; frames: number }> = ({ title, sub, frames }) => {
+  const { portrait, u } = useLayout();
+  const frame = onTwos(useCurrentFrame());
+  const subIn = interpolate(frame, [16, 26], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  return (
+    <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", flexDirection: "column", gap: 34 * u }}>
+      <CutoutStrip seed="intro" inAt={0} outAt={frames} tilt={1.6} padding="0.4em 0.9em 0.5em">
+        <InkText id="intro" text={title} startAt={6} charFrames={0.9} style={{ fontFamily: font.serif, fontWeight: 640, fontSize: (portrait ? 110 : 120) * u, lineHeight: 1.05, textAlign: "center" }} />
+      </CutoutStrip>
+      {sub ? <div style={{ fontFamily: font.body, fontWeight: 700, fontSize: 28 * u, letterSpacing: "0.38em", color: PAPER.ink, opacity: 0.7 * subIn * interpolate(frame, [frames - 8, frames], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) }}>{sub}</div> : null}
+    </AbsoluteFill>
+  );
+};
+
 export const ScriptureLyric: React.FC<ScriptureProps> = (props) => {
   const { fps } = useVideoConfig();
-  let at = 0;
+  const { starts, end } = timeline(props.phrases);
+  const at = Math.round(end * fps);
+  const introFrames = props.intro && props.phrases.length ? Math.round((starts[0] - 0.2) * fps) : 0;
   const still = props.stillPhrase !== undefined;
   const endFrames = Math.round(props.endSeconds * fps);
   return (
@@ -139,17 +173,22 @@ export const ScriptureLyric: React.FC<ScriptureProps> = (props) => {
         </>
       ) : (
         <>
+          {props.intro && introFrames >= 1.5 * fps ? (
+            <Sequence durationInFrames={introFrames} layout="none">
+              <IntroCard title={props.intro.title} sub={props.intro.sub} frames={introFrames} />
+            </Sequence>
+          ) : null}
           {props.phrases.map((p, i) => {
-            const from = at;
+            const from = Math.round(starts[i] * fps);
             const frames = Math.round(p.seconds * fps);
-            at += frames;
             return (
               <Sequence key={i} from={from} durationInFrames={frames} layout="none">
                 <PhraseCard index={i} text={p.text} emphasis={p.emphasis} frames={frames} />
               </Sequence>
             );
           })}
-          <Sequence durationInFrames={at} layout="none">
+          {/* The intro card stands alone; the overline and footer arrive with the first line. */}
+          <Sequence from={introFrames >= 1.5 * fps ? introFrames : 0} durationInFrames={Math.max(1, at - (introFrames >= 1.5 * fps ? introFrames : 0))} layout="none">
             <Overline text={props.overline} />
             <Footer reference={props.reference} />
           </Sequence>

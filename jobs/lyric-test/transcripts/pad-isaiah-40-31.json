@@ -1,0 +1,205 @@
+{
+  "source": "jobs/wait-isaiah-40-31/audio/pad-isaiah-40-31.wav",
+  "engine": "align",
+  "duration": 20,
+  "words": [
+    {
+      "text": "but",
+      "start": 3.2,
+      "end": 3.48,
+      "type": "word"
+    },
+    {
+      "text": "they",
+      "start": 3.52,
+      "end": 3.8,
+      "type": "word"
+    },
+    {
+      "text": "that",
+      "start": 3.84,
+      "end": 4.12,
+      "type": "word"
+    },
+    {
+      "text": "wait",
+      "start": 4.16,
+      "end": 4.44,
+      "type": "word"
+    },
+    {
+      "text": "upon",
+      "start": 4.48,
+      "end": 4.76,
+      "type": "word"
+    },
+    {
+      "text": "the",
+      "start": 4.8,
+      "end": 5.08,
+      "type": "word"
+    },
+    {
+      "text": "lord",
+      "start": 5.12,
+      "end": 5.4,
+      "type": "word"
+    },
+    {
+      "text": "shall",
+      "start": 6.04,
+      "end": 6.32,
+      "type": "word"
+    },
+    {
+      "text": "renew",
+      "start": 6.36,
+      "end": 6.64,
+      "type": "word"
+    },
+    {
+      "text": "their",
+      "start": 6.68,
+      "end": 6.96,
+      "type": "word"
+    },
+    {
+      "text": "strenth",
+      "start": 7,
+      "end": 7.28,
+      "type": "word"
+    },
+    {
+      "text": "they",
+      "start": 7.32,
+      "end": 7.6,
+      "type": "word"
+    },
+    {
+      "text": "shall",
+      "start": 7.64,
+      "end": 7.92,
+      "type": "word"
+    },
+    {
+      "text": "mount",
+      "start": 7.96,
+      "end": 8.24,
+      "type": "word"
+    },
+    {
+      "text": "up",
+      "start": 8.88,
+      "end": 9.16,
+      "type": "word"
+    },
+    {
+      "text": "with",
+      "start": 9.2,
+      "end": 9.48,
+      "type": "word"
+    },
+    {
+      "text": "wings",
+      "start": 9.52,
+      "end": 9.8,
+      "type": "word"
+    },
+    {
+      "text": "as",
+      "start": 9.84,
+      "end": 10.12,
+      "type": "word"
+    },
+    {
+      "text": "eagles",
+      "start": 10.16,
+      "end": 10.44,
+      "type": "word"
+    },
+    {
+      "text": "they",
+      "start": 10.48,
+      "end": 10.76,
+      "type": "word"
+    },
+    {
+      "text": "shall",
+      "start": 10.8,
+      "end": 11.08,
+      "type": "word"
+    },
+    {
+      "text": "run",
+      "start": 11.72,
+      "end": 12,
+      "type": "word"
+    },
+    {
+      "text": "and",
+      "start": 12.04,
+      "end": 12.32,
+      "type": "word"
+    },
+    {
+      "text": "not",
+      "start": 12.36,
+      "end": 12.64,
+      "type": "word"
+    },
+    {
+      "text": "be",
+      "start": 12.68,
+      "end": 12.96,
+      "type": "word"
+    },
+    {
+      "text": "weary",
+      "start": 13,
+      "end": 13.28,
+      "type": "word"
+    },
+    {
+      "text": "and",
+      "start": 13.32,
+      "end": 13.6,
+      "type": "word"
+    },
+    {
+      "text": "they",
+      "start": 13.64,
+      "end": 13.92,
+      "type": "word"
+    },
+    {
+      "text": "shall",
+      "start": 14.56,
+      "end": 14.84,
+      "type": "word"
+    },
+    {
+      "text": "walk",
+      "start": 14.88,
+      "end": 15.16,
+      "type": "word"
+    },
+    {
+      "text": "and",
+      "start": 15.2,
+      "end": 15.48,
+      "type": "word"
+    },
+    {
+      "text": "not",
+      "start": 15.52,
+      "end": 15.8,
+      "type": "word"
+    },
+    {
+      "text": "faint",
+      "start": 15.84,
+      "end": 16.12,
+      "type": "word"
+    }
+  ]
+}

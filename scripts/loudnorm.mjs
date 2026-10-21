@@ -9,13 +9,15 @@
 // Uses Remotion's bundled ffmpeg/ffprobe (loudnorm is included).
 
 import { spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 
 const [input, output, ...rest] = process.argv.slice(2);
 if (!input || !output || !existsSync(input)) {
   console.error("Usage: node scripts/loudnorm.mjs <in> <out> [--lufs=-14] [--tp=-1.5]");
   process.exit(1);
 }
+mkdirSync(dirname(output), { recursive: true });
 const opt = Object.fromEntries(rest.filter((a) => a.startsWith("--")).map((a) => a.slice(2).split("=")));
 const I = Number(opt.lufs ?? -14);
 const TP = Number(opt.tp ?? -1.5);

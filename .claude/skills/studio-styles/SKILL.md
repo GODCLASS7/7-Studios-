@@ -13,6 +13,8 @@ Source: the user's **Video Editor Reference Library** (claude.ai doc, 21 Oct 202
 
 Record the recipe(s) a job uses in `jobs/<id>/spec.json` → `visualNotes`, so the master spec carries them.
 
+**Before planning any job, read the client's section in `house-notes.md`** (preferences learned from earlier feedback) and apply it by default.
+
 ---
 
 ## 1. `atmosphere`: sound-led atmosphere (Peter McKinnon)
@@ -111,6 +113,37 @@ References: [Chibuzor](https://www.youtube.com/@hellochibuzor) · [Fibman Beats]
 
 ---
 
+## Learning a new recipe from reference videos
+
+When the user shares 3–5 videos whose editing they like (theirs or another creator's), turn the shared style into a recipe. One video is a guess; five is a pattern.
+
+1. **Get the files.**
+   - On the user's computer: `npm run analyze-reference -- <name> --fetch <url> <url> …` (needs yt-dlp).
+   - In a cloud session, TikTok and Instagram are usually blocked, so ask for the files and pass the paths: `npm run analyze-reference -- <name> <file|folder…>`.
+   - Downloads are for study only. Never reuse the creator's footage, music or graphics in a delivery.
+2. **Measure.** The script writes `references/<name>/analysis.md` and sheets. It covers:
+   - shot lengths, cuts per minute and cuts in the first 3 s, with punch-ins and jump cuts counted;
+   - loudness;
+   - speaking pace, if you transcribe the videos into `references/<name>/transcripts/` with `npm run transcribe` (any job id, then move the files).
+3. **Read the pictures.** `sheets/<video>-shots.png` shows the first frame of every shot; `sheets/<video>-hook.png` shows the first 3 s every 0.25 s. If you need a closer look, `npm run timeline` draws any stretch.
+4. **Write the breakdown** in `analysis.md`. Ignore anything that only happens once. Cover:
+   - pacing and jump cuts;
+   - zooms and punch-ins;
+   - captions: font, size, colour, position, words per line, animation and highlighted words;
+   - graphics, pop-ups and b-roll;
+   - colour;
+   - sound;
+   - the hook.
+
+   Show it and ask about anything unclear.
+5. **Once approved, save it** under *Learned recipes* below, in the same table format as recipes 1–6 (Pacing, Look, Sound, Type, Remotion, Shoot, QA). Put the measured numbers in the rules, and map each rule onto Motion Studio settings, such as `edl.json` captions, `autocut --pause`, punch-in `zoom`, a `Grade` look and recipe `hook-2s`. Name the source videos in a References line.
+
+## Learned recipes
+
+_None yet. Recipes learned from reference videos go here (section 7 onwards)._
+
+---
+
 ## Presets (start a job from one)
 
 `npm run new-job -- <id> "<title>" --preset=<name>` copies a preset's brief defaults, deliverables, a drawn storyboard, and spec rules (hard rules, motion vocabulary, QA) into the new job. Everything stays editable. The presets live in `presets/*.json`.
@@ -118,8 +151,9 @@ References: [Chibuzor](https://www.youtube.com/@hellochibuzor) · [Fibman Beats]
 | Preset | For | Recipes | Template / main deliverable |
 |---|---|---|---|
 | `worship-clip` | Worship With Me sessions | atmosphere | 9:16 30–60 s from session footage |
-| `lyric-video` | The Wait Culture releases, scripture | illustrated-type, atmosphere | `ScriptureLyric` 9:16 + 16:9 + 4:5 card |
-| `testimony-doc` | Testimonies, HSM stories | testimony-doc | 3–5 min 16:9 + 30 s 9:16 Short |
+| `lyric-video` | The Wait Culture releases, scripture, full songs | illustrated-type, atmosphere | `ScriptureLyric` 9:16 + 16:9 + 4:5 card; songs timed with `npm run lyrics` (`studio-edit` §6) |
+| `testimony-doc` | Testimonies, HSM stories | testimony-doc | 3–5 min 16:9 + 30 s 9:16 Short, edited from the interview (`studio-edit`) |
+| `talking-head` | Short-form edits of raw talking-head footage (sermon clips, teaching, vlogs) | hook-2s, phone-first-volume | `FootageEdit` 9:16 30–60 s with pop captions (`studio-edit`) |
 | `campus-kit` | Campus Invasion (8 universities) | phone-first-volume, hook-2s | 30 s 9:16 recap per campus |
 | `service-promo` | Service themes, Men's Month, Carols, 31st Night | hook-2s, illustrated-type | 8–12 s 9:16 + 16:9 + 4:5 poster |
 | `grill-reel` | Brothers on the Grill ads | product-broll, hook-2s | 10–15 s 9:16 food reel |

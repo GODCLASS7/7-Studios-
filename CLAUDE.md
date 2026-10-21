@@ -3,6 +3,7 @@
 Motion Studio is an agentic design studio that runs on Claude. It produces **still and motion graphics of every kind**, up to 4K video, ProRes masters and 300 DPI print. It works like a real studio: brief → time estimate → **storyboard you approve** → **design previews you approve** → production → review cut → masters → QC → delivery.
 
 - **Remotion** (React → frames → video/stills) makes everything exact: typography, layout, data, motion, timing, captions, grade and mix.
+- **Footage editing from the transcript** (the video-use method): word-level transcripts (ElevenLabs Scribe or local Whisper) let Claude cut raw talking heads, interviews and testimonies, add word-by-word captions and time lyric cards to a song, without watching the video. See the `studio-edit` skill.
 - **Generative models** reached through Claude's connectors make the realistic footage and imagery. Higgsfield is the main route, with Seedance, Kling, Veo, Cinema Studio, FLUX, Nano Banana, Seedream, GPT Image and Topaz upscaling. **SetField** is an optional local engine: offline, unlimited takes on your own GPU, at 480p/720p; set it per job with `"aiProvider": "setfield"`. See `.claude/skills/studio/providers.md`.
 
 These instructions are for anyone working in this repo, whether a person or Claude.
@@ -22,7 +23,8 @@ These instructions are for anyone working in this repo, whether a person or Clau
 | Bundler | Rspack (`Config.setRspack(true)` in `remotion.config.ts`) |
 | Frame format | JPEG by default (fast drafts); final presets switch to PNG |
 | Finishing kit | `@remotion/transitions`, `motion-blur`, `light-leaks`, `noise`, `paths`, `shapes`, `layout-utils`, `media-utils`, `captions`, `fonts`, `zod-types`; `zod` 4 |
-| Fonts | Bundled in `public/brand/fonts` (Inter variable, SIL OFL) and loaded with `@remotion/fonts` |
+| Fonts | Bundled in `public/brand/fonts` (Inter variable, Fraunces; SIL OFL) and loaded with `@remotion/fonts` |
+| Transcription | ElevenLabs Scribe + forced alignment (key in `.env`), or `@remotion/install-whisper-cpp` (local Whisper); a full system **ffmpeg** on PATH for cutting, analysis and checks |
 
 ## 2. Layout
 
@@ -35,13 +37,17 @@ motion-studio/
 │   ├── Root.tsx              ← registers every <Composition> and <Still>
 │   ├── lib/                  ← THE DESIGN SYSTEM: tokens, formats, Grade, Grain, FootageShot, KineticTitle
 │   ├── storyboard/           ← storyboard schema, panel drawing, approval sheet, animatic
-│   ├── templates/            ← reusable, props-driven templates (e.g. ScriptureLyric)
+│   ├── templates/            ← reusable, props-driven templates: ScriptureLyric (verses, songs), FootageEdit (edits of real footage)
 │   ├── videos/               ← one folder per deliverable (scenes, stills, concepts)
 │   │   └── StudioCheck.tsx   ← 4 s test card (used by the benchmark; keep it)
 │   └── components/           ← job-specific components shared across videos
-├── scripts/                  ← render presets, storyboard, estimate, bench, qc, fetch-asset, new-job, spec, loudnorm
+├── scripts/                  ← render presets, storyboard, estimate, bench, qc, fetch-asset, new-job, spec, loudnorm;
+│                               footage: transcribe, pack, autocut, edl, timeline, cutcheck, lyrics, analyze-reference
 ├── presets/                  ← job presets (brief, deliverables, drawn storyboard, spec rules) for recurring work
-├── jobs/<id>/                ← job documents: brief, job.json, storyboard.json, estimate, approvals, assets, qc
+├── jobs/<id>/                ← job documents: brief, job.json, storyboard.json, estimate, approvals, assets, qc;
+│                               footage jobs add transcripts/, takes.md, edl.json, edit.md; songs add lyrics.txt
+├── references/<name>/        ← reference videos for learning a style (media git-ignored; analysis.md kept)
+├── .env                      ← API keys (git-ignored; template in .env.example)
 ├── public/
 │   ├── brand/                ← studio brand: fonts/, luts/, logos
 │   ├── jobs/<id>/            ← job media: footage/, stills/, panels/, audio/, data/, brand/
@@ -74,10 +80,20 @@ npm run loudnorm -- <in.mp4> <out.mp4> [--lufs=-14]     # two-pass loudness to t
 npm run spec -- <id> [--no-pdf]                      # master spec: jobs/<id>/SPEC.md + designed PDF
 npm run fetch-asset -- <url> <id> <footage|stills|audio|data|brand|panels> <file> [--model=… --prompt=… --credits=…]
 npm run bench                          # measure this machine's render speed (about 2 min)
+
+# Footage edits and songs (studio-edit skill)
+npm run transcribe -- <id> <media...> [--engine=elevenlabs|whisper] [--from=file] [--align=lyrics.txt]
+npm run pack -- <id>                                 # jobs/<id>/takes.md: every phrase with an ID, fillers and pauses marked
+npm run autocut -- <id> --keep=A.3,A.1-A.2           # edit list from chosen phrases: fillers out, pauses closed, punch-ins
+npm run edl -- <id>                                  # props for FootageEdit-*, voice track with 30 ms fades, edit.md
+npm run timeline -- <id> <media> <from> <to>         # filmstrip + waveform + words picture for a decision
+npm run cutcheck -- <id> <render.mp4>                # pops, black frames, flashes, jump cuts, text over faces + cut sheet
+npm run lyrics -- <id> --audio=<song> --lyrics=<txt> [--lrc=file]   # timed lyric cards for ScriptureLyric
+npm run analyze-reference -- <name> <videos…|--fetch urls…>         # measure an editing style to learn a recipe
 npx remotion compositions              # list composition IDs
 ```
 
-**Render presets:** `draft` · `review` · `4k` · `4k-hevc` · `master` (ProRes 422 HQ) · `alpha` (ProRes 4444) · `webm-alpha` · `still` · `still-4k` · `still-print`. See the `studio-finishing` skill.
+**Render presets:** `draft` · `review` · `hd` (1080p final) · `4k` · `4k-hevc` · `master` (ProRes 422 HQ) · `alpha` (ProRes 4444) · `webm-alpha` · `still` · `still-4k` · `still-print`. See the `studio-finishing` skill.
 
 ## 4. How to add a new video or still
 
@@ -147,10 +163,11 @@ These tokens live in `src/lib/tokens.ts`: colour, font, type scale, `space()`, e
 | `studio-ai-footage` | Playbook 7: AI keyframes and video (Seedance, Kling, Veo…), costs, review, upscale, composite |
 | `studio-stills` | Posters, social, thumbnails, banners and print at 300 DPI; concepts, typography, export |
 | `studio-finishing` | 4K/ProRes/alpha presets, grading, LUTs, grain, polish packages, audio loudness, platform specs, QC |
-| `studio-styles` | Style recipes from the user's Video Editor Reference Library (atmosphere, product-broll, illustrated-type, hook-2s, testimony-doc, phone-first-volume) and the job presets that use them |
+| `studio-styles` | Style recipes from the user's Video Editor Reference Library (atmosphere, product-broll, illustrated-type, hook-2s, testimony-doc, phone-first-volume), **learning new recipes from reference videos**, the job presets, and `house-notes.md` (each client's learned preferences) |
+| `studio-edit` | **Editing real footage** from the transcript (talking heads, interviews, testimonies, sermon clips), captions, cut checks, and **timed lyric cards for songs** |
 | `studio-spec` | Master specs: **export** a rebuild-ready PDF + `SPEC.md` for every delivered job, or **import** a spec or generation prompt from elsewhere (HyperFrames, After Effects…) into a Motion Studio job |
 
-**Subagents**, for parallel work on larger jobs: `motion-designer` (one per scene), `still-designer` (one per still or size set), `ai-cinematographer` (all generation, only after an approved credit quote) and `finisher` (renders and QC).
+**Subagents**, for parallel work on larger jobs: `motion-designer` (one per scene), `still-designer` (one per still or size set), `ai-cinematographer` (all generation, only after an approved credit quote), `editor` (footage edits from the transcript, one per deliverable) and `finisher` (renders and QC).
 
 **Remotion skills.** These are pinned from `remotion-dev/skills`, and `skills-lock.json` records their hashes. **Before writing Remotion code, read the relevant one.** If you're unsure which applies, start with `remotion-best-practices`, which routes to the others.
 
@@ -197,7 +214,7 @@ Run the **`studio` skill**. In short:
 
 Commit the source and job documents, not `out/`. Use short, imperative commit messages, for example "Add Promo 9:16 composition".
 
-## 10. Playbooks: the seven core prompts
+## 10. Playbooks: the core prompts
 
 Each video in this studio is code. A headless browser renders it frame by frame, so every export comes out the same. The six playbooks below cover the usual requests. **When a request matches one, follow its steps.** Copy-paste prompts are in the quote blocks; replace the `<placeholders>`.
 
@@ -295,6 +312,31 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 3. Scripture and lyrics: use the **`ScriptureLyric`** template with `--props` (phrases, emphasis, reference, translation). Check the text word for word against the translation.
 4. Run the normal gated pipeline, and export the master spec at delivery.
 
+### 10.10 Edit my raw footage
+
+> Edit the footage in `public/jobs/<id>/footage/` into a `<length>` `<format>` video. Use `<style recipe / house notes>`. Cut fillers and dead air, keep the best take of each line, hook first, captions.
+
+1. Follow the **`studio-edit`** skill: `transcribe` → `pack` → read `takes.md` → plan the hook, the takes to keep and the graphics, then **wait for approval**.
+2. `autocut --keep=…` in play order, then refine `edl.json` (face boxes, framing, captions, overlays, grade, music) → `edl`.
+3. Render `FootageEdit-<format>` `review`, run `cutcheck`, read the cut sheet and fix every FAIL before sending. Take notes in plain English, versioning each round.
+4. Finals: `loudnorm`, `qc`, `cutcheck`, master spec, and lasting feedback into `house-notes.md`.
+
+### 10.11 Lyric video for a song
+
+> Make a lyric video for `<song>` (`public/jobs/<id>/audio/<file>`), lyrics attached. I own / have cleared it.
+
+1. `new-job --preset=lyric-video`; set `seconds` to the song length and `"lyricSync": true`.
+2. Write `jobs/<id>/lyrics.txt` (one card per line, `|` breaks, `*word*` emphasis, `# intro: Title | Artist`).
+3. Timing: `transcribe --align=lyrics.txt` (ElevenLabs forced alignment), or `--lrc` from a music app, or Whisper. Then run `lyrics`. Check every card time it prints; fix `⚠ guessed` lines.
+4. Render `ScriptureLyric-*` `review` first (full songs at 4K are slow), then finals as usual.
+
+### 10.12 Learn an editing style from videos
+
+> Learn the editing style of these videos: `<3–5 links or files>`. Save it as a recipe.
+
+1. Follow *Learning a new recipe* in the **`studio-styles`** skill: `analyze-reference` (with `--fetch` on the user's computer, or uploaded files in the cloud), then read the shot and hook sheets.
+2. Write the breakdown (pacing, jump cuts, zooms, captions, graphics, colour, sound, hook), get approval, and save it as a recipe mapped to Motion Studio settings.
+
 ### Bonus ideas
 
 These combine the playbooks:
@@ -302,6 +344,8 @@ These combine the playbooks:
 - **Data story:** 10.6 with 10.5 voiceover captions.
 - **Website:** 10.3 hero loops with 10.4 cut-downs for social media.
 - **Cinematic brand film:** 10.7 footage with 10.2 beat-cut titles and 10.5 captions.
+- **Sermon → Shorts:** 10.10 on a full sermon, one `edl.json` per clip (copy the job), each with its own hook.
+- **Release week:** 10.11 lyric video plus 10.10 behind-the-scenes edit from studio footage.
 
 ## 11. Don'ts
 
@@ -310,5 +354,8 @@ These combine the playbooks:
 - Don't mix `@remotion/*` versions.
 - Don't use non-deterministic animation (see §5).
 - Don't spend generation credits without an approved quote, and don't skip an approval gate.
+- Don't ask for API keys in chat, print them or commit them; they go in `.env` or the environment's secrets.
+- Don't reuse another creator's footage, music or graphics from reference downloads; learn the style only.
+- Don't cut a speaker's words in a way that changes what they meant.
 - Don't let AI models render final text, logos, numbers or UI.
 - Note that some companies need a paid Remotion company licence: https://remotion.dev/license

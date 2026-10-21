@@ -13,3 +13,14 @@ jobs/*/.*.resolved.json
 
 # Frame captures for storyboard/frames sheets; `npm run storyboard` re-renders them every run.
 public/jobs/*/panels/
+
+# Footage-edit working files: transcription temp files, local Whisper, timeline frames, reference downloads.
+production/tmp/
+production/whisper/
+public/jobs/*/timeline/
+references/*/*
+!references/*/analysis.md
+jobs/*/.timeline.json
+# Built by `npm run edl` (voice tracks) and by the test fixture (synthetic take).
+public/jobs/*/edit/
+public/jobs/edit-test/footage/

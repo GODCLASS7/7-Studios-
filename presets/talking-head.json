@@ -1,0 +1,45 @@
+{
+  "name": "talking-head",
+  "label": "Short-form edit of raw talking-head footage (sermon clip, teaching, vlog)",
+  "recipes": ["hook-2s", "phone-first-volume"],
+  "brief": {
+    "Goal (one sentence)": "Turn raw talking-head takes into a tight vertical video that hooks in 2 seconds and keeps one idea.",
+    "Deliverables": "FootageEdit 9:16 (1080×1920; 4K if the footage is 4K), 30–60 s, pop captions; optional captions-free version",
+    "Where it will be used": "Reels, Shorts, TikTok, WhatsApp Status",
+    "Must-say copy / CTA": "Speaker's name and role once (lower third); series name or CTA on the last line",
+    "Audio": "Clean voice first; optional music bed ducked under speech; −14 LUFS",
+    "Look & feel references": "Hook-first, jump cuts with punch-ins, 3-word pop captions with the active word highlighted"
+  },
+  "deliverables": [
+    { "name": "Edit 9:16", "type": "motion", "composition": "FootageEdit-9x16", "format": "9x16", "seconds": 45, "fps": 30, "preset": "hd", "complexity": "simple", "rawMinutes": 10, "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 }
+  ],
+  "storyboard": {
+    "format": "9x16",
+    "fps": 30,
+    "panels": [
+      { "id": "1", "title": "Hook", "seconds": 3, "shot": "Close", "camera": "punch-in", "source": "footage", "action": "The strongest line in the footage, cold, first.", "onScreenText": "<hook line as pop captions>", "audio": "Voice", "draw": [{ "type": "figure", "x": 50, "y": 92, "h": 62 }, { "type": "rect", "x": 18, "y": 62, "w": 64, "h": 7, "label": "CAPTIONS" }] },
+      { "id": "2", "title": "Setup", "seconds": 12, "shot": "Medium", "camera": "static", "source": "footage", "action": "Context in the speaker's best take; fillers and dead air cut; lower third with name.", "onScreenText": "<Name> · <role>", "audio": "Voice (+ bed)", "draw": [{ "type": "figure", "x": 50, "y": 95, "h": 55 }, { "type": "rect", "x": 10, "y": 50, "w": 40, "h": 6, "label": "name" }, { "type": "rect", "x": 18, "y": 62, "w": 64, "h": 7, "label": "CAPTIONS" }] },
+      { "id": "3", "title": "Point", "seconds": 20, "shot": "Medium/Close", "camera": "punch-in", "source": "footage", "action": "The one idea; punch-in on every jump cut; pop-up on the key phrase or number.", "onScreenText": "<key phrase pop-up>", "audio": "Voice", "draw": [{ "type": "figure", "x": 50, "y": 98, "h": 70 }, { "type": "rect", "x": 26, "y": 10, "w": 48, "h": 7, "label": "POP-UP" }, { "type": "rect", "x": 18, "y": 62, "w": 64, "h": 7, "label": "CAPTIONS" }] },
+      { "id": "4", "title": "Close + CTA", "seconds": 10, "shot": "Medium", "camera": "static", "source": "footage", "action": "Strongest closing line; series name or CTA as a title.", "onScreenText": "<CTA>", "audio": "Voice; bed resolves", "draw": [{ "type": "figure", "x": 50, "y": 95, "h": 55 }, { "type": "text", "x": 50, "y": 14, "text": "CTA", "size": 6 }] }
+    ]
+  },
+  "spec": {
+    "hardRules": [
+      "Never change what the speaker meant by cutting; no invented quotes.",
+      "Every cut on a word boundary or in a pause; zero audio pops (cutcheck).",
+      "Captions match the audio word for word, never cover the face, and stay out of the bottom 20% and right 12%.",
+      "Consent from everyone on camera."
+    ],
+    "visualNotes": ["Recipes: hook-2s + phone-first-volume. Template FootageEdit; edit lane in the studio-edit skill (transcribe → pack → autocut → edl → cutcheck)."],
+    "motionVocabulary": [
+      { "name": "Punch-in jump cut", "how": "autocut alternates zoom 1.0 / 1.12 on cuts inside one take, so the jump reads as intentional." },
+      { "name": "Pop captions", "how": "Max 3 words, Inter 900 uppercase with a black stroke; active word in the accent colour with a small spring pop." },
+      { "name": "Pop-up", "how": "White card with the key phrase, springs in above the face for 2–3 s (overlay kind popup)." }
+    ],
+    "qaChecklist": [
+      "Hook plays in the first 2 s and is the strongest line.",
+      "cutcheck: no FAILs; any WARN explained.",
+      "Length within ±5 s of the target."
+    ]
+  }
+}

@@ -33,7 +33,7 @@
       "One phrase per card; one or two emphasis words per phrase, no more.",
       "Portrait line breaks are set by hand with \"|\" so no line ends on an orphan word."
     ],
-    "visualNotes": ["Recipe: illustrated-type (Ben Marriott) with atmosphere sound. Template ScriptureLyric."],
+    "visualNotes": ["Recipe: illustrated-type (Ben Marriott) with atmosphere sound. Template ScriptureLyric.", "Songs: set \"lyricSync\": true and \"seconds\" to the song length on the motion deliverables; time the cards with npm run lyrics (studio-edit skill §6)."],
     "motionVocabulary": [
       { "name": "Cut-out on twos", "how": "CutoutStrip: torn-edge strip lands in 6 frames with a slight overshoot; positions held on twos." },
       { "name": "Ink bleed", "how": "InkText: characters arrive blurred and scaled, then firm up; edge displacement settles from 9 to 1.6 and boils on twos." },

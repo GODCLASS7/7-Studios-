@@ -1,6 +1,6 @@
 ---
 name: studio
-description: Run a Motion Studio job end to end, for any still or motion design. Covers brief, time estimate, storyboard approval, style-frame approval, production (Remotion plus AI image/video generation), review cut, 4K/print masters, QC and delivery. Use for any request to make or edit a video, animation, motion graphic, title sequence, ad, explainer, poster, flyer, social graphic, thumbnail, banner or other visual design.
+description: Run a Motion Studio job end to end, for any still or motion design, or any edit of real footage. Covers brief, time estimate, storyboard approval, style-frame approval, production (Remotion plus AI image/video generation), review cut, 4K/print masters, QC and delivery. Use for any request to make or edit a video (including cutting down raw footage, talking heads, interviews and lyric videos for songs), animation, motion graphic, title sequence, ad, explainer, poster, flyer, social graphic, thumbnail, banner or other visual design.
 ---
 
 # Motion Studio: the production pipeline
@@ -22,6 +22,8 @@ If the user shares a spec, generation prompt or production document (a PDF, Mark
 2. Fill `jobs/<id>/brief.md` from what the user gave you. If they gave a URL, scrape it for copy, brand colours, fonts and logo (playbook 10.4 in CLAUDE.md, and `providers.md`).
 3. Ask **one** round of questions, only about things you cannot sensibly assume. Write every assumption into the brief's "Assumptions" line and tell the user what you assumed.
 4. Pick the matching playbook(s) from CLAUDE.md §10.
+5. Read the client's section in `.claude/skills/studio-styles/house-notes.md` and apply those preferences by default.
+6. **Raw footage or a song is the input?** Run the `studio-edit` skill for transcription, take selection, cutting, captions and cut checks, inside these phases. Put `rawMinutes` (minutes of footage to review) or `"lyricSync": true` on the deliverable, so the estimate includes them.
 
 ## Phase 1: Plan + estimate
 
@@ -56,6 +58,7 @@ If the user shares a spec, generation prompt or production document (a PDF, Mark
 
 - **Choose how to make each shot.**
   - **Remotion:** typography, logos, UI, charts, data, kinetic text, transitions and brand layouts. It's exact and free, and you can re-render any time.
+  - **Real footage** (talking heads, interviews, events): the `studio-edit` lane. Transcribe, pack, autocut, then `edl` into the `FootageEdit` template.
   - **AI video** (`studio-ai-footage` skill): photoreal people, places, products in motion, nature and cinematic b-roll.
   - **AI image:** photoreal stills, textures, environments and product shots.
   - **Never let an AI model render final text, logos, numbers or UI.** Overlay those in Remotion.
@@ -87,7 +90,7 @@ Render each deliverable with its preset. Then run `npm run loudnorm -- <render> 
 
 ## Phase 7: QC
 
-Run `npm run qc -- <file> --expect=<WxH> --fps=<n> --seconds=<n> --job=<id>` on every final. Check the design checklist on 4K stills. Resolve every FAIL, and explain any WARN you're leaving.
+Run `npm run qc -- <file> --expect=<WxH> --fps=<n> --seconds=<n> --job=<id>` on every final. For footage edits, also run `npm run cutcheck -- <id> <file>` and read its cut sheet. Check the design checklist on 4K stills. Resolve every FAIL, and explain any WARN you're leaving.
 
 ## Phase 8: Delivery
 
@@ -96,7 +99,8 @@ Run `npm run qc -- <file> --expect=<WxH> --fps=<n> --seconds=<n> --job=<id>` on 
 3. Fill `jobs/<id>/spec.json` and run `npm run spec -- <id>` (the `studio-spec` skill). This gives a master spec PDF plus `SPEC.md` that let any agent rebuild or adapt the piece. Read it before sending.
 4. Send the files and the master spec, and summarise: what was made, the specs, the credits spent (from `assets.json`) and where the source files are.
 5. Log the actual time for each phase so future estimates improve: `npm run estimate -- --log <id> <phase> <minutes>`.
-6. Commit the source (the job docs, `SPEC.md` and compositions), not `out/`.
+6. **Make the studio smarter.** Go through this job's feedback (`approvals.md` and the review notes). Add every *lasting* preference to the client's section of `.claude/skills/studio-styles/house-notes.md`, then show the user exactly what you added. For example: "captions smaller and lower on talking heads", "warmer grade, natural skin". One-off fixes don't go in. A preference that holds for every client belongs in a recipe instead.
+7. Commit the source (the job docs, `SPEC.md` and compositions), not `out/`.
 
 ## Design checklist (run it on every frame you show)
 
@@ -118,6 +122,6 @@ Version everything (v1, v2, …), and never overwrite an approved version.
 ## References
 
 - `providers.md`: every connected API or tool, what it's for, and the rules for using it.
-- `studio-ai-footage`, `studio-stills` and `studio-finishing` skills.
+- `studio-ai-footage`, `studio-stills`, `studio-finishing`, `studio-edit` (footage and songs) and `studio-styles` (recipes, house notes) skills.
 - CLAUDE.md §10: the seven playbooks.
 - Remotion skills: `remotion-best-practices` routes to the rest.

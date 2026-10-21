@@ -35,6 +35,12 @@ const D = {
   // Vendor figures: a still ~20 s, a 5 s clip ~2.5 min on an RTX 4090; smaller cards are slower.
   localImage: [0.3, 1.5], // per image
   localVideo: [2.5, 10], // per shot
+  // Footage edits (studio-edit): transcription per raw minute, then reading the takes and planning.
+  transcribeBase: [1, 3],
+  transcribePerRawMin: [0.1, 0.5],
+  editPlanBase: [4, 8],
+  editPlanPerRawMin: [0.3, 0.7],
+  lyricTiming: [3, 8], // per song: alignment, lyrics.mjs, checking every card
   qcBase: [5, 10],
   qcShareOfBuild: [0.1, 0.2],
 };
@@ -45,6 +51,7 @@ const PARALLEL = 4;
 const FALLBACK_BENCH = {
   draft: 0.03,
   review: 0.08,
+  hd: 0.1,
   "4k": 0.17,
   "4k-hevc": 0.25,
   master: 0.3,
@@ -134,6 +141,8 @@ const stills = spec.deliverables.filter((d) => d.type === "still");
 const totalShots = spec.deliverables.reduce((n, d) => n + (d.aiVideoShots || 0), 0);
 const totalImages = spec.deliverables.reduce((n, d) => n + (d.aiImages || 0), 0);
 const totalUpscales = spec.deliverables.reduce((n, d) => n + (d.upscaleShots || 0), 0);
+const rawMinutes = spec.deliverables.reduce((n, d) => n + (d.rawMinutes || 0), 0);
+const songs = spec.deliverables.filter((d) => d.lyricSync).length;
 
 add("brief", "Brief, questions & assumptions", "Claude", spec.researchUrl ? sum(D.brief, D.research) : D.brief);
 add("plan", "Production plan & estimate", "Claude", D.plan);
@@ -143,6 +152,12 @@ if (motion.length) {
 }
 add("style", `Style frames / design previews (${spec.deliverables.length} deliverable${spec.deliverables.length > 1 ? "s" : ""})`, "Claude", scale(D.styleFrames, Math.max(1, motion.length) + stills.length * 0.5));
 gate("Approve style frames");
+if (rawMinutes) {
+  add("transcribe", `Transcribe ${rawMinutes} min of footage (word level)`, "Provider", sum(D.transcribeBase, scale(D.transcribePerRawMin, rawMinutes)));
+  add("edit-plan", "Read takes, pick the hook and best takes, edit plan", "Claude", sum(D.editPlanBase, scale(D.editPlanPerRawMin, rawMinutes)));
+  gate("Approve edit plan");
+}
+if (songs) add("lyric-timing", `Time lyric cards to the vocal (${songs} song${songs > 1 ? "s" : ""})`, "Claude", scale(D.lyricTiming, songs));
 // AI generation: Higgsfield (default, cloud, parallel) or SetField (optional, local GPU, sequential).
 const local = spec.aiProvider === "setfield";
 if (totalImages) {
