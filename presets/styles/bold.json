@@ -1,0 +1,19 @@
+{
+  "name": "bold",
+  "description": "Kinetic words with the punch word huge behind your head.",
+  "for": "Hooks, strong opinions",
+  "look": "bold",
+  "grade": "neutral",
+  "captions": {
+    "punch": "auto"
+  },
+  "sfx": "auto",
+  "autocut": {
+    "pause": 0.3,
+    "punch": "alternate"
+  },
+  "suggestedFx": [
+    "clone",
+    "god-rays"
+  ]
+}

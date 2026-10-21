@@ -1,0 +1,23 @@
+{
+  "name": "color-cards",
+  "description": "A day told in pieces, broken up by flat colour cards and numbered points.",
+  "for": "Day in the life, recaps, lists",
+  "look": "classic",
+  "grade": "punchy",
+  "captions": {
+    "style": "gradient"
+  },
+  "sfx": "auto",
+  "autocut": {
+    "pause": 0.3,
+    "punch": "alternate"
+  },
+  "titles": {
+    "style": "poster"
+  },
+  "suggestedFx": [
+    "chips",
+    "checklist",
+    "counter"
+  ]
+}

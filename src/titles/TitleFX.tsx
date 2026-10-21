@@ -12,7 +12,7 @@ import { z } from "zod";
 import { ease, font, onTwos, useBrand } from "../lib";
 
 // Cinematic titles for any footage (behind or in front of the person, or on
-// transparency for other editors). Seven styles, each with its own entrance, hold
+// transparency for other editors). Eight styles, each with its own entrance, hold
 // and exit, all driven by the frame so every render matches:
 //   cutout     magazine cut-out letters on coloured paper, placed one by one
 //   editorial  a huge serif word that rises out of a mask and tightens
@@ -21,6 +21,7 @@ import { ease, font, onTwos, useBrand } from "../lib";
 //   extrude    solid 3D block letters that swing in on a perspective camera
 //   poster     stacked condensed lines, each filling the width, with an accent bar
 //   outline    letters drawn as a stroke, then filled
+//   tag        a sticky label that pops on; pinned, a leader line runs to the spot it follows
 // "|" in the text breaks the line. In editorial, *word* sets a word in the accent
 // colour, in italic. Colours default to the job's brand kit.
 
@@ -32,6 +33,7 @@ export const TITLE_STYLES = [
   "extrude",
   "poster",
   "outline",
+  "tag",
 ] as const;
 export type TitleStyle = (typeof TITLE_STYLES)[number];
 
@@ -780,6 +782,113 @@ const Outline: React.FC<StyleProps> = ({ t, u, W, H, c }) => {
   );
 };
 
+// A sticky label. Pinned, the label sits at the offset (x, y) from the tracked
+// spot and a leader line with a dot runs back to it, so it reads as "this, here".
+const Tag: React.FC<StyleProps> = ({ t, u, W, H, a }) => {
+  const { frame, fps, exit } = useLife(t.durationInFrames, 0.4, 0.3);
+  const pop = spring({
+    frame,
+    fps,
+    config: { damping: 11, stiffness: 190 },
+    durationInFrames: 14,
+  });
+  const line = interpolate(frame, [2, 10], [0, 1], {
+    ...clamp,
+    easing: ease.out,
+  });
+  const pinned = Boolean(t.pin && t.pin.length > 1);
+  const dx = -t.x * W;
+  const dy = -t.y * H;
+  const fs = 40 * u * t.size;
+  return (
+    <div style={{ position: "relative", opacity: 1 - exit }}>
+      {pinned ? (
+        <svg
+          width={1}
+          height={1}
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            overflow: "visible",
+          }}
+        >
+          <line
+            x1={0}
+            y1={0}
+            x2={dx * line}
+            y2={dy * line}
+            stroke="#fff"
+            strokeWidth={3 * u}
+            strokeLinecap="round"
+            style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.5))" }}
+          />
+          <circle
+            cx={dx}
+            cy={dy}
+            r={9 * u * line}
+            fill={a}
+            stroke="#fff"
+            strokeWidth={3 * u}
+          />
+        </svg>
+      ) : null}
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          gap: 14 * u,
+          padding: `${14 * u * t.size}px ${24 * u * t.size}px`,
+          borderRadius: 16 * u * t.size,
+          backgroundColor: "#FFFFFF",
+          boxShadow: `0 ${10 * u}px ${26 * u}px rgba(0,0,0,0.35)`,
+          transform: `scale(${pop}) rotate(${-2 + 2 * (1 - pop)}deg)`,
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span
+          style={{
+            width: 16 * u * t.size,
+            height: 16 * u * t.size,
+            borderRadius: 999,
+            backgroundColor: a,
+            flex: "none",
+          }}
+        />
+        <div>
+          <div
+            style={{
+              fontFamily: font.display,
+              fontWeight: 800,
+              fontSize: fs,
+              lineHeight: 1.05,
+              color: "#141418",
+            }}
+          >
+            {lines(t.text).join(" ")}
+          </div>
+          {t.sub ? (
+            <div
+              style={{
+                fontFamily: font.mono,
+                fontWeight: 500,
+                fontSize: fs * 0.5,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "#6A6560",
+                marginTop: 4 * u,
+              }}
+            >
+              {t.sub}
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const STYLES: Record<TitleStyle, React.FC<StyleProps>> = {
   cutout: Cutout,
   editorial: Editorial,
@@ -788,6 +897,7 @@ const STYLES: Record<TitleStyle, React.FC<StyleProps>> = {
   extrude: Extrude,
   poster: Poster,
   outline: Outline,
+  tag: Tag,
 };
 
 /** One title, placed (or pinned) in the frame. Put it in a <Sequence> of its own length. */

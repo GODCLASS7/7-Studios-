@@ -115,6 +115,7 @@ const SAMPLE: Record<
   extrude: { text: "New York" },
   poster: { text: "Motion|Design|Week", sub: "21–27 October · Accra" },
   outline: { text: "Waiting" },
+  tag: { text: "Studio B", sub: "Recording" },
 };
 export const titleReelDefaults: TitleReelProps = {
   durationInFrames: TITLE_STYLES.length * 60,

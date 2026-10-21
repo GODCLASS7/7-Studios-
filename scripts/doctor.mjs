@@ -64,6 +64,11 @@ const remote = sh("git", ["remote", "-v"]).stdout || "";
 const dirty = (sh("git", ["status", "--porcelain"]).stdout || "").trim().split("\n").filter(Boolean).length;
 add("Backup (git)", remote.trim() ? "ok" : "warn", remote.trim() ? remote.split("\n")[0].split(/\s+/)[1] : `no remote: the project exists only on this machine${dirty ? `, ${dirty} uncommitted change(s)` : ""}`, "Create a private GitHub repo and push (git remote add origin …; git push -u origin main)");
 
+// Approved posts whose time has passed without going out (a scheduled task didn't run).
+const posts = existsSync("production/posts.json") ? JSON.parse(readFileSync("production/posts.json", "utf8")).posts || [] : [];
+const overdue = posts.filter((p) => p.status === "approved" && p.at && Date.parse(p.at) < Date.now() - 15 * 60 * 1000);
+if (posts.length) add("Post queue", overdue.length ? "warn" : "ok", overdue.length ? `${overdue.length} approved post(s) past their time: ${overdue.map((p) => p.id).join(", ")}` : `${posts.filter((p) => p.status === "approved").length} approved, waiting`, "npm run posts -- list; post them (after posts check) or cancel them");
+
 // Disk
 try {
   const s = statfsSync(".");

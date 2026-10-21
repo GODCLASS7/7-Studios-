@@ -1,0 +1,26 @@
+{
+  "name": "cozy",
+  "description": "A dim warm room, calm serif captions and big cream chapter titles.",
+  "for": "Faceless how-tos, wellness, home",
+  "look": "classic",
+  "grade": "warm",
+  "captions": {
+    "style": "serif",
+    "uppercase": false
+  },
+  "sfx": "auto",
+  "music": {
+    "volume": 0.14
+  },
+  "autocut": {
+    "pause": 0.4,
+    "punch": "none"
+  },
+  "titles": {
+    "style": "editorial",
+    "color": "#F3E9D8"
+  },
+  "suggestedFx": [
+    "phone"
+  ]
+}

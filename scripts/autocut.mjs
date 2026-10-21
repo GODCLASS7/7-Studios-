@@ -10,9 +10,10 @@
 // Claude picks the best take of each line by reading takes.md; this script
 // does the precise cutting.
 //
-// Writes jobs/<job>/edl.json. Hand-edited fields (captions, overlays, grade,
-// music, source face boxes) survive a re-run; segments are replaced and the
-// version goes up by one.
+// Writes jobs/<job>/edl.json. Every hand-edited field (captions, looks, titles,
+// effects, brand, music, source face boxes…) survives a re-run; segments are
+// replaced and the version goes up by one. --style=<name> takes the pace and
+// punch-ins from an editing style (presets/styles/) and records it.
 
 import { join } from "node:path";
 import { isFiller, parseArgs, readJson, writeJson } from "./lib/media.mjs";
@@ -28,8 +29,12 @@ if (!takes) {
   console.error(`No takes yet. Run: npm run pack -- ${job}`);
   process.exit(1);
 }
-const PAUSE = Number(opt.pause ?? 0.35);
-const PAD = Number(opt.pad ?? 0.06);
+// An editing style (presets/styles/<name>.json) sets the pace and punch-ins; flags still win.
+const style = opt.style ? readJson(join("presets", "styles", `${opt.style}.json`)) : null;
+if (opt.style && !style) throw new Error(`Unknown style "${opt.style}" (presets/styles/)`);
+const PAUSE = Number(opt.pause ?? style?.autocut?.pause ?? 0.35);
+const PAD = Number(opt.pad ?? style?.autocut?.pad ?? 0.06);
+opt.punch ??= style?.autocut?.punch;
 const extraFillers = String(opt.fillers || "").split(",").map((s) => s.trim()).filter(Boolean);
 const byId = Object.fromEntries(takes.phrases.map((p) => [p.id, p]));
 
@@ -108,18 +113,20 @@ if (opt.punch === "editorial") {
 const path = join("jobs", job, "edl.json");
 const old = readJson(path, {});
 const sources = Object.fromEntries(takes.sources.map((s) => [s.key, { file: s.file, ...(old.sources?.[s.key] || {}), transcript: s.transcript }]));
+// Everything autocut doesn't own (looks, titles, effects, brand, music…) is kept as it was.
 const edl = {
+  ...old,
+  ...(opt.style ? { style: opt.style } : {}),
   job,
   version: (old.version || 0) + 1,
   format: opt.format || old.format || "9x16",
   fps: old.fps || 30,
   sources,
   segments: merged,
-  captions: old.captions || { style: "pop", maxWords: 3, position: 0.66, uppercase: true, highlight: "#E8B44A" },
+  // With an editing style, its caption settings apply unless edl.json sets its own.
+  captions: old.captions || (opt.style || old.style ? {} : { style: "pop", maxWords: 3, position: 0.66, uppercase: true, highlight: "#E8B44A" }),
   grade: old.grade ?? "none",
   overlays: old.overlays || [],
-  ...(old.music ? { music: old.music } : {}),
-  ...(old.hook ? { hook: old.hook } : {}),
 };
 writeJson(path, edl);
 const total = merged.reduce((t, s) => t + s.out - s.in, 0);

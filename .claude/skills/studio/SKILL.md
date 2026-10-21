@@ -64,11 +64,12 @@ If the user shares a spec, generation prompt or production document (a PDF, Mark
   - **Never let an AI model render final text, logos, numbers or UI.** Overlay those in Remotion.
 - Build compositions in `src/videos/<Name>/`, one scene per component, using the design system in `src/lib`. The pieces are tokens, formats, `Grade`, `Grain`, `FootageShot` and `KineticTitle`. Register every deliverable in `src/Root.tsx`.
 - Ready-made templates, before building from scratch:
-  - `TitleFX` / `Titles-*`: cinematic titles in 7 styles (cutout, editorial, inflate, neon, extrude, poster, outline), over footage or on transparency.
+  - `TitleFX` / `Titles-*`: cinematic titles in 8 styles (cutout, editorial, inflate, neon, extrude, poster, outline, tag), over footage or on transparency.
+  - `Carousel-*`: carousel posts in 8 looks (`npm run carousel`, studio-stills).
   - `Cards-*`: a kinetic 3D card line-up (carousel or stack) for speakers, campuses, products and stats.
   - `Tutorial-*`: a presenter plus screen recordings that zoom to each click.
   - `ScriptureLyric-*`: verses and songs.
-  - `FootageEdit-*`: edits of real footage.
+  - `FootageEdit-*`: edits of real footage, with the effects pack (`fx`), 14 caption styles and 12 one-pick editing styles (studio-edit §3g–§3h), and trial versions (`npm run variants`).
 - For a job with 3 or more independent scenes or stills, hand them to subagents in parallel (`.claude/agents/`):
   - `motion-designer`, one per scene;
   - `still-designer`, one per still;
@@ -129,5 +130,5 @@ Version everything (v1, v2, …), and never overwrite an approved version.
 
 - `providers.md`: every connected API or tool, what it's for, and the rules for using it.
 - `studio-ai-footage`, `studio-stills`, `studio-finishing`, `studio-edit` (footage and songs) and `studio-styles` (recipes, house notes) skills.
-- CLAUDE.md §10: the seven playbooks.
+- CLAUDE.md §10: the playbooks (10.1–10.18).
 - Remotion skills: `remotion-best-practices` routes to the rest.

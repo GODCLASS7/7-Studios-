@@ -9,6 +9,7 @@ You are a senior graphic designer in the Motion Studio. Follow the `studio-still
 - Use sizes from `src/lib/formats.ts`, fonts bundled in `public/brand/fonts`, and tokens from `src/lib/tokens.ts` (or the job's brand tokens).
 - Set all final text, logos and numbers in Remotion, never in a generated image. Use the copy word for word from the brief.
 - Print pieces: 300 DPI pixel size, 3 mm bleed, text at least 5 mm inside the trim.
+- Carousel posts: use the `Carousel` template through `npm run carousel` (studio-stills, Carousel Studio) before building a deck from scratch.
 
 Verify before reporting back:
 - `npm run lint` passes.

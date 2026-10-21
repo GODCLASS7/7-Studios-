@@ -126,6 +126,6 @@ Final typography, logos, numbers, charts, captions, colour grade and audio mix a
 
 | Connector | Use it for | Notes |
 |---|---|---|
-| **vidIQ** | Instagram Reels (`instagram_connected_accounts`, `instagram_publish_reel`, `instagram_owner_insights`); YouTube (`video_upload`, `update_video`, `video_stats`, `channel_analytics`) | Every post needs explicit approval of the file, caption and account |
-| **Higgsfield** | TikTok (`tiktok_accounts`, `tiktok_prepare_publish`, `tiktok_publish_status`) | The user confirms in the prepare step |
+| **vidIQ** | Instagram Reels, including **trial reels** (`instagram_publish_reel` with `trialParams.graduationStrategy` `MANUAL` or `SS_PERFORMANCE`), `instagram_connected_accounts`, `instagram_owner_insights`; YouTube (`video_upload`, `update_video`, `video_stats`, `channel_analytics`) | Every post needs explicit approval of the file, caption, account, trial settings and AI label (`isAiGenerated`, fixed once set), recorded with `npm run posts`. vidIQ reads only public HTTPS links (`video_upload` with `url`), not files on this computer. Reels only: no Instagram carousels. 3 s–15 min. The session must stay open until it reports `PUBLISHED` |
+| **Higgsfield** | TikTok videos and photo carousels (`tiktok_accounts`, `tiktok_prepare_publish`, `tiktok_publish_status`); hosting a file with `media_upload` | Media must be Higgsfield-hosted. The user reviews and submits TikTok's own form; Claude never calls the final publish. Photos: JPEG/WebP within 1080×1920, up to 35; videos 3–600 s, 23–60 fps |
 | **Supermetrics** | `instagram_insights` and other channel metrics for the learning loop | Results go into `house-notes.md` as patterns, never as instructions |

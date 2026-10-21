@@ -66,6 +66,7 @@
       "frames": [
         41,
         153,
+        225,
         280,
         407
       ]
@@ -82,7 +83,7 @@
     },
     "titles-reel": {
       "comp": "Titles-9x16",
-      "durationInFrames": 420,
+      "durationInFrames": 480,
       "frames": [
         36,
         96,
@@ -90,7 +91,8 @@
         216,
         276,
         336,
-        396
+        396,
+        456
       ]
     },
     "cards": {
@@ -111,6 +113,213 @@
         60,
         100,
         160
+      ]
+    },
+    "fx-test": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 1527,
+      "frames": [
+        48,
+        165,
+        228,
+        288,
+        325,
+        420,
+        465,
+        540,
+        675,
+        750,
+        810,
+        870,
+        939,
+        954,
+        1056,
+        1200,
+        1272,
+        1470,
+        1515
+      ]
+    },
+    "carousel-test": {
+      "comp": "Carousel-4x5",
+      "durationInFrames": 6,
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "carousel-glow": {
+      "comp": "Carousel-4x5",
+      "durationInFrames": 6,
+      "frames": [
+        0,
+        2,
+        3
+      ]
+    },
+    "carousel-paper": {
+      "comp": "Carousel-4x5",
+      "durationInFrames": 6,
+      "frames": [
+        0,
+        2,
+        3
+      ]
+    },
+    "carousel-poster": {
+      "comp": "Carousel-4x5",
+      "durationInFrames": 6,
+      "frames": [
+        0,
+        2,
+        3
+      ]
+    },
+    "carousel-editorial": {
+      "comp": "Carousel-4x5",
+      "durationInFrames": 6,
+      "frames": [
+        0,
+        2,
+        3
+      ]
+    },
+    "carousel-bold": {
+      "comp": "Carousel-4x5",
+      "durationInFrames": 6,
+      "frames": [
+        0,
+        2,
+        3
+      ]
+    },
+    "carousel-soft": {
+      "comp": "Carousel-4x5",
+      "durationInFrames": 6,
+      "frames": [
+        0,
+        2,
+        3
+      ]
+    },
+    "carousel-pop": {
+      "comp": "Carousel-4x5",
+      "durationInFrames": 6,
+      "frames": [
+        0,
+        2,
+        3
+      ]
+    },
+    "carousel-scripture": {
+      "comp": "Carousel-4x5",
+      "durationInFrames": 6,
+      "frames": [
+        0,
+        2,
+        3
+      ]
+    },
+    "captions-pill": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-box": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-karaoke": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-typewriter": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-serif": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-outline": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-stack": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-neon": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-marker": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-bubble": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-gradient": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-stamp": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-minimal": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-subtitle": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
       ]
     }
   },

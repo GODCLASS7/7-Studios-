@@ -1,0 +1,20 @@
+{
+  "name": "warm-lamp",
+  "description": "One locked-off shot in warm light, no punch-ins; the words do the work.",
+  "for": "Testimonies, reflections, devotionals",
+  "look": "classic",
+  "grade": "warm",
+  "captions": {
+    "style": "minimal",
+    "uppercase": false
+  },
+  "sfx": [],
+  "autocut": {
+    "pause": 0.5,
+    "punch": "none"
+  },
+  "titles": {
+    "style": "editorial"
+  },
+  "suggestedFx": []
+}

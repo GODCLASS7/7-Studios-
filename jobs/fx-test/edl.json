@@ -1,0 +1,343 @@
+{
+  "job": "fx-test",
+  "version": 1,
+  "format": "9x16",
+  "fps": 30,
+  "sources": {
+    "A": {
+      "file": "jobs/look-test/footage/take-a.mp4",
+      "transcript": "jobs/look-test/transcripts/take-a.json",
+      "matte": "jobs/look-test/matte/A.webm",
+      "faceBox": [
+        0.28,
+        0.25,
+        0.41,
+        0.2
+      ],
+      "track": "jobs/look-test/tracks/A.json"
+    }
+  },
+  "segments": [
+    {
+      "source": "A",
+      "in": 14.94,
+      "out": 16.78,
+      "phrase": "A.6",
+      "text": "Waiting is not wasting."
+    },
+    {
+      "source": "A",
+      "in": 6.58,
+      "out": 11.19,
+      "phrase": "A.3",
+      "text": "The hardest part of waiting is not knowing when it ends.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 11.62,
+      "out": 13.72,
+      "phrase": "A.4",
+      "text": "But here's what I learned."
+    },
+    {
+      "source": "A",
+      "in": 17.21,
+      "out": 19.57,
+      "phrase": "A.7",
+      "text": "God is working in the wait.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 21.3,
+      "out": 24.84,
+      "phrase": "A.8",
+      "text": "So if you're in a season of waiting today,"
+    },
+    {
+      "source": "A",
+      "in": 25.56,
+      "out": 26.74,
+      "phrase": "A.8",
+      "text": "don't give up.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 27.17,
+      "out": 28.5,
+      "phrase": "A.9",
+      "text": "Keep showing up."
+    },
+    {
+      "source": "A",
+      "in": 14.94,
+      "out": 16.78,
+      "phrase": "A.6",
+      "text": "Waiting is not wasting."
+    },
+    {
+      "source": "A",
+      "in": 6.58,
+      "out": 11.19,
+      "phrase": "A.3",
+      "text": "The hardest part of waiting is not knowing when it ends.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 11.62,
+      "out": 13.72,
+      "phrase": "A.4",
+      "text": "But here's what I learned."
+    },
+    {
+      "source": "A",
+      "in": 17.21,
+      "out": 19.57,
+      "phrase": "A.7",
+      "text": "God is working in the wait.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 21.3,
+      "out": 24.84,
+      "phrase": "A.8",
+      "text": "So if you're in a season of waiting today,"
+    },
+    {
+      "source": "A",
+      "in": 25.56,
+      "out": 26.74,
+      "phrase": "A.8",
+      "text": "don't give up.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 27.17,
+      "out": 28.5,
+      "phrase": "A.9",
+      "text": "Keep showing up."
+    },
+    {
+      "source": "A",
+      "in": 14.94,
+      "out": 16.78,
+      "phrase": "A.6",
+      "text": "Waiting is not wasting."
+    },
+    {
+      "source": "A",
+      "in": 6.58,
+      "out": 11.19,
+      "phrase": "A.3",
+      "text": "The hardest part of waiting is not knowing when it ends.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 11.62,
+      "out": 13.72,
+      "phrase": "A.4",
+      "text": "But here's what I learned."
+    },
+    {
+      "source": "A",
+      "in": 17.21,
+      "out": 19.57,
+      "phrase": "A.7",
+      "text": "God is working in the wait.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 21.3,
+      "out": 24.84,
+      "phrase": "A.8",
+      "text": "So if you're in a season of waiting today,"
+    },
+    {
+      "source": "A",
+      "in": 25.56,
+      "out": 26.74,
+      "phrase": "A.8",
+      "text": "don't give up.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 27.17,
+      "out": 28.5,
+      "phrase": "A.9",
+      "text": "Keep showing up."
+    }
+  ],
+  "captions": {
+    "style": "pill",
+    "maxWords": 3,
+    "position": 0.66,
+    "uppercase": false
+  },
+  "grade": "warm",
+  "brand": "the-wait-culture",
+  "endCard": false,
+  "sfx": "auto",
+  "fx": [
+    {
+      "kind": "clone",
+      "atWord": "waiting",
+      "items": [
+        "not",
+        "wasting"
+      ],
+      "seconds": 1.8
+    },
+    {
+      "kind": "checklist",
+      "atWord": "hardest",
+      "text": "The hard part",
+      "items": [
+        "hardest part",
+        "not knowing",
+        "when it ends"
+      ]
+    },
+    {
+      "kind": "rack-focus",
+      "atWord": "here's",
+      "seconds": 1.9,
+      "text": "What I learned",
+      "sub": "Lesson one"
+    },
+    {
+      "kind": "god-rays",
+      "atWord": "God",
+      "seconds": 2.2
+    },
+    {
+      "kind": "zoom-through",
+      "atWord": "so",
+      "seconds": 0.8
+    },
+    {
+      "kind": "doodles",
+      "atWord": "season",
+      "items": [
+        "season",
+        "waiting"
+      ],
+      "seconds": 1.8
+    },
+    {
+      "kind": "freeze",
+      "atWord": "don't",
+      "items": [
+        "you've got this"
+      ],
+      "seconds": 2.2
+    },
+    {
+      "kind": "frame-break",
+      "atWord": "waiting",
+      "after": 16.5,
+      "seconds": 1.8
+    },
+    {
+      "kind": "comment",
+      "atWord": "hardest",
+      "after": 16.5,
+      "seconds": 4.4,
+      "text": "How do you keep going when nothing changes?",
+      "sub": "One day at a time. Here's how.",
+      "data": {
+        "name": "@a_viewer",
+        "replyName": "@thewaitculture"
+      }
+    },
+    {
+      "kind": "phone",
+      "atWord": "here's",
+      "after": 16.5,
+      "seconds": 2.1,
+      "src": "jobs/tutorial-test/screen/app.mp4"
+    },
+    {
+      "kind": "cover",
+      "atWord": "God",
+      "after": 16.5,
+      "seconds": 2.3,
+      "text": "Wait",
+      "sub": "Issue 10 \u00b7 The waiting season",
+      "items": [
+        "God is working",
+        "In the wait",
+        "Don't give up"
+      ]
+    },
+    {
+      "kind": "green-screen",
+      "atWord": "so",
+      "after": 16.5,
+      "seconds": 1.7,
+      "src": "jobs/look-test/reels/reel-3.jpg"
+    },
+    {
+      "kind": "vertigo",
+      "atWord": "waiting today",
+      "after": 16.5,
+      "seconds": 1.5
+    },
+    {
+      "kind": "blackout",
+      "atWord": "don't",
+      "after": 16.5,
+      "seconds": 0.7,
+      "text": "Don't give up"
+    },
+    {
+      "kind": "before-after",
+      "atWord": "waiting",
+      "after": 33.5,
+      "seconds": 2.6
+    },
+    {
+      "kind": "callout",
+      "atWord": "hardest",
+      "after": 33.5,
+      "items": [
+        "hardest part",
+        "not knowing",
+        "when it ends"
+      ]
+    },
+    {
+      "kind": "zoom-through",
+      "atWord": "God",
+      "after": 33.5,
+      "seconds": 0.8
+    },
+    {
+      "kind": "chips",
+      "atWord": "season",
+      "after": 33.5,
+      "items": [
+        "season",
+        "waiting",
+        "today"
+      ]
+    },
+    {
+      "kind": "counter",
+      "atWord": "keep",
+      "after": 33.5,
+      "seconds": 1.6,
+      "value": 365,
+      "suffix": " days",
+      "text": "Keep showing up"
+    }
+  ],
+  "look": "classic"
+}

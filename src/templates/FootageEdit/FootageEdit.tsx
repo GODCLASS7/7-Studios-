@@ -2,6 +2,8 @@ import {
   AbsoluteFill,
   Audio,
   CalculateMetadataFunction,
+  Freeze,
+  Img,
   interpolate,
   OffthreadVideo,
   Sequence,
@@ -29,6 +31,22 @@ import {
 } from "../../lib";
 import { LookCaptions, lookAt, Orbit, PunchBehind } from "../../looks/Looks";
 import { TitleFX, titleSchema } from "../../titles/TitleFX";
+import {
+  CAPTION_STYLES,
+  type CaptionStyle,
+  StyledCaptions,
+} from "../../captions/CaptionStyles";
+import {
+  type Fx,
+  footageMods,
+  FxBehind,
+  FxFront,
+  fxSchema,
+  FxUnder,
+  headIn,
+  WipeLine,
+} from "../../fx/Fx";
+import { ease } from "../../lib";
 
 // Edit of real footage (talking heads, interviews, testimonies, vlogs) from a
 // resolved edit list: run scripts/autocut.mjs, then scripts/edl.mjs, and pass
@@ -151,7 +169,7 @@ export const footageEditSchema = z.object({
     z.object({ startMs: z.number(), endMs: z.number(), words: z.array(word) }),
   ),
   captions: z.object({
-    style: z.enum(["pop", "line", "none"]),
+    style: z.enum(["pop", "line", "none", ...CAPTION_STYLES]),
     position: z.number(),
     uppercase: z.boolean(),
     highlight: z.string(),
@@ -182,6 +200,8 @@ export const footageEditSchema = z.object({
     .nullable(),
   // Cinematic titles (src/titles), behind or in front of the speaker, optionally pinned.
   titles: z.array(titleSchema).default([]),
+  // The effects pack (src/fx): clone, frame-break, god-rays, rack-focus, vertigo, doodles…
+  fx: z.array(fxSchema).default([]),
   // B-roll cutaways over the speaker; the voice carries on underneath.
   broll: z
     .array(
@@ -270,31 +290,32 @@ export const calcFootageEdit: CalculateMetadataFunction<FootageEditProps> = ({
   fps: props.fps,
 });
 
+type Seg = FootageEditProps["segments"][number];
+
+// Crop centre and zoom of a segment at a frame inside it (the face-following crop, and any push).
+const framing = (s: Seg, frame: number) => {
+  const ft = s.focusTrack;
+  const along = (k: 1 | 2) =>
+    interpolate(
+      frame,
+      ft!.map((x) => x[0]),
+      ft!.map((x) => x[k]),
+      { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+    );
+  const tracked = Boolean(ft && ft.length > 1);
+  return {
+    fX: tracked ? along(1) : s.focusX,
+    fY: tracked ? along(2) : s.focusY,
+    scale: s.zoom + s.push * (frame / Math.max(1, s.durationInFrames)),
+  };
+};
+
 const Shot: React.FC<{
-  s: FootageEditProps["segments"][number];
+  s: Seg;
   person?: boolean;
 }> = ({ s, person }) => {
   const frame = useCurrentFrame();
-  const scale = s.zoom + s.push * (frame / Math.max(1, s.durationInFrames));
-  const ft = s.focusTrack;
-  const fX =
-    ft && ft.length > 1
-      ? interpolate(
-          frame,
-          ft.map((k) => k[0]),
-          ft.map((k) => k[1]),
-          { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-        )
-      : s.focusX;
-  const fY =
-    ft && ft.length > 1
-      ? interpolate(
-          frame,
-          ft.map((k) => k[0]),
-          ft.map((k) => k[2]),
-          { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-        )
-      : s.focusY;
+  const { fX, fY, scale } = framing(s, frame);
   const origin = `${fX * 100}% ${fY * 100}%`;
   return (
     <AbsoluteFill
@@ -635,6 +656,99 @@ const Camera: React.FC<{ p: FootageEditProps; children: React.ReactNode }> = ({
   );
 };
 
+// Copies of the cut-out speaker beside them (fx "clone"), each a few frames behind,
+// popping in on its own word. The left ones are mirrored so they face in.
+const Clones: React.FC<{ p: FootageEditProps; f: Fx }> = ({ p, f }) => {
+  const frame = useCurrentFrame();
+  const { fps, width } = useVideoConfig();
+  const l = frame - f.from;
+  if (l < 0 || l >= f.durationInFrames) return null;
+  const n = Math.max(2, f.items.length);
+  const out = interpolate(
+    l,
+    [f.durationInFrames - 8, f.durationInFrames],
+    [1, 0],
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    },
+  );
+  return (
+    <>
+      {Array.from({ length: n }, (_, k) => {
+        const at = f.items[k]?.f ?? k * 6;
+        const pop = spring({
+          frame: l - at,
+          fps,
+          config: { damping: 13, stiffness: 170 },
+          durationInFrames: 14,
+        });
+        if (pop <= 0.01) return null;
+        const left = k % 2 === 0;
+        const ring = Math.floor(k / 2);
+        const dx = (left ? -1 : 1) * width * (0.27 + 0.15 * ring);
+        const sc = (0.9 - 0.08 * ring) * pop;
+        return (
+          <AbsoluteFill
+            key={k}
+            style={{
+              transform: `translateX(${dx}px) scale(${left ? -sc : sc}, ${sc})`,
+              transformOrigin: "50% 100%",
+              opacity: out,
+              filter: `brightness(${0.88 - 0.1 * ring})`,
+            }}
+          >
+            <Sequence from={6 * (k + 1)} layout="none">
+              <Camera p={p}>
+                <Footage p={p} layer="person" />
+              </Camera>
+            </Sequence>
+          </AbsoluteFill>
+        );
+      })}
+    </>
+  );
+};
+
+// Before / after (fx "before-after"): the raw clip (ungraded, no graphics) or `src`,
+// wiped away left to right to show the edit.
+const BeforeAfter: React.FC<{ p: FootageEditProps; f: Fx }> = ({ p, f }) => {
+  const frame = useCurrentFrame();
+  const d = f.durationInFrames;
+  const x = interpolate(frame, [d * 0.2, d * 0.75], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: ease.inOut,
+  });
+  if (x >= 1) return null;
+  const src = f.src;
+  return (
+    <AbsoluteFill>
+      <AbsoluteFill style={{ clipPath: `inset(0 0 0 ${x * 100}%)` }}>
+        {src ? (
+          /\.(mp4|mov|webm|m4v)$/i.test(src) ? (
+            <OffthreadVideo
+              src={staticFile(src)}
+              muted
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          ) : (
+            <Img
+              src={staticFile(src)}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          )
+        ) : (
+          <Sequence from={-f.from} layout="none">
+            <Footage p={{ ...p, grade: "none", looks: [] }} />
+          </Sequence>
+        )}
+      </AbsoluteFill>
+      {x > 0 ? <WipeLine fx={f} x={x} /> : null}
+    </AbsoluteFill>
+  );
+};
+
 export const FootageEdit: React.FC<FootageEditProps> = (p) => {
   const frame = useCurrentFrame();
   const look = (p.grade in LOOKS ? p.grade : "neutral") as Look;
@@ -743,6 +857,32 @@ export const FootageEdit: React.FC<FootageEditProps> = (p) => {
           frame >= t.from &&
           frame < t.from + t.durationInFrames,
       ));
+  // The effects pack: what the active effects do to the footage, and where the head is now.
+  const fr = seg ? framing(seg, frame - seg.from) : null;
+  const head = headIn(
+    seg && fr
+      ? { ...seg, focusX: fr.fX, focusY: fr.fY, zoom: fr.scale }
+      : undefined,
+    width,
+    height,
+  );
+  const mods = footageMods(p.fx, frame, width, height, head);
+  const personOn = needPerson || (hasMatte && mods.needPerson);
+  const hold = (node: React.ReactNode) =>
+    mods.freezeAt === null ? (
+      node
+    ) : (
+      <Freeze frame={mods.freezeAt}>{node}</Freeze>
+    );
+  // Captions step aside for a magazine cover or a blackout that carries its own words,
+  // and rise above the speaker while green-screen shrinks them to the bottom.
+  const fxOn = (k: Fx["kind"]) =>
+    p.fx.find(
+      (f) =>
+        f.kind === k && frame >= f.from && frame < f.from + f.durationInFrames,
+    );
+  const coverOn = Boolean(fxOn("cover") || fxOn("blackout")?.text);
+  const capAt = fxOn("green-screen") ? Math.min(capPos, 0.5) : capPos;
   const coolGirl = p.looks.filter((r) => r.look === "cool-girl");
   // Anything "behind" the speaker is drawn between the background and the cut-out person.
   const behind = (
@@ -782,20 +922,49 @@ export const FootageEdit: React.FC<FootageEditProps> = (p) => {
           </Sequence>
         ) : null,
       )}
+      {hasMatte
+        ? p.fx.map((f, i) =>
+            f.kind === "clone" ? (
+              <Clones key={`xc${i}`} p={p} f={f} />
+            ) : f.kind === "god-rays" ||
+              f.kind === "cover" ||
+              (f.kind === "phone" && f.style === "behind") ? (
+              <Sequence
+                key={`xb${i}`}
+                from={f.from}
+                durationInFrames={f.durationInFrames}
+                layout="none"
+              >
+                <FxBehind fx={f} head={head} />
+              </Sequence>
+            ) : null,
+          )
+        : null}
     </>
   );
   return (
     <BrandProvider brand={p.brand}>
       <AbsoluteFill style={{ backgroundColor: "#000" }}>
-        <Camera p={p}>
-          <Footage p={p} layer="background" />
-        </Camera>
-        {behind}
-        {needPerson ? (
-          <Camera p={p}>
-            <Footage p={p} layer="person" />
-          </Camera>
-        ) : null}
+        <AbsoluteFill style={mods.all}>
+          {mods.under ? <FxUnder fx={mods.under} /> : null}
+          <AbsoluteFill style={mods.bg}>
+            {hold(
+              <Camera p={p}>
+                <Footage p={p} layer="background" />
+              </Camera>,
+            )}
+          </AbsoluteFill>
+          {behind}
+          {personOn ? (
+            <AbsoluteFill style={mods.person}>
+              {hold(
+                <Camera p={p}>
+                  <Footage p={p} layer="person" />
+                </Camera>,
+              )}
+            </AbsoluteFill>
+          ) : null}
+        </AbsoluteFill>
         {look === "neutral" && lookNow === "classic" ? null : (
           <Grain opacity={0.04} />
         )}
@@ -860,6 +1029,16 @@ export const FootageEdit: React.FC<FootageEditProps> = (p) => {
             )}
           </Sequence>
         ))}
+        {p.fx.map((f, i) => (
+          <Sequence
+            key={`xf${i}`}
+            from={f.from}
+            durationInFrames={f.durationInFrames}
+            layout="none"
+          >
+            <FxFront fx={f} head={head} />
+          </Sequence>
+        ))}
         {p.titles.map((t, i) =>
           t.layer === "front" ? (
             <Sequence
@@ -882,8 +1061,20 @@ export const FootageEdit: React.FC<FootageEditProps> = (p) => {
             <Overlay o={o} />
           </Sequence>
         ))}
-        {screenOn ? null : lookNow === "classic" ? (
-          <Captions cues={p.cues} c={{ ...p.captions, position: capPos }} />
+        {screenOn || coverOn ? null : lookNow === "classic" ? (
+          (CAPTION_STYLES as readonly string[]).includes(p.captions.style) ? (
+            <StyledCaptions
+              cues={p.cues}
+              style={p.captions.style as CaptionStyle}
+              position={capAt}
+              size={p.captions.size}
+              uppercase={p.captions.uppercase}
+              highlight={p.captions.highlight}
+              emphasis={p.captions.emphasis}
+            />
+          ) : (
+            <Captions cues={p.cues} c={{ ...p.captions, position: capAt }} />
+          )
         ) : (
           <LookCaptions
             cues={p.cues}
@@ -891,11 +1082,23 @@ export const FootageEdit: React.FC<FootageEditProps> = (p) => {
             look={lookNow}
             position={
               lookNow === "cool-dude"
-                ? Math.max(capPos, 0.74)
-                : Math.max(capPos, 0.7)
+                ? Math.max(capAt, 0.74)
+                : Math.max(capAt, 0.7)
             }
             emphasis={p.captions.emphasis}
           />
+        )}
+        {p.fx.map((f, i) =>
+          f.kind === "before-after" ? (
+            <Sequence
+              key={`xa${i}`}
+              from={f.from}
+              durationInFrames={f.durationInFrames}
+              layout="none"
+            >
+              <BeforeAfter p={p} f={f} />
+            </Sequence>
+          ) : null,
         )}
         {p.voice ? <Audio src={staticFile(p.voice)} /> : null}
         {p.sfx.map((x, i) => (
@@ -961,6 +1164,7 @@ export const footageEditDefaults: FootageEditProps = {
   orbit: [],
   inserts: [],
   titles: [],
+  fx: [],
   sfx: [],
   brand: null,
   cutSources: [],

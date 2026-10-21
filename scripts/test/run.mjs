@@ -25,14 +25,19 @@
 //   voice         voice cleanup (shorts-test-s1): voice at least 30 dB above the noise between words
 //   shorts        the Shorts finder still picks the same clips from the long test talk
 //   pin           a spot pinned on the panning 16:9 test take stays within 1 px of the truth
-//   frames        golden frames of every test edit, the title styles, the tutorial and the cards
+//   styles        every editing style in presets/styles uses looks, grades, captions and titles that exist
+//   carousel      frames picked and cut out of the look-test take, the test carousel rendered (6 slides)
+//   variants      the look-test trial plan builds 4 versions, each with its change, none the same
+//   posts         the post queue refuses unapproved, changed or not-yet-due posts (on a scratch queue)
+//   frames        golden frames of every test edit (fx-test: all 18 effects), the title styles, the
+//                 tutorial, the cards, the carousel (and its 8 looks) and the 14 caption styles
 //   track (full)  face found in at least 95% of the moving 16:9 test take
 //   cutcheck (full) each test edit rendered and passed by the cut check
 //
 // Exits 1 if anything fails.
 
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { appendFileSync, copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { findBeats } from "../lib/beats.mjs";
 import { parseArgs, pcm, readJson, writeJson } from "../lib/media.mjs";
@@ -64,13 +69,25 @@ const JOBS = {
   "reframe-test": { fixture: [`--photo=${PHOTO}`, "--wide"] },
   "shorts-test-s1": { footageJob: "shorts-test", fixture: ["--vertical", "--script=jobs/shorts-test/talk.txt"] },
   "prelive-test": { footageJob: "reframe-test", fixture: [`--photo=${PHOTO}`, "--wide"], music: [100], broll: true },
-  "titles-test": { footageJob: "reframe-test", fixture: [`--photo=${PHOTO}`, "--wide"] },
+  "titles-test": { footageJob: "reframe-test", fixture: [`--photo=${PHOTO}`, "--wide"], frames: [41, 153, 225, 280, 407] },
   "tutorial-test": { footageJob: "look-test", fixture: [`--photo=${PHOTO}`], screen: true, layoutComp: "Tutorial-9x16" },
   "lyric-test": { comp: "ScriptureLyric-9x16", props: "jobs/lyric-test/lyrics.props.json" },
-  "titles-reel": { comp: "Titles-9x16", dur: 420, frames: [36, 96, 156, 216, 276, 336, 396] },
+  // All 18 effects of the pack in one 51 s edit of the look-test take (uses its cut-out and reels).
+  "fx-test": { footageJob: "look-test", fixture: [`--photo=${PHOTO}`], reels: "look-test", screen: "tutorial-test", frames: [48, 165, 228, 288, 325, 420, 465, 540, 675, 750, 810, 870, 939, 954, 1056, 1200, 1272, 1470, 1515] },
+  "titles-reel": { comp: "Titles-9x16", dur: 480, frames: [36, 96, 156, 216, 276, 336, 396, 456] },
   cards: { comp: "Cards-9x16", dur: 255, frames: [40, 78, 125, 200] },
   "cards-stack": { comp: "Cards-16x9", props: "tests/fixtures/cards-stack.json", dur: 189, frames: [30, 60, 100, 160] },
+  // Carousel Studio end to end: frames from the look-test take, a cut-out cover, the brand kit.
+  "carousel-test": { comp: "Carousel-4x5", props: "jobs/carousel-test/.carousel.resolved.json", dur: 6, frames: [0, 1, 2, 3, 4, 5], carousel: true },
 };
+// Every carousel look on the sample deck (props merge over the defaults: only the look changes).
+const CAROUSEL_LOOKS = ["glow", "paper", "poster", "editorial", "bold", "soft", "pop", "scripture"];
+for (const look of CAROUSEL_LOOKS) {
+  const file = join(TMP, `carousel-${look}.json`);
+  writeJson(file, { look });
+  JOBS[`carousel-${look}`] = { comp: "Carousel-4x5", props: file, dur: 6, frames: [0, 2, 3], group: "carousel" };
+}
+const CAPTION_STYLES = ["pill", "box", "karaoke", "typewriter", "serif", "minimal", "outline", "stack", "subtitle", "neon", "marker", "bubble", "gradient", "stamp"];
 
 const results = [];
 const record = (area, name, status, detail) => {
@@ -107,10 +124,24 @@ if (want("beats")) {
 }
 
 // ── test material ────────────────────────────────────────────────────────────
-const jobs = Object.entries(JOBS).filter(([job]) => want(job) || want("frames") || want("edl") || (job === "shorts-test-s1" && want("voice")) || (FULL && want("cutcheck")));
+const jobs = Object.entries(JOBS).filter(([job, cfg]) => want(job) || want("frames") || want("edl") || (cfg.group && want(cfg.group)) || (cfg.carousel && want("carousel")) || (job === "shorts-test-s1" && want("voice")) || (FULL && want("cutcheck")));
 const ready = new Set();
 let fixtureBundle = null;
 for (const [job, cfg] of jobs) {
+  if (cfg.carousel) {
+    // Pick 4 frames from the look-test take (cut out), then render the deck with the brand kit.
+    const take = join("public", "jobs", "look-test", "footage", "take-a.mp4");
+    if (!existsSync(take)) node("scripts/test/footage-fixture.mjs", ["look-test", `--photo=${PHOTO}`]);
+    const f = node("scripts/carousel.mjs", [job, "frames", "jobs/look-test/footage/take-a.mp4", "--count=4", "--cutout"]);
+    const picked = readJson(join("jobs", job, "carousel-frames.json"))?.frames || [];
+    const r = f.status === 0 ? node("scripts/carousel.mjs", [job, "render", "--format=4x5"]) : f;
+    const dir = join("out", job, "carousel", "4x5");
+    const slides = existsSync(dir) ? readdirSync(dir).filter((x) => /^slide-\d+\.jpg$/.test(x)).length : 0;
+    const ok = r.status === 0 && picked.length === 4 && picked.every((x) => x.cutout) && slides === 6;
+    if (want("carousel") || want(job)) record("carousel", job, ok ? "pass" : "fail", ok ? `frames at ${picked.map((x) => x.t).join(", ")} s (cut out), 6 slides + sheet in ${dir}` : tail(r) || `${picked.length} frames, ${slides} slides`);
+    if (ok) ready.add(job);
+    continue;
+  }
   if (cfg.comp) {
     ready.add(job);
     continue;
@@ -130,14 +161,15 @@ for (const [job, cfg] of jobs) {
     }
   }
   // A generic app screen "recording" for the tutorial layout, rendered from TestScreen.
-  const screen = join("public", "jobs", job, "screen", "app.mp4");
+  const screenJob = typeof cfg.screen === "string" ? cfg.screen : job;
+  const screen = join("public", "jobs", screenJob, "screen", "app.mp4");
   if (cfg.screen && !existsSync(screen)) {
     console.log("   rendering the test screen recording…");
     if (!fixtureBundle) {
       fixtureBundle = join(TMP, "fixture-bundle");
       run("npx", ["remotion", "bundle", `--out-dir=${fixtureBundle}`, "--log=error"]);
     }
-    mkdirSync(join("public", "jobs", job, "screen"), { recursive: true });
+    mkdirSync(join("public", "jobs", screenJob, "screen"), { recursive: true });
     const r = run("npx", ["remotion", "render", fixtureBundle, "TestScreen", screen, "--codec=h264", "--crf=20", "--log=error", ...BROWSER]);
     if (r.status !== 0) {
       record("edl", job, "fail", `test screen: ${tail(r)}`);
@@ -145,7 +177,7 @@ for (const [job, cfg] of jobs) {
     }
   }
   if (cfg.reels) {
-    const dir = join("public", "jobs", job, "reels");
+    const dir = join("public", "jobs", typeof cfg.reels === "string" ? cfg.reels : job, "reels");
     mkdirSync(dir, { recursive: true });
     const reels = [
       ["reel-1.mp4", "gradients=s=360x640:c0=0x1F1A15:c1=0xB4442F:c2=0xF2C14E:n=3:speed=0.03:seed=1:d=6:r=30"],
@@ -177,8 +209,10 @@ for (const [job, cfg] of jobs) {
   let ok = true;
   for (const [key, s] of Object.entries(edl.sources || {})) {
     if (s.matte && !existsSync(join("public", s.matte))) {
-      console.log(`   cutting out ${job} ${key} (first run sets up Python)…`);
-      const r = node("scripts/matte.mjs", [job, key]);
+      // The cut-out belongs to the job named in its path (fx-test shares look-test's).
+      const owner = s.matte.split("/")[1] || job;
+      console.log(`   cutting out ${owner} ${key} (first run sets up Python)…`);
+      const r = node("scripts/matte.mjs", [owner, key]);
       if (r.status !== 0) {
         record("edl", job, "fail", `cut-out: ${tail(r)}`);
         ok = false;
@@ -248,6 +282,83 @@ if (want("pin")) {
   }
 }
 
+// ── editing styles ───────────────────────────────────────────────────────────
+if (want("styles")) {
+  const LOOKS = ["classic", "bold", "cool-girl", "cool-dude"];
+  const GRADES = ["none", "neutral", "warm", "cool", "punchy", "film", "noir", "faded", "worship", "food"];
+  const TITLES = ["cutout", "editorial", "inflate", "neon", "extrude", "poster", "outline", "tag"];
+  const FX = ["clone", "frame-break", "god-rays", "rack-focus", "vertigo", "doodles", "freeze", "green-screen", "callout", "checklist", "counter", "chips", "before-after", "blackout", "phone", "cover", "comment", "zoom-through"];
+  const dir = join("presets", "styles");
+  const bad = [];
+  const names = readdirSync(dir).filter((f) => f.endsWith(".json"));
+  for (const f of names) {
+    const st = readJson(join(dir, f));
+    const n = f.replace(".json", "");
+    if (st.name !== n) bad.push(`${n}: name "${st.name}"`);
+    if (st.look && !LOOKS.includes(st.look)) bad.push(`${n}: look ${st.look}`);
+    if (st.grade && !GRADES.includes(st.grade)) bad.push(`${n}: grade ${st.grade}`);
+    if (st.captions?.style && !["pop", "line", "none", ...CAPTION_STYLES].includes(st.captions.style)) bad.push(`${n}: captions ${st.captions.style}`);
+    if (st.titles?.style && !TITLES.includes(st.titles.style)) bad.push(`${n}: titles ${st.titles.style}`);
+    for (const x of st.suggestedFx || []) if (!FX.includes(x)) bad.push(`${n}: fx ${x}`);
+    if (st.autocut?.pause && !(st.autocut.pause > 0.05 && st.autocut.pause < 1.5)) bad.push(`${n}: pause ${st.autocut.pause}`);
+  }
+  record("styles", "presets/styles", bad.length ? "fail" : "pass", bad.length ? bad.join("; ") : `${names.length} styles valid`);
+}
+
+// ── trial variants ───────────────────────────────────────────────────────────
+if (want("variants") && ready.has("look-test")) {
+  const r = node("scripts/variants.mjs", ["look-test", "build"]);
+  const v = (id) => readJson(join("jobs", `look-test-${id}`, ".edl.resolved.json"));
+  const [t1, t2, t3, t4] = ["t1", "t2", "t3", "t4"].map(v);
+  const checks = [
+    [r.status === 0, `build exited ${r.status}${r.status === 2 ? " (a version came out the same as another)" : ""}`],
+    [t2?.titles?.[0]?.from === 0 && /hurt/.test(t2.titles[0].text), "t2 opens on its hook headline"],
+    [t3?.segments?.[0]?.trimBefore !== t1?.segments?.[0]?.trimBefore, "t3 opens on another line"],
+    [t4?.segments?.[0]?.zoom > t1?.segments?.[0]?.zoom && t4?.grade === "punchy", "t4 is closer, with the punchy grade"],
+  ];
+  const failed = checks.filter(([ok]) => !ok).map(([, what]) => what);
+  record("variants", "look-test plan", failed.length ? "fail" : "pass", failed.length ? `not met: ${failed.join("; ")}` : "4 versions built, each with its own change");
+}
+
+// ── post queue ───────────────────────────────────────────────────────────────
+if (want("posts")) {
+  const queue = join(TMP, "posts.json");
+  rmSync(queue, { force: true });
+  const vid = join(TMP, "post-test.mp4");
+  if (!existsSync(vid)) ffmpeg(["-f", "lavfi", "-i", "color=c=0x1F1A15:s=360x640:d=5:r=30", "-f", "lavfi", "-i", "sine=f=440:d=5", "-shortest", "-pix_fmt", "yuv420p", "-c:v", "libx264", vid]);
+  const posts = (args) => spawnSync("node", ["scripts/posts.mjs", ...args], { encoding: "utf8", env: { ...process.env, POSTS_QUEUE: queue } });
+  const later = new Date(Date.now() + 864e5).toISOString();
+  const earlier = new Date(Date.now() - 6e4).toISOString();
+  const steps = [
+    ["queues a post", posts(["add", vid, "--platform=instagram", "--account=@test", "--caption=Test", "--trial=manual", "--ai-label=no", `--at=${later}`]).status === 0],
+    ["refuses an unapproved post", posts(["check", "p1"]).status === 1],
+    ["records approval", posts(["approve", "p1", "--by=test approval"]).status === 0],
+    ["waits until it's due", posts(["check", "p1"]).status === 1],
+    ["queues a due post", posts(["add", vid, "--platform=instagram", "--account=@test", "--caption=Test", "--ai-label=no", `--at=${earlier}`]).status === 0 && posts(["approve", "p2", "--by=test approval"]).status === 0],
+    ["passes an approved, due, unchanged post", posts(["check", "p2"]).status === 0],
+  ];
+  appendFileSync(vid, Buffer.from([0]));
+  steps.push(["refuses a file changed after approval", posts(["check", "p2"]).status === 1]);
+  const short = join(TMP, "post-test-2s.mp4");
+  ffmpeg(["-f", "lavfi", "-i", "color=c=0x1F1A15:s=360x640:d=2:r=30", "-pix_fmt", "yuv420p", "-c:v", "libx264", short]);
+  steps.push(["refuses a 2 s TikTok", posts(["add", short, "--platform=tiktok", "--account=@t", "--caption=x"]).status === 1]);
+  rmSync(vid, { force: true });
+  rmSync(short, { force: true });
+  const failed = steps.filter(([, ok]) => !ok).map(([what]) => what);
+  record("posts", "approval queue", failed.length ? "fail" : "pass", failed.length ? `wrong: ${failed.join("; ")}` : `${steps.length} rules hold`);
+}
+
+// Caption library: the look-test edit in the classic look, once per caption style.
+if (ready.has("look-test") && (want("frames") || want("captions"))) {
+  const base = readJson(join("jobs", "look-test", ".edl.resolved.json"));
+  for (const style of CAPTION_STYLES) {
+    const file = join(TMP, `captions-${style}.json`);
+    writeJson(file, { ...base, looks: [{ from: 0, to: base.durationInFrames, look: "classic" }], punches: [], orbit: [], inserts: [], captions: { ...base.captions, style } });
+    JOBS[`captions-${style}`] = { comp: "FootageEdit-9x16", props: file, dur: base.durationInFrames, frames: [100], group: "captions" };
+    ready.add(`captions-${style}`);
+  }
+}
+
 // ── golden frames ────────────────────────────────────────────────────────────
 const gray = (f) => spawnSync("ffmpeg", ["-v", "error", "-i", f, "-vf", "format=gray,gblur=sigma=1.5", "-f", "rawvideo", "-"], { maxBuffer: 1e9 }).stdout;
 const changed = (a, b) => {
@@ -257,7 +368,7 @@ const changed = (a, b) => {
   for (let i = 0; i < x.length; i++) if (Math.abs(x[i] - y[i]) > 32) n++;
   return (100 * n) / x.length;
 };
-const frameJobs = [...ready].filter((job) => want("frames") || want(job));
+const frameJobs = [...ready].filter((job) => want("frames") || want(job) || (JOBS[job].group && want(JOBS[job].group)) || (JOBS[job].carousel && want("carousel")));
 let bundle = null;
 const ensureBundle = () => {
   if (bundle) return bundle;

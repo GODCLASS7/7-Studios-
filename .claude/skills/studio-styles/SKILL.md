@@ -163,6 +163,14 @@ When the user shares a design they like (a section of a site from Awwwards, a po
 
 The breakdowns of reels the user shared are kept in `references/<name>/analysis.md` (e.g. `references/creator-reels-2026-10/`).
 
+## Editing styles (one pick for an edit)
+
+Recipes above are craft rules for planning. **Editing styles** (`presets/styles/<name>.json`) are their quick, mechanical form for talking-head edits: one name sets the look, grade, caption style, sound, title style, pace and punch-ins, and suggests effects that suit it. Twelve ship with the studio (`quiet-premium`, `chalk`, `warm-lamp`, `film-diary`, `teacher`, `cozy`, `glam`, `color-cards`, `faceless`, `bold`, `cool-girl`, `cool-dude`); the table is in `studio-edit` §3h.
+
+- Use one with `"style": "<name>"` in `edl.json` or `npm run autocut -- <id> --style=<name>`. Anything set in `edl.json` wins over it.
+- **Make a client's own style** from a recipe, a learned reference or house notes: copy the closest file to `presets/styles/<client>-<name>.json` and set `name`, `description`, `for`, `look`, `grade`, `captions` (style, position, uppercase, highlight, size), `sfx`, `music` (volume, duck), `autocut` (`pause`, `pad`, `punch`), `titles` (default title style), `layout` and `suggestedFx`. Then `npm test -- --only=styles`.
+- To compare two styles on the same footage, make them trial versions (`npm run variants`, studio-edit §5c).
+
 ## Learned recipes
 
 _None yet. Recipes learned from reference videos go here (section 7 onwards)._

@@ -16,8 +16,18 @@ import {
   ScriptureLyric,
   scriptureSchema,
 } from "./templates/ScriptureLyric/ScriptureLyric";
-import { calcTutorial, Tutorial, tutorialSchema } from "./templates/Tutorial/Tutorial";
+import {
+  calcTutorial,
+  Tutorial,
+  tutorialSchema,
+} from "./templates/Tutorial/Tutorial";
 import { TestScreen } from "./videos/TestScreen";
+import {
+  calcCarousel,
+  Carousel,
+  carouselDefaults,
+  carouselSchema,
+} from "./templates/Carousel/Carousel";
 import { calcAnimatic, StoryboardAnimatic } from "./storyboard/Animatic";
 import { sampleStoryboard } from "./storyboard/sample";
 import { storyboardSchema } from "./storyboard/schema";
@@ -289,6 +299,41 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1920}
         height={1080}
+      />
+
+      {/* Template: carousel posts, one slide per frame (npm run carousel -- <id> render). */}
+      <Composition
+        id="Carousel-4x5"
+        component={Carousel}
+        schema={carouselSchema}
+        defaultProps={carouselDefaults}
+        calculateMetadata={calcCarousel}
+        durationInFrames={6}
+        fps={30}
+        width={1080}
+        height={1350}
+      />
+      <Composition
+        id="Carousel-1x1"
+        component={Carousel}
+        schema={carouselSchema}
+        defaultProps={carouselDefaults}
+        calculateMetadata={calcCarousel}
+        durationInFrames={6}
+        fps={30}
+        width={1080}
+        height={1080}
+      />
+      <Composition
+        id="Carousel-9x16"
+        component={Carousel}
+        schema={carouselSchema}
+        defaultProps={carouselDefaults}
+        calculateMetadata={calcCarousel}
+        durationInFrames={6}
+        fps={30}
+        width={1080}
+        height={1920}
       />
 
       {/* Studio pipeline: storyboard approval sheet + timed animatic. */}

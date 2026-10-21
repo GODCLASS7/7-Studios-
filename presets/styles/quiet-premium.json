@@ -1,0 +1,27 @@
+{
+  "name": "quiet-premium",
+  "description": "Calm, premium talking head: one word at a time, a moody film grade, numbers on flat cards.",
+  "for": "Teaching, opinions, founders",
+  "look": "classic",
+  "grade": "film",
+  "captions": {
+    "style": "stack",
+    "uppercase": false
+  },
+  "sfx": "auto",
+  "music": {
+    "volume": 0.1
+  },
+  "autocut": {
+    "pause": 0.3,
+    "punch": "editorial"
+  },
+  "titles": {
+    "style": "poster"
+  },
+  "suggestedFx": [
+    "counter",
+    "blackout",
+    "rack-focus"
+  ]
+}

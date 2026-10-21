@@ -1,0 +1,20 @@
+{
+  "name": "teacher",
+  "description": "You in a panel, a clean canvas for screens, steps and arrows (render Tutorial-*).",
+  "for": "How-tos, software, step-by-step",
+  "look": "classic",
+  "grade": "neutral",
+  "captions": {
+    "style": "pill"
+  },
+  "sfx": "auto",
+  "layout": "tutorial",
+  "autocut": {
+    "pause": 0.3,
+    "punch": "alternate"
+  },
+  "suggestedFx": [
+    "checklist",
+    "chips"
+  ]
+}

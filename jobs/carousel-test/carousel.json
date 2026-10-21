@@ -1,0 +1,13 @@
+{
+  "look": "glow",
+  "brand": "the-wait-culture",
+  "handle": "@thewaitculture",
+  "slides": [
+    { "kind": "cover", "kicker": "The Wait Culture", "title": "Waiting is *not* wasting", "image": "jobs/carousel-test/carousel/frame-02-cut.png", "cutout": true },
+    { "kind": "point", "title": "The hardest part is not knowing when it ends", "body": "That's normal. Name it, and you can carry it." },
+    { "kind": "image", "title": "God is working in the wait", "image": "jobs/carousel-test/carousel/frame-03.jpg" },
+    { "kind": "list", "title": "Three things to do *while you wait*", "items": ["Keep showing up", "Stay close to people", "Write down what changes"] },
+    { "kind": "stat", "value": "40:31", "title": "Isaiah's promise", "body": "They that wait upon the LORD shall renew their strength." },
+    { "kind": "cta", "title": "Save this for *your* season", "body": "Send it to someone who's waiting." }
+  ]
+}

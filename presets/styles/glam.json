@@ -1,0 +1,23 @@
+{
+  "name": "glam",
+  "description": "Tight shots, quick punch-ins, boxed captions and a phone screen floating beside you.",
+  "for": "Beauty, product, tutorials on camera",
+  "look": "classic",
+  "grade": "punchy",
+  "captions": {
+    "style": "box"
+  },
+  "sfx": "auto",
+  "autocut": {
+    "pause": 0.25,
+    "punch": "alternate"
+  },
+  "titles": {
+    "style": "inflate"
+  },
+  "suggestedFx": [
+    "phone",
+    "counter",
+    "before-after"
+  ]
+}

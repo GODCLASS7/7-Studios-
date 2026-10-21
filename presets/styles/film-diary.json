@@ -1,0 +1,22 @@
+{
+  "name": "film-diary",
+  "description": "A wide sit-down left alone: faded film look, small yellow subtitles.",
+  "for": "Vlogs, behind the scenes, campus diaries",
+  "look": "classic",
+  "grade": "faded",
+  "captions": {
+    "style": "subtitle",
+    "uppercase": false
+  },
+  "sfx": [],
+  "autocut": {
+    "pause": 0.4,
+    "punch": "none"
+  },
+  "titles": {
+    "style": "outline"
+  },
+  "suggestedFx": [
+    "freeze"
+  ]
+}

@@ -97,6 +97,14 @@
       "size": 0.8
     },
     {
+      "style": "tag",
+      "text": "Shuttle",
+      "sub": "Pinned spot",
+      "atPhrase": "A.4",
+      "seconds": 2,
+      "pin": "shuttle"
+    },
+    {
       "style": "neon",
       "text": "in the wait",
       "atPhrase": "A.7",

@@ -71,7 +71,11 @@
     "review-page": "node scripts/review-page.mjs",
     "render-cloud": "node scripts/render-cloud.mjs",
     "doctor": "node scripts/doctor.mjs",
-    "test": "node scripts/test/run.mjs"
+    "test": "node scripts/test/run.mjs",
+    "carousel": "node scripts/carousel.mjs",
+    "variants": "node scripts/variants.mjs",
+    "posts": "node scripts/posts.mjs",
+    "install:studio": "bash scripts/install.sh"
   },
   "allowScripts": {
     "esbuild": false

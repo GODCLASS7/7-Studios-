@@ -9,7 +9,7 @@ That proves the pipeline works end to end. It doesn't prove how it handles a rea
 
 ## 1. Set up your computer (30 min)
 
-1. Unzip the project, or clone it from your private GitHub repo. Then run `npm i`.
+1. Unzip the project, or clone it from your private GitHub repo. Then run the one-paste installer from the folder: `bash scripts/install.sh` on a Mac or Linux, `powershell -ExecutionPolicy Bypass -File scripts\install.ps1` on Windows. It installs what's missing and ends with the doctor.
 2. Run `npm run doctor -- --network` and fix every ❌. Each ⚠️ only turns off one optional feature.
 3. Copy `.env.example` to `.env` and add your **ElevenLabs** key (Speech to Text: Access). Never paste keys into chat.
 4. Run `npm test`. Every check should pass. If a frame fails only because fonts render differently on your computer, look at the diff in `out/test/`. If the difference is only edge smoothing, run `npm test -- --update` once to make your computer's frames the reference.
@@ -32,6 +32,12 @@ Use material you have the rights to, and people who agreed to be filmed. Run eac
 - **Cloud render:** follow the steps in `scripts/render-cloud.mjs`, then render job 1 at `4k`. Compare the time and the AWS bill with a local render.
 - **AI b-roll:** for one line that `broll-suggest` couldn't match, get a credit quote, approve it, generate the clip and cut it in.
 - **Publishing:** post job 1 through vidIQ or Higgsfield, approving the exact post. A week later, pull the numbers and write one line into `house-notes.md`.
+- **New this round** (fold into jobs 1–3):
+  - one or two effects from the pack on job 1 (`fx`, studio-edit §3g), checked frame by frame on real hair and movement;
+  - an editing style (`"style": …`) and a caption style on job 2;
+  - a carousel from job 3's talk (`npm run carousel`, studio-stills): the frame picks, a cut-out cover, the copy;
+  - trial versions of job 1 (`npm run variants`), with two different hooks;
+  - the post queue end to end: `posts add`, approve, a scheduled task that runs `posts check`, then the post (as a trial reel if you like). Pass when it posts exactly the approved file at the approved time, and refuses when the file changed.
 
 ## 3. What to write down for each job
 
@@ -62,4 +68,7 @@ Each failure is a specific fix, not a reason to stop. Bring the log back to Clau
 - **Voice cleanup** can't fix clipped or distant audio. A lav mic or a re-record beats any filter.
 - **Shorts scoring** is a guide from the transcript alone. It can't hear delivery, so always judge the picks as an editor.
 - **Beat snapping** needs a clear beat. Ambient pads report low confidence, and then nothing moves.
-- **Cloud rendering, AI footage and publishing** haven't been run against real accounts yet. The pilot is their first real test.
+- **Effects** place themselves from the face box and the cut-out. A head that moves a lot within one segment can drift away from doodles, callouts and notes (they follow the segment's average head). Check each effect in a frame.
+- **Frame-break** has no clean background plate: inside the card is the shot with you in it, hidden behind your full-size cut-out. With big arm movements a second copy can show at the edges.
+- **Trial versions** render one by one: about 2.5 min per 17 s version on the cloud machine. Plan for it with 4–6 versions.
+- **Cloud rendering, AI footage and publishing** (including trial reels and scheduled posts) haven't been run against real accounts yet. The pilot is their first real test.

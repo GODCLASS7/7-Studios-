@@ -16,10 +16,11 @@
 
 - 0:00.00–0:01.80: cutout "Waiting" (front)
 - 0:01.83–0:05.83: editorial "Monday" (behind, pinned)
+- 0:06.47–0:08.47: tag "Shuttle" (front, pinned)
 - 0:08.57–0:10.87: neon "in the wait" (front)
 - 0:12.63–0:14.83: inflate "Season" (behind)
 - 0:15.63–0:16.97: poster "Keep|showing|up" (front)
 
 ## Sound effects
 
-0:00.00 pop · 0:01.83 whoosh · 0:08.57 tick · 0:12.63 pop · 0:15.63 whoosh
+0:00.00 pop · 0:01.83 whoosh · 0:06.47 whoosh · 0:08.57 tick · 0:12.63 pop · 0:15.63 whoosh

@@ -1,0 +1,24 @@
+{
+  "name": "chalk",
+  "description": "You on a dark backdrop with hand-drawn marker captions and doodles that draw themselves.",
+  "for": "Explainers, frameworks, sermon points",
+  "look": "classic",
+  "grade": "noir",
+  "captions": {
+    "style": "marker",
+    "uppercase": false
+  },
+  "sfx": "auto",
+  "autocut": {
+    "pause": 0.35,
+    "punch": "alternate"
+  },
+  "titles": {
+    "style": "outline"
+  },
+  "suggestedFx": [
+    "doodles",
+    "freeze",
+    "checklist"
+  ]
+}

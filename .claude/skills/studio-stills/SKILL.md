@@ -43,6 +43,28 @@ Use `src/lib/formats.ts`:
 - Contrast for text over images: add a scrim (gradient) or pick a quiet area of the image. Never rely on a drop shadow alone.
 - One accent colour, used for one thing.
 
-## Carousels and series
+## Carousels: Carousel Studio
 
-Use one composition with an `index` prop, plus a shared frame. Keep the headline in the same position on every slide, and lead the eye towards the swipe direction.
+The `Carousel` template (`src/templates/Carousel/`) renders a whole deck, one slide per frame, from a props file. Formats: `Carousel-4x5` (1080×1350, Instagram's default), `-1x1`, `-9x16` (TikTok photo posts, stories).
+
+```bash
+npm run carousel -- <id> frames public/jobs/<id>/footage/<video>.mp4 --count=8 --cutout   # stills from a video (optional)
+npm run carousel -- <id> render --format=4x5                                              # out/<id>/carousel/4x5/slide-01.jpg … + sheet.jpg
+```
+
+1. **Words first.** Write the deck from the transcript (`takes.md`) or the topic: a cover that makes a promise, one idea per slide, a closing slide that says what to do (save, share, follow). Quote the speaker exactly; check scripture word for word. Show the slide copy for approval (⏸) before rendering.
+2. **Pictures.** `frames` picks the sharpest, best-exposed moments of a video (preferring ones with a face after `npm run track`), at least `--min-gap` seconds apart, full size; `--cutout` also cuts the person out of each (a transparent PNG trimmed to them). Or use the user's photos in `public/jobs/<id>/`.
+3. **Props**, in `jobs/<id>/carousel.json`:
+   ```json
+   { "look": "glow", "brand": "the-wait-culture", "handle": "@thewaitculture",
+     "slides": [
+       { "kind": "cover", "kicker": "The Wait Culture", "title": "Waiting is *not* wasting", "image": "jobs/<id>/carousel/frame-02-cut.png", "cutout": true },
+       { "kind": "list", "title": "Three things to do *while you wait*", "items": ["Keep showing up", "Stay close to people", "Write down what changes"] },
+       { "kind": "cta", "title": "Save this for *your* season", "body": "Send it to someone who's waiting." } ] }
+   ```
+   Slide kinds: `cover`, `point` (title + body), `list` (`items`), `quote` (`body`, `reference`), `stat` (`value`, `title`, `body`), `scripture` (`body`, `reference`), `image` (a photo with a title), `cta`. `*word*` sets a word in the accent colour (italic in the serif looks). Titles fit themselves. Also `swipeHint`, `pageNumbers`, and `theme` to override colours and fonts.
+4. **Looks:** `glow` (dark, a glowing horizon, the speaker cut out over it), `paper` (warm paper, ink serif, taped photos), `poster` (condensed caps filling the width, an accent bar), `editorial` (cream page, serif with italic accents, arched photo), `bold` (big caps over full-bleed photos), `soft` (blush and cream, rounded photos), `pop` (bright colour blocks, sticker photos), `scripture` (ink on paper, small-caps references). `"brand": "<slug>"` applies the brand kit's colours, fonts and logo.
+5. **Check** the contact sheet (`sheet.jpg`) at phone size: the cover must read in a second, nothing important in the bottom 15% on 4:5 (the app's buttons), and every number and quote matches the source.
+6. **Post** through the queue (`npm run posts -- add out/<id>/carousel/4x5 …`, studio-edit §5b): TikTok takes it as a photo post; an Instagram carousel is handed to the user to post.
+
+For a series of single posts, use one composition with an `index` prop and a shared frame; keep the headline in the same place on every one.

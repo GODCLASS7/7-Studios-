@@ -38,3 +38,8 @@ public/audio/test/
 jobs/*/beats-*.json
 # The tutorial test's screen recording, rendered from the TestScreen composition by npm test.
 public/jobs/tutorial-test/screen/
+# Frames picked from a video for carousels (npm run carousel -- <job> frames rebuilds them).
+public/jobs/*/carousel/
+# Trial versions the tests build from look-test's plan (npm run variants).
+jobs/look-test-t*/
+__pycache__/

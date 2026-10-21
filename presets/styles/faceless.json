@@ -1,0 +1,24 @@
+{
+  "name": "faceless",
+  "description": "No face needed: b-roll, floating stat cards and steps typed onto the frame.",
+  "for": "Tips lists over b-roll, ministry announcements",
+  "look": "classic",
+  "grade": "film",
+  "captions": {
+    "style": "typewriter",
+    "uppercase": false
+  },
+  "sfx": "auto",
+  "autocut": {
+    "pause": 0.3,
+    "punch": "none"
+  },
+  "titles": {
+    "style": "outline"
+  },
+  "suggestedFx": [
+    "counter",
+    "checklist",
+    "chips"
+  ]
+}

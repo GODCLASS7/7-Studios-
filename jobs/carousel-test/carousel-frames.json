@@ -1,0 +1,25 @@
+{
+  "video": "jobs/look-test/footage/take-a.mp4",
+  "frames": [
+    {
+      "t": 3.5,
+      "image": "jobs/carousel-test/carousel/frame-01.jpg",
+      "cutout": "jobs/carousel-test/carousel/frame-01-cut.png"
+    },
+    {
+      "t": 5.5,
+      "image": "jobs/carousel-test/carousel/frame-02.jpg",
+      "cutout": "jobs/carousel-test/carousel/frame-02-cut.png"
+    },
+    {
+      "t": 22.5,
+      "image": "jobs/carousel-test/carousel/frame-03.jpg",
+      "cutout": "jobs/carousel-test/carousel/frame-03-cut.png"
+    },
+    {
+      "t": 24.5,
+      "image": "jobs/carousel-test/carousel/frame-04.jpg",
+      "cutout": "jobs/carousel-test/carousel/frame-04-cut.png"
+    }
+  ]
+}

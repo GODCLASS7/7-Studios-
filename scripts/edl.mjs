@@ -18,6 +18,7 @@
 
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { brandProps } from "./lib/brand.mjs";
 import { findBeats } from "./lib/beats.mjs";
 import { diskPath, ff, FORMAT_SIZE, mapBox, norm, parseArgs, readJson, ts, videoInfo, writeJson } from "./lib/media.mjs";
 
@@ -30,6 +31,19 @@ if (!edl) {
 }
 const fps = edl.fps || 30;
 const notes_early = [];
+
+// Editing style: presets/styles/<name>.json, chosen with "style": "<name>". One pick
+// sets the look, grade, caption style, sound and title style; anything in edl.json wins.
+if (edl.style) {
+  const st = readJson(join("presets", "styles", `${edl.style}.json`));
+  if (!st) throw new Error(`Editing style not found: presets/styles/${edl.style}.json`);
+  edl.look ??= st.look;
+  edl.grade ??= st.grade;
+  edl.sfx ??= st.sfx;
+  edl.captions = { ...(st.captions || {}), ...(edl.captions || {}) };
+  if (edl.music && st.music) edl.music = { ...st.music, ...edl.music };
+  if (st.titles) edl.titles = (edl.titles || []).map((t) => ({ ...st.titles, ...t }));
+}
 
 // Brand kit: public/brands/<slug>/brand.json, chosen with "brand": "<slug>". Its
 // look, grade and caption colour are defaults; anything set in edl.json wins.
@@ -100,6 +114,9 @@ for (const s of segs) {
   }
 }
 const cap = edl.captions || {};
+// Caption styles: "pop" and "line" (FootageEdit) plus the library in src/captions/CaptionStyles.tsx.
+const CAPTION_STYLES = ["pop", "line", "none", "pill", "box", "karaoke", "typewriter", "serif", "minimal", "outline", "stack", "subtitle", "neon", "marker", "bubble", "gradient", "stamp"];
+if (cap.style && !CAPTION_STYLES.includes(cap.style)) throw new Error(`Unknown caption style "${cap.style}" (${CAPTION_STYLES.join(", ")})`);
 const maxWords = cap.maxWords || 3;
 const cues = [];
 let cur = [];
@@ -166,7 +183,8 @@ const overlays = (edl.overlays || []).map((o) => {
 });
 
 // Talking-head effects (src/effects). Each starts at `at` (output seconds), `atPhrase`
-// (a phrase ID) or `atWord` (the first time a word or phrase is said in the edit).
+// (a phrase ID) or `atWord` (the first time a word or phrase is said in the edit, or
+// the first time after `after` seconds).
 const OUT = FORMAT_SIZE[edl.format] || FORMAT_SIZE["9x16"];
 
 // Framing from face tracks (npm run track): each segment gets the head box for
@@ -235,8 +253,9 @@ const startOf = (e) => {
     return seg.from / fps;
   }
   if (e.atWord) {
-    const hit = sayStart(e.atWord);
-    if (!hit) throw new Error(`effect ${e.kind}: "${e.atWord}" isn't said in the edit (check edit.md)`);
+    // "after": the first time it's said after that many seconds (for words said more than once).
+    const hit = sayStart(e.atWord, Number(e.after ?? 0));
+    if (!hit) throw new Error(`effect ${e.kind}: "${e.atWord}" isn't said in the edit${e.after ? ` after ${e.after} s` : ""} (check edit.md)`);
     return hit[0].startMs / 1000;
   }
   return Number(e.at ?? 0);
@@ -363,6 +382,9 @@ for (const c of cuts) {
 }
 lookRanges.push({ from: lf, to: total, look: curLook });
 const lookAt = (f) => lookRanges.find((r) => f >= r.from && f < r.to)?.look || defaultLook;
+// The caption library styles are for classic sections; the other looks set their own captions.
+if (cap.style && !["pop", "line", "none"].includes(cap.style) && lookRanges.some((r) => r.look !== "classic"))
+  notes.push(`Caption style "${cap.style}" shows only in classic sections; ${[...new Set(lookRanges.filter((r) => r.look !== "classic").map((r) => r.look))].join(", ")} use their own captions.`);
 const needsMatte = lookRanges.some((r) => r.look !== "classic") || (edl.inserts || []).some((i) => i.layer === "behind");
 const missingMatte = Object.entries(edl.sources).filter(([, src]) => !src.matte).map(([k]) => k);
 if (needsMatte && missingMatte.length) notes.push(`No cutout yet for source(s) ${missingMatte.join(", ")}: big words and "behind" inserts will sit in front instead. Run: npm run matte -- ${job}`);
@@ -436,7 +458,7 @@ const inserts = (edl.inserts || []).map((i) => {
 // Titles (src/titles): cinematic type in the footage, behind or in front of the speaker,
 // optionally pinned to a spot tracked with `npm run pin` so it moves with the shot.
 // "titles": [{ style, text, sub, atWord | atPhrase | at, seconds, x, y, size, rotate, color, accent, layer, pin }]
-const TITLE_STYLES = ["cutout", "editorial", "inflate", "neon", "extrude", "poster", "outline"];
+const TITLE_STYLES = ["cutout", "editorial", "inflate", "neon", "extrude", "poster", "outline", "tag"];
 const pinData = {};
 const pinOf = (name) => {
   const ref = edl.pins?.[name];
@@ -485,8 +507,9 @@ const titles = (edl.titles || []).map((t, n) => {
     sub: t.sub ?? null,
     from,
     durationInFrames: len,
-    x: t.x ?? (pin ? 0 : 0.5),
-    y: t.y ?? (pin ? 0 : 0.3),
+    // A pinned tag sits up and to the side of its spot, with a leader line back to it.
+    x: t.x ?? (pin ? (t.style === "tag" ? 0.14 : 0) : 0.5),
+    y: t.y ?? (pin ? (t.style === "tag" ? -0.08 : 0) : 0.3),
     size: t.size ?? 1,
     rotate: t.rotate ?? 0,
     color: t.color ?? null,
@@ -502,6 +525,100 @@ for (let k = punches.length - 1; k >= 0; k--) {
 }
 if (titles.some((t) => t.layer === "behind") && Object.values(edl.sources).some((x) => !x.matte))
   notes.push(`Titles set "behind" need the cutout, or they sit in front of the speaker. Run: npm run matte -- ${job}`);
+
+// The effects pack (src/fx): "fx": [{ kind, atWord | atPhrase | at, seconds, text, sub,
+// items, value, src, x, y, side, color, style, data }]. Items are said in the edit: each
+// lands on its own word (found after the effect starts), or { text, atWord | at }.
+const FX_SECONDS = { clone: 3, "frame-break": 2.5, "god-rays": 3, "rack-focus": 2.2, vertigo: 2.5, doodles: 3, freeze: 2.5, "green-screen": 4, callout: 3.5, checklist: 4, counter: 2.5, chips: 3.5, "before-after": 3, blackout: 0.8, phone: 3.5, cover: 3, comment: 4.5, "zoom-through": 0.8 };
+// These draw the cut-out speaker over something, so they are skipped without one.
+const FX_MATTE = ["clone", "frame-break", "god-rays", "vertigo", "green-screen", "cover"];
+const FX_HEAD = ["callout", "doodles", "freeze", "god-rays", "zoom-through"];
+const segAt = (f) => segs.find((x) => f >= x.from && f < x.from + x.durationInFrames) || segs[segs.length - 1];
+const cutFrames = segs.slice(1).map((x) => x.from);
+const fx = (edl.fx || []).flatMap((e, n) => {
+  const label = `fx ${n + 1} (${e.kind})`;
+  if (!(e.kind in FX_SECONDS)) throw new Error(`${label}: unknown kind; use one of ${Object.keys(FX_SECONDS).join(", ")}`);
+  const t0 = startOf(e);
+  let from = Math.round(t0 * fps);
+  let len = Math.round((e.seconds ?? FX_SECONDS[e.kind]) * fps);
+  // Zoom-through is centred on the nearest cut (within a second), so the dive crosses it.
+  if (e.kind === "zoom-through") {
+    const near = cutFrames.filter((c) => Math.abs(c - from) <= fps).sort((a, b) => Math.abs(a - from) - Math.abs(b - from))[0];
+    if (near === undefined) notes.push(`${label} at ${t0.toFixed(2)} s: no cut within a second, so it dives in mid-shot. Put it on a cut.`);
+    from = (near ?? from) - Math.round(len / 2);
+  } else if (e.kind !== "blackout") from = snapF(from);
+  from = Math.max(0, from);
+  const s = segAt(from);
+  const src = edl.sources[s.source];
+  if (FX_MATTE.includes(e.kind) && !src.matte) {
+    notes.push(`${label} at ${t0.toFixed(2)} s skipped: it needs the speaker cut out. Run: npm run matte -- ${job}`);
+    return [];
+  }
+  if ((e.kind === "doodles" || e.kind === "freeze") && !src.matte) notes.push(`${label}: no cutout, so the white outline${e.kind === "freeze" ? " and sticker lift are" : " is"} left out. Run: npm run matte -- ${job}`);
+  if (FX_HEAD.includes(e.kind) && !faceBoxOf(s)) notes.push(`${label}: no face box for source ${s.source}, so the head is assumed centred. Run: npm run track -- ${job}`);
+  const items = (e.items || []).map((it, k) => {
+    const spec = typeof it === "string" ? { text: it } : it;
+    let at = null;
+    if (spec.at != null) at = Number(spec.at);
+    else {
+      const hit = sayStart(spec.atWord || spec.text, from / fps - 0.05);
+      if (hit && hit[0].startMs / 1000 < (from + len + 3 * fps) / fps) at = hit[0].startMs / 1000;
+    }
+    // Not said: spread evenly through the first half of the effect.
+    const f = at === null ? Math.round(((k + 0.5) / Math.max(1, e.items.length)) * len * 0.5) : Math.max(0, Math.round(at * fps) - from);
+    return { text: String(spec.text ?? spec.atWord ?? ""), f, said: at !== null };
+  });
+  // Unsaid items never land before the one listed ahead of them.
+  items.forEach((it, k) => {
+    if (k && !it.said) it.f = Math.max(it.f, items[k - 1].f + Math.round(0.3 * fps));
+    delete it.said;
+  });
+  // The effect lasts until a beat after its last item.
+  if (items.length) len = Math.max(len, Math.max(...items.map((i) => i.f)) + Math.round(1.2 * fps));
+  len = Math.max(1, Math.min(len, total - from));
+  let value = null;
+  let prefix = e.prefix ?? "";
+  let suffix = e.suffix ?? "";
+  if (e.value != null) {
+    const m = String(e.value).match(/^([^\d.-]*)(-?[\d,]*\.?\d+)(.*)$/);
+    if (!m) throw new Error(`${label}: can't read the value "${e.value}" (try 120, $10,000, 98%)`);
+    value = Number(m[2].replace(/,/g, ""));
+    prefix = e.prefix ?? m[1];
+    suffix = e.suffix ?? m[3];
+  }
+  if (e.kind === "counter" && value === null) throw new Error(`${label}: needs a "value" (the number it rolls up to)`);
+  let fsrc = null;
+  if (e.src) {
+    if (!existsSync(diskPath(e.src))) throw new Error(`${label}: ${e.src} not found under public/`);
+    fsrc = e.src.replace(/^public\//, "");
+  }
+  if (e.kind === "green-screen" && !fsrc) notes.push(`${label}: no "src", so the screen behind you is the brand backdrop.`);
+  if (e.kind === "comment" && !(e.text && e.sub)) throw new Error(`${label}: needs "text" (the comment) and "sub" (your reply)`);
+  return [{
+    kind: e.kind,
+    from,
+    durationInFrames: len,
+    text: e.text ?? null,
+    sub: e.sub ?? null,
+    items,
+    value,
+    prefix,
+    suffix,
+    src: fsrc,
+    x: e.x ?? null,
+    y: e.y ?? null,
+    side: e.side === "left" ? "left" : "right",
+    color: e.color ?? null,
+    style: e.style ?? null,
+    data: e.data ?? {},
+  }];
+});
+
+// Nor with an effect from the pack (they carry their own words and graphics).
+for (let k = punches.length - 1; k >= 0; k--) {
+  const f = Math.round((punches[k].startMs / 1000) * fps);
+  if (fx.some((e) => f + 30 > e.from && f < e.from + e.durationInFrames)) punches.splice(k, 1);
+}
 
 // Tutorial layout (Tutorial-9x16 / -16x9): the presenter plus screen recordings that zoom
 // to each click, numbered steps and hand-drawn notes. Click and note times ("t") are
@@ -555,6 +672,14 @@ if (edl.sfx === "auto") {
   for (const sc of tutorial?.screens || []) sfx.push({ from: sc.from, sound: "whoosh" }, ...sc.clicks.map((c) => ({ from: sc.from + c.f, sound: "click" })));
   for (const t of titles) sfx.push({ from: t.from, sound: t.style === "inflate" || t.style === "cutout" ? "pop" : t.style === "neon" ? "tick" : "whoosh" });
   for (const e of effects) sfx.push({ from: e.from + (e.kind === "shoulder-zoom" ? Math.round(2.4 * fps) : 0), sound: e.kind === "screen-push" ? "tick" : "whoosh" });
+  // Effects pack: one sound as it starts, and one per item where items land.
+  const FX_SOUND = { clone: "pop", "frame-break": "whoosh", "god-rays": "shimmer", "rack-focus": "whoosh", vertigo: "riser", doodles: "pop", freeze: "click", "green-screen": "whoosh", callout: "pop", checklist: "tick", counter: "tick", chips: "pop", "before-after": "whoosh", blackout: "click", phone: "whoosh", cover: "click", comment: "click", "zoom-through": "whoosh" };
+  for (const e of fx) {
+    const per = ["clone", "doodles", "callout", "checklist", "chips"].includes(e.kind) && e.items.length;
+    if (per) for (const it of e.items) sfx.push({ from: e.from + it.f, sound: FX_SOUND[e.kind] });
+    else sfx.push({ from: e.from, sound: FX_SOUND[e.kind] });
+    if (e.kind === "comment") sfx.push({ from: e.from + Math.round(e.durationInFrames * 0.55), sound: "pop" });
+  }
 } else if (Array.isArray(edl.sfx)) {
   sfx = edl.sfx.map((x) => ({ from: Math.round(Number(x.at) * fps), sound: x.sound, volume: x.volume }));
 }
@@ -567,23 +692,7 @@ sfx = sfx
 if (sfx.length && !existsSync(join("public", "audio", "sfx", "pop.wav"))) notes.push("Sound effects are listed but not built yet. Run: npm run sfx");
 
 const fam = (f, fallback) => (f?.family ? `"${f.family}", ${fallback}` : fallback);
-const brand = brandKit
-  ? {
-      name: brandKit.name,
-      accent: brandKit.colors?.accent || "#E8B44A",
-      punch: brandKit.colors?.punch || "#FFD60A",
-      text: brandKit.colors?.text || "#F4EFE6",
-      background: brandKit.colors?.background || "#0B0B0D",
-      displayFont: fam(brandKit.fonts?.display, "Inter, Helvetica, Arial, sans-serif"),
-      serifFont: fam(brandKit.fonts?.serif, "Fraunces, Georgia, serif"),
-      fonts: Object.values(brandKit.fonts || {})
-        .filter((f) => f.file)
-        .map((f) => ({ family: f.family, src: `brands/${edl.brand}/${f.file}`, ...(f.weight ? { weight: f.weight } : {}), ...(f.style ? { style: f.style } : {}) })),
-      logo: brandKit.logo ? `brands/${edl.brand}/${brandKit.logo}` : null,
-      wordmark: brandKit.wordmark || brandKit.name,
-      endCard: brandKit.endCard && edl.endCard !== false ? { seconds: brandKit.endCard.seconds ?? 2.5, line: brandKit.endCard.line || "", sub: brandKit.endCard.sub || "" } : null,
-    }
-  : null;
+const brand = brandKit ? brandProps(edl.brand, { endCard: edl.endCard !== false }) : null;
 // The end card plays after the last word, not over it.
 const endFrames = brand?.endCard ? Math.round(brand.endCard.seconds * fps) : 0;
 
@@ -614,6 +723,7 @@ const props = {
   orbit,
   inserts,
   titles,
+  fx,
   tutorial,
   sfx,
   cues: cap.style === "none" ? [] : cues,
@@ -654,6 +764,7 @@ const lines = [
       ]
     : []),
   ...(titles.length ? ["## Titles", "", ...titles.map((t) => `- ${ts(t.from / fps)}–${ts((t.from + t.durationInFrames) / fps)}: ${t.style} "${t.text}" (${t.layer}${t.pin ? ", pinned" : ""})`), ""] : []),
+  ...(fx.length ? ["## Effects pack", "", ...fx.map((e) => `- ${ts(e.from / fps)}–${ts((e.from + e.durationInFrames) / fps)}: ${e.kind}${e.text ? ` "${e.text}"` : ""}${e.items.length ? ` (${e.items.map((i) => `${i.text}@+${(i.f / fps).toFixed(1)}s`).join(", ")})` : ""}${e.value !== null ? ` ${e.prefix}${e.value}${e.suffix}` : ""}`), ""] : []),
   ...(broll.length ? ["## B-roll", "", ...broll.map((b) => `- ${ts(b.from / fps)}–${ts((b.from + b.durationInFrames) / fps)}: ${b.src}`), ""] : []),
   ...(brand || clean || edl.music?.file
     ? [

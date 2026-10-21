@@ -1,0 +1,29 @@
+{
+  "goal": "Which opening keeps people past 3 seconds",
+  "variants": [
+    {
+      "id": "t1",
+      "label": "As edited"
+    },
+    {
+      "id": "t2",
+      "label": "Question headline",
+      "hook": {
+        "text": "Why does waiting *hurt*?",
+        "style": "editorial",
+        "seconds": 2.2
+      }
+    },
+    {
+      "id": "t3",
+      "label": "Opens on the hardest part",
+      "keep": "A.3,A.6,A.4,A.7,A.8,A.9"
+    },
+    {
+      "id": "t4",
+      "label": "Closer, punchier grade",
+      "zoom": 1.12,
+      "grade": "punchy"
+    }
+  ]
+}

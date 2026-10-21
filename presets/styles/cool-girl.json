@@ -1,0 +1,18 @@
+{
+  "name": "cool-girl",
+  "description": "Warm grade, calm lowercase captions, serif punch lines with sparkles, your reels orbiting.",
+  "for": "Lifestyle, creators, personal brands",
+  "look": "cool-girl",
+  "grade": "warm",
+  "captions": {
+    "punch": "auto"
+  },
+  "sfx": "auto",
+  "autocut": {
+    "pause": 0.35,
+    "punch": "alternate"
+  },
+  "suggestedFx": [
+    "doodles"
+  ]
+}
