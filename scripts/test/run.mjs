@@ -73,7 +73,9 @@ const JOBS = {
   "tutorial-test": { footageJob: "look-test", fixture: [`--photo=${PHOTO}`], screen: true, layoutComp: "Tutorial-9x16" },
   "lyric-test": { comp: "ScriptureLyric-9x16", props: "jobs/lyric-test/lyrics.props.json" },
   // All 18 effects of the pack in one 51 s edit of the look-test take (uses its cut-out and reels).
-  "fx-test": { footageJob: "look-test", fixture: [`--photo=${PHOTO}`], reels: "look-test", screen: "tutorial-test", frames: [48, 165, 228, 288, 325, 420, 465, 540, 675, 750, 810, 870, 939, 954, 1056, 1200, 1272, 1470, 1515] },
+  // tol: the white sticker outlines trace the cut-out's edge, so the tiny edge differences of a
+  // cut-out rebuilt on another computer show more than elsewhere.
+  "fx-test": { tol: 0.4, footageJob: "look-test", fixture: [`--photo=${PHOTO}`], reels: "look-test", screen: "tutorial-test", frames: [48, 165, 228, 288, 325, 420, 465, 540, 675, 750, 810, 870, 939, 954, 1056, 1200, 1272, 1470, 1515] },
   "titles-reel": { comp: "Titles-9x16", dur: 480, frames: [36, 96, 156, 216, 276, 336, 396, 456] },
   cards: { comp: "Cards-9x16", dur: 255, frames: [40, 78, 125, 200] },
   "cards-stack": { comp: "Cards-16x9", props: "tests/fixtures/cards-stack.json", dur: 189, frames: [30, 60, 100, 160] },
@@ -411,7 +413,7 @@ for (const job of frameJobs) {
       continue;
     }
     const pct = changed(now, gold);
-    if (pct > TOL) {
+    if (pct > Math.max(TOL, cfg.tol || 0)) {
       const sheet = join(OUT, `${job}-f${f}-diff.png`);
       ffmpeg(["-i", gold, "-i", now, "-filter_complex", "[0:v]format=rgb24,split[g1][g2];[1:v]format=rgb24,split[n1][n2];[g2]format=gray[gg];[n2]format=gray[ng];[gg][ng]blend=all_mode=difference,eq=contrast=4,format=rgb24[d];[g1][n1][d]hstack=3", "-frames:v", "1", sheet]);
       fails.push(`frame ${f}: ${pct.toFixed(2)}% changed → ${sheet}`);
