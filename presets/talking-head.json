@@ -8,7 +8,7 @@
     "Where it will be used": "Reels, Shorts, TikTok, WhatsApp Status",
     "Must-say copy / CTA": "Speaker's name and role once (lower third); series name or CTA on the last line",
     "Audio": "Clean voice first; optional music bed ducked under speech; −14 LUFS",
-    "Look & feel references": "Hook-first, jump cuts with punch-ins, 3-word pop captions with the active word highlighted"
+    "Look & feel references": "Hook-first, jump cuts with punch-ins; look: bold (words behind the head), cool-girl or cool-dude, or classic pop captions (studio-edit §3c)"
   },
   "deliverables": [
     { "name": "Edit 9:16", "type": "motion", "composition": "FootageEdit-9x16", "format": "9x16", "seconds": 45, "fps": 30, "preset": "hd", "complexity": "simple", "rawMinutes": 10, "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 }

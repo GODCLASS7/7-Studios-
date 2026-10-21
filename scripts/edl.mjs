@@ -16,7 +16,7 @@
 //
 // Render: npm run render -- FootageEdit-9x16 review --props=jobs/<job>/.edl.resolved.json
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { diskPath, ff, FORMAT_SIZE, mapBox, norm, parseArgs, readJson, ts, videoInfo, writeJson } from "./lib/media.mjs";
 
@@ -236,6 +236,102 @@ const effects = (edl.effects || []).flatMap((e) => {
   throw new Error(`Unknown effect kind "${e.kind}" (liquid-glass, screen-push, shoulder-zoom)`);
 });
 
+// Looks ("classic", "bold", "cool-girl", "cool-dude"): one default, switched per
+// section by "sections": [{ atWord | atPhrase | at, look }]. A section runs until the next.
+const LOOKS = ["classic", "bold", "cool-girl", "cool-dude"];
+const lookOf = (l) => {
+  if (!LOOKS.includes(l)) throw new Error(`Unknown look "${l}" (${LOOKS.join(", ")})`);
+  return l;
+};
+const defaultLook = lookOf(edl.look || "classic");
+const cuts = (edl.sections || []).map((sec) => ({ from: Math.round(startOf({ kind: "section", ...sec }) * fps), look: lookOf(sec.look) })).sort((a, b) => a.from - b.from);
+const lookRanges = [];
+let lf = 0;
+let curLook = defaultLook;
+for (const c of cuts) {
+  if (c.from > lf) lookRanges.push({ from: lf, to: c.from, look: curLook });
+  lf = c.from;
+  curLook = c.look;
+}
+lookRanges.push({ from: lf, to: total, look: curLook });
+const lookAt = (f) => lookRanges.find((r) => f >= r.from && f < r.to)?.look || defaultLook;
+const needsMatte = lookRanges.some((r) => r.look !== "classic") || (edl.inserts || []).some((i) => i.layer === "behind");
+const missingMatte = Object.entries(edl.sources).filter(([, src]) => !src.matte).map(([k]) => k);
+if (needsMatte && missingMatte.length) notes.push(`No cutout yet for source(s) ${missingMatte.join(", ")}: big words and "behind" inserts will sit in front instead. Run: npm run matte -- ${job}`);
+
+// Punch words: the emphasis words, or (punch "auto") one strong word per cue, at most one every 2.2 s.
+const STOP = new Set("about after again also because before being could every first from have here just like make many more most much only other over really should some than that their them then there these they thing think this those through very what when where which while with would your yours".split(" "));
+const punchMode = cap.punch || (defaultLook === "classic" ? "emphasis" : "auto");
+const emph = new Set((cap.emphasis || []).map((w) => norm(w)));
+const punches = [];
+let lastPunch = -1e9;
+for (const c of cues) {
+  const f = Math.round((c.startMs / 1000) * fps);
+  const look = lookAt(f);
+  if (look === "classic" || punchMode === "none") continue;
+  // Auto picks skip contractions ("here's", "don't") and the word just used.
+  const cands = c.words.filter(
+    (w) => emph.has(norm(w.text)) || (punchMode === "auto" && norm(w.text).length >= 5 && !STOP.has(norm(w.text)) && !norm(w.text).includes("'") && norm(w.text) !== norm(punches[punches.length - 1]?.text || "")),
+  );
+  const marked = cands.some((x) => emph.has(norm(x.text)));
+  if (!cands.length || (!marked && c.startMs - lastPunch < 2200)) continue; // emphasis words always get their moment
+  const w = cands.find((x) => emph.has(norm(x.text))) || [...cands].sort((a, b) => norm(b.text).length - norm(a.text).length)[0];
+  punches.push({ text: w.text.replace(/[.,!?;:]+$/, ""), startMs: w.startMs, endMs: Math.max(w.endMs + 700, w.startMs + 1100), look, cueStartMs: c.startMs, cueEndMs: c.endMs });
+  lastPunch = c.startMs;
+}
+
+// A punch word never competes with an insert placed behind the speaker.
+const behindIns = (edl.inserts || []).filter((i) => i.layer === "behind").map((i) => {
+  const at = startOf({ kind: i.kind, ...i });
+  return [at * 1000, (at + (i.seconds || 3)) * 1000];
+});
+for (let k = punches.length - 1; k >= 0; k--) if (behindIns.some(([a, b]) => punches[k].endMs > a && punches[k].startMs < b)) punches.splice(k, 1);
+
+// Orbiting reels (cool-girl): your own reels, or other creators' with their @handle shown.
+const orbit = (edl.orbit || []).map((o) => {
+  if (o.own === false && !o.credit) throw new Error(`orbit: ${o.file} isn't yours, so it needs "credit": "@handle"`);
+  return { src: o.file, credit: o.own === false ? o.credit : o.credit || null, image: /\.(png|jpe?g|webp)$/i.test(o.file) };
+});
+
+// Inserts (src/inserts): app window, profile follow, file scroll.
+const INSERTS = ["app-window", "profile-follow", "file-scroll"];
+const inserts = (edl.inserts || []).map((i) => {
+  if (!INSERTS.includes(i.kind)) throw new Error(`Unknown insert "${i.kind}" (${INSERTS.join(", ")})`);
+  if (i.credit === undefined && i.own === false) throw new Error(`insert ${i.kind}: someone else's content needs "credit": "@handle"`);
+  const at = startOf({ kind: i.kind, ...i });
+  return {
+    kind: i.kind,
+    from: Math.round(at * fps),
+    durationInFrames: Math.round((i.seconds || 3) * fps),
+    layer: i.layer === "behind" ? "behind" : "front",
+    x: i.x ?? 0.5,
+    y: i.y ?? (i.layer === "behind" ? 0.3 : 0.32),
+    w: i.w ?? (i.layer === "behind" ? 0.86 : 0.78),
+    credit: i.credit || null,
+    data: i.data || {},
+  };
+});
+
+// Sound effects: "auto" puts subtle ones on punch words, inserts, look changes and effects,
+// or list them yourself: [{ at, sound, volume }]. Always well under the voice.
+const SFX = { pop: "audio/sfx/pop.wav", whoosh: "audio/sfx/whoosh.wav", click: "audio/sfx/click.wav", shimmer: "audio/sfx/shimmer.wav", tick: "audio/sfx/tick.wav", riser: "audio/sfx/riser.wav" };
+let sfx = [];
+if (edl.sfx === "auto") {
+  for (const p of punches) sfx.push({ from: Math.round((p.startMs / 1000) * fps) - 1, sound: p.look === "cool-girl" ? "shimmer" : "pop" });
+  for (const i of inserts) sfx.push({ from: i.from, sound: "whoosh" }, ...(i.kind === "profile-follow" ? [{ from: i.from + Math.round(1.4 * fps), sound: "click" }] : []));
+  for (const c of cuts) sfx.push({ from: c.from, sound: "whoosh" });
+  for (const e of effects) sfx.push({ from: e.from + (e.kind === "shoulder-zoom" ? Math.round(2.4 * fps) : 0), sound: e.kind === "screen-push" ? "tick" : "whoosh" });
+} else if (Array.isArray(edl.sfx)) {
+  sfx = edl.sfx.map((x) => ({ from: Math.round(Number(x.at) * fps), sound: x.sound, volume: x.volume }));
+}
+sfx = sfx
+  .filter((x) => x.from >= 0 && x.from < total)
+  .map((x) => {
+    if (!SFX[x.sound]) throw new Error(`Unknown sound "${x.sound}" (${Object.keys(SFX).join(", ")})`);
+    return { from: x.from, src: SFX[x.sound], volume: Math.min(0.35, x.volume ?? 0.22) };
+  });
+if (sfx.length && !existsSync(join("public", "audio", "sfx", "pop.wav"))) notes.push("Sound effects are listed but not built yet. Run: npm run sfx");
+
 const props = {
   job,
   version: edl.version,
@@ -251,7 +347,13 @@ const props = {
     push: s.push || 0,
     focusX: s.focus?.[0] ?? edl.sources[s.source].focus?.[0] ?? 0.5,
     focusY: s.focus?.[1] ?? edl.sources[s.source].focus?.[1] ?? 0.4,
+    matte: edl.sources[s.source].matte || null,
   })),
+  looks: lookRanges,
+  punches,
+  orbit,
+  inserts,
+  sfx,
   cues: cap.style === "none" ? [] : cues,
   captions: { style: cap.style || "pop", position: cap.position ?? 0.66, uppercase: cap.uppercase ?? true, highlight: cap.highlight || "#E8B44A", size: cap.size || 1, emphasis: cap.emphasis || [] },
   grade: edl.grade || "none",
@@ -276,6 +378,10 @@ const lines = [
   ...(effects.length
     ? ["## Effects", "", "| In | Out | Effect | Detail |", "|---|---|---|---|", ...effects.map((e) => `| ${ts(e.from / fps)} | ${ts((e.from + e.durationInFrames) / fps)} | ${e.kind} | ${e.kind === "screen-push" ? e.words.map((w) => `${w.text}@${w.start.toFixed(2)}`).join(" ") : e.kind === "liquid-glass" ? `${e.title} ${e.prefix}${e.endValue}${e.suffix} ${e.lineColour}` : `${e.style}: ${e.start.big} → ${e.end.big}; face x ${e.faceX.toFixed(2)} w ${e.faceWidth.toFixed(2)} eyes ${e.eyeY.toFixed(2)}`} |`), ""]
     : []),
+  ...(lookRanges.length > 1 || defaultLook !== "classic" ? ["## Looks", "", ...lookRanges.map((r) => `- ${ts(r.from / fps)}–${ts(r.to / fps)}: **${r.look}**`), ""] : []),
+  ...(punches.length ? ["## Punch words", "", punches.map((p) => `${ts(p.startMs / 1000)} **${p.text}** (${p.look})`).join(" · "), ""] : []),
+  ...(inserts.length ? ["## Inserts", "", ...inserts.map((i) => `- ${ts(i.from / fps)}–${ts((i.from + i.durationInFrames) / fps)}: ${i.kind} (${i.layer})${i.credit ? `, credit ${i.credit}` : ""}`), ""] : []),
+  ...(sfx.length ? ["## Sound effects", "", sfx.map((x) => `${ts(x.from / fps)} ${x.src.split("/").pop().replace(".wav", "")}`).join(" · "), ""] : []),
   ...(notes.length ? ["## Notes", "", ...notes.map((n) => `- ${n}`), ""] : []),
 ];
 writeFileSync(join("jobs", job, "edit.md"), lines.join("\n"));

@@ -8,7 +8,9 @@
 //   Black frame   a black or blank frame at a cut                     → FAIL
 //   Flash         a piece shorter than 0.3 s                          → WARN
 //   Jump cut      two pieces of one take back to back, same framing   → WARN (punch in, or cover with b-roll)
-//   Face          a caption or overlay over a face box (set "faceBox" per source in edl.json) → WARN
+//   Face          a caption, overlay, insert or card over a face box (set "faceBox" per source in edl.json) → WARN
+//   Safe zone     on 9:16, text or graphics under Instagram/TikTok's buttons and captions
+//                 (outside x 6–89%, y 11–82% of the frame)                     → WARN
 //   Length        render length differs from the edit list           → FAIL
 // Also draws out/<job>/cutcheck-v<N>.png: the frame before and after each cut,
 // with the render time burned in, to read before sending the cut.
@@ -127,7 +129,6 @@ for (const e of p.effects || []) {
   }
 }
 const anyFace = Object.keys(p.faceBoxes).length > 0;
-add("Text over faces", faceHits.length ? "WARN" : "PASS", anyFace ? (faceHits.length ? faceHits.join(", ") : "captions and overlays clear of faces") : "not checked: add \"faceBox\": [x, y, w, h] (0–1 of the source frame) to each source in edl.json");
 
 // Cut sheet: last frame before and first frame after each cut, render time burned in.
 const sheet = join("out", job, `cutcheck-v${p.version}.png`);
@@ -140,6 +141,48 @@ if (cuts.length) {
   if (r.status !== 0) r = ff(["-i", render, "-vf", `select='${sel}',scale=${portrait ? 270 : 480}:-2,tile=4x${rows}:padding=6:color=0x0B0B0D`, "-frames:v", "1", "-fps_mode", "passthrough", sheet]);
   add("Cut sheet", r.status === 0 ? "PASS" : "WARN", r.status === 0 ? `${sheet} (pairs: before | after, in cut order)` : "could not draw");
 }
+
+// Platform safe zone (vertical only): the top bar, the right-hand buttons and the caption/audio strip.
+if (portrait) {
+  const SAFE = { x1: 0.06 * W, x2: 0.89 * W, y1: 0.11 * H, y2: 0.82 * H };
+  const out = [];
+  const outside = (b) => b.x1 < SAFE.x1 - 2 || b.x2 > SAFE.x2 + 2 || b.y1 < SAFE.y1 - 2 || b.y2 > SAFE.y2 + 2;
+  const lookAtF = (f) => (p.looks || []).find((r) => f >= r.from && f < r.to)?.look || "classic";
+  for (const c of p.cues) {
+    const f = Math.round(((c.startMs + c.endMs) / 2000) * fps);
+    const look = lookAtF(f);
+    const pos = look === "classic" ? p.captions.position : look === "cool-dude" ? Math.max(p.captions.position, 0.74) : Math.max(p.captions.position, 0.7);
+    const size = look === "classic" ? capSize : (look === "bold" ? 66 : look === "cool-girl" ? 96 : 27) * u;
+    const lines = c.words.map((w) => w.text).join(" ").length > 16 ? 2 : 1;
+    const top = look === "classic" ? H * pos - size * 0.6 : H * pos - (lines * size * 1.15) / 2;
+    const band = { x1: W * 0.12, x2: W * 0.88, y1: top, y2: top + lines * size * 1.15 };
+    if (outside(band)) out.push(`captions at ${ts(f / fps)}`);
+  }
+  for (const i of p.inserts || []) {
+    const h = i.w * W * (i.kind === "file-scroll" ? Number(i.data?.ratio ?? 1.25) : i.kind === "profile-follow" ? 0.62 : 0.7);
+    const b = { x1: i.x * W - (i.w * W) / 2, x2: i.x * W + (i.w * W) / 2, y1: i.y * H - h / 2, y2: i.y * H + h / 2 };
+    if (i.layer === "front" && outside(b)) out.push(`${i.kind} at ${ts(i.from / fps)}`);
+    const k = p.segments.findIndex((s) => i.from + 15 >= s.from && i.from + 15 < s.from + s.durationInFrames);
+    if (k >= 0 && i.layer === "front" && overlaps(faceRect(p.segments[k], p.cutSources[k]), b)) faceHits.push(`${i.kind} at ${ts(i.from / fps)}`);
+  }
+  for (const e of p.effects || []) {
+    if (e.kind === "liquid-glass") {
+      const b = { x1: W / 2 - 450 * u, x2: W / 2 + 450 * u, y1: e.cardY * H, y2: e.cardY * H + 610 * u };
+      if (outside(b)) out.push(`liquid-glass card at ${ts(e.from / fps)}`);
+    }
+  }
+  // Captions against front inserts (FootageEdit moves captions below an insert, up to 80% down).
+  for (const i of p.inserts || []) {
+    if (i.layer !== "front") continue;
+    const h = i.w * W * (i.kind === "file-scroll" ? Number(i.data?.ratio ?? 1.25) : i.kind === "profile-follow" ? 0.62 : 0.7);
+    const bottom = (i.y * H + h / 2) / H;
+    if (bottom + 0.035 > 0.8 && p.cues.some((c) => c.endMs / 1000 > i.from / fps && c.startMs / 1000 < (i.from + i.durationInFrames) / fps))
+      out.push(`captions under ${i.kind} at ${ts(i.from / fps)} (no room below it: move it up or make it smaller)`);
+  }
+  add("Safe zone (9:16)", out.length ? "WARN" : "PASS", out.length ? `outside the platform safe area: ${out.slice(0, 8).join(", ")}${out.length > 8 ? ` +${out.length - 8} more` : ""}` : "all text and graphics inside the safe area");
+}
+
+add("Text over faces", faceHits.length ? "WARN" : "PASS", anyFace ? (faceHits.length ? faceHits.join(", ") : "captions and overlays clear of faces") : "not checked: add \"faceBox\": [x, y, w, h] (0–1 of the source frame) to each source in edl.json");
 
 // Effect check frames: the moments to look at (glass card with the line drawn, first
 // screen word, both shoulder cards), side by side in out/<job>/effects-v<N>.png.

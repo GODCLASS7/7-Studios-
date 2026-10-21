@@ -3,7 +3,7 @@
 // pauses closed up, and the cuts padded so no word is clipped.
 //
 //   node scripts/autocut.mjs <job> [--keep=A.3,A.1-A.2,B.4] [--pause=0.35] [--pad=0.06]
-//                            [--fillers=like,so] [--punch=alternate|none] [--format=9x16]
+//                            [--fillers=like,so] [--punch=alternate|editorial|none] [--format=9x16]
 //
 // --keep lists phrase IDs from jobs/<job>/takes.md in the order they should
 // play, so the hook can come first. Without it, every phrase is kept in order.
@@ -88,8 +88,14 @@ for (const s of segments) {
   } else merged.push({ ...s });
 }
 
-// Jump cuts inside one take are hidden by alternating a punch-in.
-if ((opt.punch || "alternate") === "alternate") {
+// Jump cuts inside one take are hidden by alternating a punch-in. "editorial"
+// alternates wide and close on every cut, like a two-camera studio interview
+// (the cool-dude look); it needs 4K footage to stay sharp.
+if (opt.punch === "editorial") {
+  merged.forEach((s, i) => {
+    if (i % 2) s.zoom = 1.35;
+  });
+} else if ((opt.punch || "alternate") === "alternate") {
   let zoomed = false;
   merged.forEach((s, i) => {
     const prev = merged[i - 1];

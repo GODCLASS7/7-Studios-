@@ -19,8 +19,17 @@ transcribe → pack (takes.md) → choose takes ⏸ → autocut → edl → revi
 | Whisper (free, local) | Nothing to set: `--engine=whisper` installs whisper.cpp and the model into `production/whisper/` on first use. Needs git, a C compiler and access to huggingface.co. Slower, and less accurate on singing. |
 | Existing transcript | `--from=<file>`: ElevenLabs JSON, Remotion caption JSON, SRT/VTT (cue-level) or LRC (line-level). |
 | yt-dlp | Only for downloading reference videos (`studio-styles` → learning a recipe). |
+| Background cutout | Nothing to set: `npm run matte` creates `production/matte-venv` (Python 3.10+, `pip install ai-edge-litert numpy pillow scipy`) and downloads MediaPipe's 16 MB selfie segmenter from storage.googleapis.com on first use. CPU only, about 5–6 s of processing per second of 1080×1920 footage (faster on Apple Silicon). |
+| Sound effects | `npm run sfx` once: builds the studio's own pop, whoosh, click, shimmer, tick and riser into `public/audio/sfx/`. |
 
-Put footage in `public/jobs/<id>/footage/`. Long phone videos are fine; keep the originals untouched.
+Put footage in `public/jobs/<id>/footage/`. Long phone videos are fine. **Never modify, move or delete the originals**: every step reads them and writes new files.
+
+**Filming guidance to give the user (from the "/video-edit" method):**
+- Shoot vertical, in 4K if the phone allows; punch-ins are cropped from the originals, so 4K keeps them sharp.
+- Keep the camera still for each setup, and start a new clip for a new angle.
+- Repeat a line until it lands, without stopping: the edit keeps the best take.
+- Name the look in the script ("…the cool girl aesthetic…") or say where each look goes.
+- Leave space around the head for words and cards, and use a plain background if text will sit behind it.
 
 ## 1. Transcribe and pack
 
@@ -31,9 +40,18 @@ npm run pack -- <id>
 
 `jobs/<id>/takes.md` is the reading view: every phrase with an ID (`A.3`), start–end, speaker, `(um)` fillers and `‖0.8‖` pauses. Read it all before deciding anything. Use `--keyterms` for names, places and brand words, so they're spelled right.
 
+**Fix what the transcript misheard** before cutting, so captions say what was really said (e.g. "Claude" heard as "cloud" or "claws"):
+
+```bash
+npm run fix-words -- <id> "cloud code=>Claude Code" "claws=>Claude" [--only=A.3,A.5] [--dry]
+npm run pack -- <id>
+```
+
+Every change is listed with its phrase and time; check them, and use `--only` where the heard word is also real elsewhere. Add recurring fixes to the client's house notes.
+
 ## 2. Plan the edit (⏸ gate)
 
-From `takes.md`, write the plan and **show it before cutting**:
+From `takes.md`, write the plan and **show it before cutting**, with a short table of the take kept for each line:
 - the **hook**: the strongest line in the footage, which plays first (recipe `hook-2s`);
 - which take of each line you keep, and why (best delivery, no stumble, complete thought);
 - what goes, such as false starts, repeats, tangents and anything the speaker wouldn't want public;
@@ -96,6 +114,37 @@ Three premium effects live in `src/effects/` (adapted from the "Effect of the Da
 - Effects are heavy to render: the glass refracts a second copy of the footage, and the screen is a pixel grid. Expect a 1080p render to take about twice as long.
 - Fonts (Plus Jakarta Sans, DM Mono, Inter) are bundled, so renders don't depend on Google Fonts. The refraction maths follows liquid-glass-js by Armagan Amcalar (MIT).
 
+## 3c. Looks, words behind the head, inserts and sound
+
+The guide's "/video-edit" signature looks, rebuilt in Motion Studio (src/looks, src/inserts). Set them in `edl.json`:
+
+```json
+"look": "bold",
+"sections": [{ "atWord": "cool girl aesthetic", "look": "cool-girl" }, { "atPhrase": "B.2", "look": "cool-dude" }],
+"captions": { "emphasis": ["wait"], "punch": "auto" },
+"orbit": [{ "file": "jobs/<id>/reels/reel-1.mp4" }, { "file": "jobs/<id>/reels/other.mp4", "own": false, "credit": "@theirhandle" }],
+"inserts": [
+  { "kind": "app-window", "layer": "behind", "at": 2.2, "seconds": 3, "data": { "title": "Motion Studio", "lines": ["> /video-edit", "Rendering reel.mp4 ✓"] } },
+  { "kind": "profile-follow", "atWord": "follow", "seconds": 3, "y": 0.62, "data": { "name": "…", "handle": "@…", "followers": 12400, "avatar": "jobs/<id>/brand/avatar.jpg" } },
+  { "kind": "file-scroll", "layer": "behind", "at": 6.6, "seconds": 2, "data": { "title": "…", "paragraphs": ["…"] } }
+],
+"sfx": "auto"
+```
+
+| Look | What it does |
+|---|---|
+| `classic` | The pop captions (3 words, uppercase, active word highlighted). |
+| `bold` | Kinetic lowercase words spring in as they're said; the **punch word**, huge and yellow, sits **behind the speaker's head**. Start here if unsure. |
+| `cool-girl` | Warm grade, calm lowercase captions; the punch line in a **yellow serif italic with sparkles**; the user's own reels **orbit around them** (far side behind, near side in front, and never across the face). |
+| `cool-dude` | Dark editorial: **the room falls back, the speaker stays lit**; tiny spaced capitals plus big serif words behind the head. Pair it with `npm run autocut -- <id> … --punch=editorial` for wide/close alternation (needs 4K). |
+
+- **Words behind the head need the cutout:** `npm run matte -- <id> [--check]` writes the speaker on transparency for each source and records it in `edl.json`. With `--check`, read the mask video, or a timeline frame, before building on it. Without a cutout, punch words move above the head instead.
+- **Sections** switch looks at a word (`atWord`), a phrase (`atPhrase`) or a time (`at`), so "use cool girl when I say 'the cool girl aesthetic'" maps straight onto `sections`.
+- **Punch words:** `emphasis` words always get one. `"punch": "auto"` also picks one strong word per caption, at most every 2.2 s, skipping contractions and repeats. `edit.md` lists them; change any that read wrong.
+- **Inserts** (`app-window`, `profile-follow`, `file-scroll`) are generic by design: no platform logos or copied interfaces. Show a real screen as an `image` or `video` inside `app-window`. Use `"layer": "behind"` to put an insert behind the speaker. Captions move below a front insert automatically. On bigger jobs, hand each insert to a `motion-designer` subagent while the main edit renders.
+- **Credit other creators:** any orbit reel or insert that isn't the user's own needs `"own": false` and `"credit": "@handle"`, which is shown on screen. `edl` refuses to build without it.
+- **Sound effects:** `"sfx": "auto"` puts subtle ones on punch words (a pop, or a shimmer for cool-girl), insert entrances (a whoosh), the follow tap (a click), look changes and effects. Volumes are capped at 0.35 and must never be louder than the voice. Or list your own: `[{ "at": 3.2, "sound": "whoosh", "volume": 0.2 }]`.
+
 ## 4. Review cut and cut check (⏸ gate)
 
 ```bash
@@ -103,7 +152,7 @@ npm run render -- FootageEdit-9x16 review --props=jobs/<id>/.edl.resolved.json -
 npm run cutcheck -- <id> out/<id>/<id>_edit_v<N>_review.mp4
 ```
 
-The cut check covers audio pops, black frames at cuts, flash pieces, unmasked jump cuts, captions or overlays over faces, and length. It draws `out/<id>/cutcheck-v<N>.png`, with the frames before and after every cut. **Read the sheet and fix every FAIL before the user sees anything** (up to 3 fix-and-re-render passes, as video-use does). Then send the review cut with the plan, the length and what was cut.
+The cut check covers audio pops, black frames at cuts, flash pieces, unmasked jump cuts, captions, overlays, inserts and effect cards over faces, the **9:16 platform safe zone** (x 6–89%, y 11–82%: clear of the top bar, the right-hand buttons and the caption strip), captions with no room below a front insert, and length. It draws `out/<id>/cutcheck-v<N>.png`, with the frames before and after every cut. **Read the sheet and fix every FAIL before the user sees anything** (up to 3 fix-and-re-render passes, as video-use does). Then make a phone copy (`npm run phone -- <render>`, 720p, a few MB) and send it with the plan, the length and what was cut. Each round of notes re-renders from the same edit list; every version is kept.
 
 Notes come back in plain English ("captions are covering my face", "punch in on every number", "warmer"). Apply them in `edl.json`, bump the version (autocut bumps it, or change `version` by hand), re-run `edl`, re-render and re-check.
 
@@ -135,4 +184,7 @@ npm run render -- ScriptureLyric-9x16 review --props=jobs/<id>/lyrics.props.json
 - Keep the speaker's meaning. Never cut words in a way that changes what they said, and never invent quotes.
 - Captions: max 3 words for pop style, no 1-word flashes, off faces, out of the bottom 20% and right 12% on 9:16.
 - Consent: everyone on camera has agreed (testimonies especially).
+- Never cover the face with text, cards or reels (the cut check tests every one), and keep everything inside the safe zone on 9:16.
+- Sound effects stay subtle, never louder than the voice.
+- Other creators' content is credited on screen with their @handle.
 - Log feedback into `.claude/skills/studio-styles/house-notes.md` at delivery (the `studio` skill, phase 8).

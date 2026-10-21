@@ -1,0 +1,165 @@
+{
+  "job": "look-test",
+  "gap": 0.5,
+  "sources": [
+    {
+      "key": "A",
+      "file": "jobs/look-test/footage/take-a.mp4",
+      "transcript": "jobs/look-test/transcripts/take-a.json",
+      "duration": 29.79
+    }
+  ],
+  "phrases": [
+    {
+      "id": "A.1",
+      "source": "A",
+      "start": 0.6,
+      "end": 3.66,
+      "text": "So the hardest part of waiting is",
+      "words": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "fillers": 1,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.2",
+      "source": "A",
+      "start": 5.03,
+      "end": 5.27,
+      "text": "",
+      "words": [
+        8
+      ],
+      "fillers": 1,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.3",
+      "source": "A",
+      "start": 6.64,
+      "end": 11.13,
+      "text": "The hardest part of waiting is not knowing when it ends.",
+      "words": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.4",
+      "source": "A",
+      "start": 11.68,
+      "end": 13.66,
+      "text": "But here's what I learned.",
+      "words": [
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.5",
+      "source": "A",
+      "start": 14.21,
+      "end": 14.45,
+      "text": "",
+      "words": [
+        25
+      ],
+      "fillers": 1,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.6",
+      "source": "A",
+      "start": 15,
+      "end": 16.72,
+      "text": "Waiting is not wasting.",
+      "words": [
+        26,
+        27,
+        28,
+        29
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.7",
+      "source": "A",
+      "start": 17.27,
+      "end": 19.51,
+      "text": "God is working in the wait.",
+      "words": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.8",
+      "source": "A",
+      "start": 21.36,
+      "end": 26.68,
+      "text": "So if you're in a season of waiting today, don't give up.",
+      "words": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "fillers": 1,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.9",
+      "source": "A",
+      "start": 27.23,
+      "end": 28.44,
+      "text": "Keep showing up.",
+      "words": [
+        49,
+        50,
+        51
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    }
+  ]
+}

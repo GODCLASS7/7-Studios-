@@ -1,0 +1,153 @@
+{
+  "job": "look-test",
+  "version": 1,
+  "format": "9x16",
+  "fps": 30,
+  "sources": {
+    "A": {
+      "file": "jobs/look-test/footage/take-a.mp4",
+      "transcript": "jobs/look-test/transcripts/take-a.json",
+      "matte": "jobs/look-test/matte/A.webm",
+      "faceBox": [
+        0.28,
+        0.25,
+        0.41,
+        0.2
+      ]
+    }
+  },
+  "segments": [
+    {
+      "source": "A",
+      "in": 14.94,
+      "out": 16.78,
+      "phrase": "A.6",
+      "text": "Waiting is not wasting."
+    },
+    {
+      "source": "A",
+      "in": 6.58,
+      "out": 11.19,
+      "phrase": "A.3",
+      "text": "The hardest part of waiting is not knowing when it ends.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 11.62,
+      "out": 13.72,
+      "phrase": "A.4",
+      "text": "But here's what I learned."
+    },
+    {
+      "source": "A",
+      "in": 17.21,
+      "out": 19.57,
+      "phrase": "A.7",
+      "text": "God is working in the wait.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 21.3,
+      "out": 24.84,
+      "phrase": "A.8",
+      "text": "So if you're in a season of waiting today,"
+    },
+    {
+      "source": "A",
+      "in": 25.56,
+      "out": 26.74,
+      "phrase": "A.8",
+      "text": "don't give up.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 27.17,
+      "out": 28.5,
+      "phrase": "A.9",
+      "text": "Keep showing up."
+    }
+  ],
+  "captions": {
+    "style": "pop",
+    "maxWords": 3,
+    "position": 0.66,
+    "uppercase": true,
+    "highlight": "#E8B44A",
+    "emphasis": [
+      "wasting",
+      "wait"
+    ]
+  },
+  "grade": "none",
+  "overlays": [],
+  "look": "bold",
+  "sections": [
+    {
+      "atPhrase": "A.7",
+      "look": "cool-girl"
+    },
+    {
+      "atPhrase": "A.8",
+      "look": "cool-dude"
+    }
+  ],
+  "orbit": [
+    {
+      "file": "jobs/look-test/reels/reel-1.mp4"
+    },
+    {
+      "file": "jobs/look-test/reels/reel-2.mp4"
+    },
+    {
+      "file": "jobs/look-test/reels/reel-3.jpg"
+    }
+  ],
+  "inserts": [
+    {
+      "kind": "app-window",
+      "layer": "behind",
+      "at": 2.2,
+      "seconds": 3.2,
+      "y": 0.3,
+      "data": {
+        "title": "Motion Studio",
+        "lines": [
+          "> /video-edit",
+          "Transcribing 5 clips\u2026",
+          "Picking the best takes\u2026",
+          "Rendering reel.mp4 \u2713"
+        ]
+      }
+    },
+    {
+      "kind": "file-scroll",
+      "at": 6.6,
+      "seconds": 1.9,
+      "y": 0.36,
+      "w": 0.6,
+      "data": {
+        "title": "What I learned in the wait"
+      },
+      "layer": "behind"
+    },
+    {
+      "kind": "profile-follow",
+      "at": 14.0,
+      "seconds": 2.9,
+      "y": 0.63,
+      "w": 0.72,
+      "data": {
+        "name": "The Wait Culture",
+        "handle": "@thewaitculture",
+        "followers": 12400,
+        "posts": "318",
+        "following": "210",
+        "bio": "Faith, waiting and worship."
+      }
+    }
+  ],
+  "sfx": "auto"
+}

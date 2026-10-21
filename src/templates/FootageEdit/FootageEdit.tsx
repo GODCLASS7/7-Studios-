@@ -3,7 +3,9 @@ import { z } from "zod";
 import { LiquidGlassGraph } from "../../effects/LiquidGlassGraph";
 import { ScreenPush } from "../../effects/ScreenPush";
 import { ShoulderCards, shoulderCamera } from "../../effects/ShoulderZoom";
+import { Insert, insertHeight } from "../../inserts/Inserts";
 import { color, font, Grade, Grain, LOOKS, type Look, springs } from "../../lib";
+import { LookCaptions, lookAt, Orbit, PunchBehind } from "../../looks/Looks";
 
 // Edit of real footage (talking heads, interviews, testimonies, vlogs) from a
 // resolved edit list: run scripts/autocut.mjs, then scripts/edl.mjs, and pass
@@ -19,8 +21,41 @@ export const footageEditSchema = z.object({
   durationInFrames: z.number(),
   voice: z.string().nullable(),
   segments: z.array(
-    z.object({ src: z.string(), from: z.number(), durationInFrames: z.number(), trimBefore: z.number(), zoom: z.number(), push: z.number(), focusX: z.number(), focusY: z.number() }),
+    z.object({
+      src: z.string(),
+      from: z.number(),
+      durationInFrames: z.number(),
+      trimBefore: z.number(),
+      zoom: z.number(),
+      push: z.number(),
+      focusX: z.number(),
+      focusY: z.number(),
+      // The speaker cut out of this source (scripts/matte.mjs): transparent VP9, same frames.
+      matte: z.string().nullable().default(null),
+    }),
   ),
+  // Looks per section (src/looks), punch words, orbiting reels, inserts and sound effects (all from edl.mjs).
+  looks: z.array(z.object({ from: z.number(), to: z.number(), look: z.enum(["classic", "bold", "cool-girl", "cool-dude"]) })).default([]),
+  punches: z
+    .array(z.object({ text: z.string(), startMs: z.number(), endMs: z.number(), look: z.enum(["classic", "bold", "cool-girl", "cool-dude"]), cueStartMs: z.number(), cueEndMs: z.number() }))
+    .default([]),
+  orbit: z.array(z.object({ src: z.string(), credit: z.string().nullable(), image: z.boolean() })).default([]),
+  inserts: z
+    .array(
+      z.object({
+        kind: z.enum(["app-window", "profile-follow", "file-scroll"]),
+        from: z.number(),
+        durationInFrames: z.number(),
+        layer: z.enum(["behind", "front"]),
+        x: z.number(),
+        y: z.number(),
+        w: z.number(),
+        credit: z.string().nullable(),
+        data: z.record(z.string(), z.unknown()),
+      }),
+    )
+    .default([]),
+  sfx: z.array(z.object({ from: z.number(), src: z.string(), volume: z.number() })).default([]),
   cues: z.array(z.object({ startMs: z.number(), endMs: z.number(), words: z.array(word) })),
   captions: z.object({ style: z.enum(["pop", "line", "none"]), position: z.number(), uppercase: z.boolean(), highlight: z.string(), size: z.number(), emphasis: z.array(z.string()) }),
   grade: z.string(),
@@ -92,15 +127,29 @@ export const calcFootageEdit: CalculateMetadataFunction<FootageEditProps> = ({ p
   fps: props.fps,
 });
 
-const Shot: React.FC<{ s: FootageEditProps["segments"][number] }> = ({ s }) => {
+const Shot: React.FC<{ s: FootageEditProps["segments"][number]; person?: boolean }> = ({ s, person }) => {
   const frame = useCurrentFrame();
   const scale = s.zoom + s.push * (frame / Math.max(1, s.durationInFrames));
   const origin = `${s.focusX * 100}% ${s.focusY * 100}%`;
   return (
     <AbsoluteFill style={{ transform: `scale(${scale})`, transformOrigin: origin }}>
-      <OffthreadVideo src={staticFile(s.src)} trimBefore={s.trimBefore} muted style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: origin }} />
+      <OffthreadVideo
+        src={staticFile(person && s.matte ? s.matte : s.src)}
+        transparent={person}
+        trimBefore={s.trimBefore}
+        muted
+        style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: origin }}
+      />
     </AbsoluteFill>
   );
+};
+
+// Grade per frame: the job's grade, or the look's own (cool-girl warm, cool-dude film).
+const gradeFor = (p: FootageEditProps, frame: number): Look => {
+  const l = lookAt(p.looks, frame);
+  if (l === "cool-girl") return "warm";
+  if (l === "cool-dude") return "film";
+  return (p.grade in LOOKS ? p.grade : "neutral") as Look;
 };
 
 const clean = (t: string) => t.replace(/[.,;:]+$/, "");
@@ -199,15 +248,25 @@ const Overlay: React.FC<{ o: FootageEditProps["overlays"][number] }> = ({ o }) =
   );
 };
 
-const Footage: React.FC<{ p: FootageEditProps }> = ({ p }) => {
-  const look = (p.grade in LOOKS ? p.grade : "neutral") as Look;
+// layer "all": the footage as shot. "background": the same, darkened for cool-dude
+// when the speaker is cut out ("the room falls back"). "person": only the
+// cut-out speaker, for drawing on top of anything placed behind them.
+const Footage: React.FC<{ p: FootageEditProps; layer?: "all" | "background" | "person" }> = ({ p, layer = "all" }) => {
+  const frame = useCurrentFrame();
+  const look = gradeFor(p, frame);
+  const seg = p.segments.find((s) => frame >= s.from && frame < s.from + s.durationInFrames);
+  const dim = layer === "background" && lookAt(p.looks, frame) === "cool-dude" && seg?.matte;
   return (
-    <Grade look={look} vignette={look === "neutral" ? 0 : 0.25}>
-      {p.segments.map((s, i) => (
-        <Sequence key={i} from={s.from} durationInFrames={s.durationInFrames} layout="none">
-          <Shot s={s} />
-        </Sequence>
-      ))}
+    <Grade look={look} vignette={layer === "person" || look === "neutral" ? 0 : dim ? 0.55 : 0.25}>
+      <AbsoluteFill style={{ filter: dim ? "brightness(0.42) saturate(0.8)" : undefined }}>
+        {p.segments.map((s, i) =>
+          layer === "person" && !s.matte ? null : (
+            <Sequence key={i} from={s.from} durationInFrames={s.durationInFrames} layout="none">
+              <Shot s={s} person={layer === "person"} />
+            </Sequence>
+          ),
+        )}
+      </AbsoluteFill>
     </Grade>
   );
 };
@@ -237,14 +296,65 @@ export const FootageEdit: React.FC<FootageEditProps> = (p) => {
   // Captions drop below a glass card while it's up (never into the bottom 20%).
   const { width, height } = useVideoConfig();
   const glass = p.effects.find((e) => e.kind === "liquid-glass" && frame >= e.from && frame < e.from + e.durationInFrames);
-  const capPos =
+  const glassPos =
     glass && glass.kind === "liquid-glass" ? Math.min(0.79, Math.max(p.captions.position, glass.cardY + (610 * (Math.min(width, height) / 1080)) / height + 0.03)) : p.captions.position;
+  // Likewise below a front insert while it's on screen.
+  const frontIns = p.inserts.find((i) => i.layer === "front" && frame >= i.from && frame < i.from + i.durationInFrames);
+  const capPos = frontIns ? Math.min(0.8, Math.max(glassPos, frontIns.y + insertHeight(frontIns, width, height) / 2 + 0.035)) : glassPos;
+  const lookNow = lookAt(p.looks, frame);
+  const seg = p.segments.find((s) => frame >= s.from && frame < s.from + s.durationInFrames);
+  const hasMatte = Boolean(seg?.matte);
+  // The cut-out speaker is only drawn again when something sits behind them (saves a second decode).
+  const ms = (frame / (p.fps || 30)) * 1000;
+  const needPerson =
+    hasMatte &&
+    (lookNow === "cool-dude" ||
+      lookNow === "cool-girl" ||
+      p.punches.some((x) => (x.look === "bold" || x.look === "cool-dude") && ms >= x.startMs - 100 && ms < x.endMs + 100) ||
+      p.inserts.some((i) => i.layer === "behind" && frame >= i.from && frame < i.from + i.durationInFrames));
+  const coolGirl = p.looks.filter((r) => r.look === "cool-girl");
+  // Anything "behind" the speaker is drawn between the background and the cut-out person.
+  const behind = (
+    <>
+      <PunchBehind punches={p.punches} hasMatte={hasMatte} />
+      {coolGirl.map((r, i) => (
+        <Sequence key={`ob${i}`} from={r.from} durationInFrames={r.to - r.from} layout="none">
+          <Orbit items={p.orbit} durationInFrames={r.to - r.from} half="back" />
+        </Sequence>
+      ))}
+      {p.inserts.map((ins, i) =>
+        ins.layer === "behind" ? (
+          <Sequence key={`ib${i}`} from={ins.from} durationInFrames={ins.durationInFrames} layout="none">
+            <Insert {...ins} />
+          </Sequence>
+        ) : null,
+      )}
+    </>
+  );
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>
       <Camera p={p}>
-        <Footage p={p} />
+        <Footage p={p} layer="background" />
       </Camera>
-      {look === "neutral" ? null : <Grain opacity={0.04} />}
+      {behind}
+      {needPerson ? (
+        <Camera p={p}>
+          <Footage p={p} layer="person" />
+        </Camera>
+      ) : null}
+      {look === "neutral" && lookNow === "classic" ? null : <Grain opacity={0.04} />}
+      {coolGirl.map((r, i) => (
+        <Sequence key={`of${i}`} from={r.from} durationInFrames={r.to - r.from} layout="none">
+          <Orbit items={p.orbit} durationInFrames={r.to - r.from} half="front" />
+        </Sequence>
+      ))}
+      {p.inserts.map((ins, i) =>
+        ins.layer === "front" ? (
+          <Sequence key={`if${i}`} from={ins.from} durationInFrames={ins.durationInFrames} layout="none">
+            <Insert {...ins} />
+          </Sequence>
+        ) : null,
+      )}
       {p.effects.map((e, i) => (
         <Sequence key={`fx${i}`} from={e.from} durationInFrames={e.durationInFrames} layout="none">
           {e.kind === "liquid-glass" ? (
@@ -270,8 +380,17 @@ export const FootageEdit: React.FC<FootageEditProps> = (p) => {
           <Overlay o={o} />
         </Sequence>
       ))}
-      {screenOn ? null : <Captions cues={p.cues} c={{ ...p.captions, position: capPos }} />}
+      {screenOn ? null : lookNow === "classic" ? (
+        <Captions cues={p.cues} c={{ ...p.captions, position: capPos }} />
+      ) : (
+        <LookCaptions cues={p.cues} punches={p.punches} look={lookNow} position={lookNow === "cool-dude" ? Math.max(capPos, 0.74) : Math.max(capPos, 0.7)} emphasis={p.captions.emphasis} />
+      )}
       {p.voice ? <Audio src={staticFile(p.voice)} /> : null}
+      {p.sfx.map((x, i) => (
+        <Sequence key={`sfx${i}`} from={x.from} layout="none">
+          <Audio src={staticFile(x.src)} volume={x.volume} />
+        </Sequence>
+      ))}
       {p.music ? <Audio src={staticFile(p.music.src)} loop volume={(f) => p.music!.volume * (ducked(f) ? p.music!.duck : 1)} /> : null}
     </AbsoluteFill>
   );
@@ -293,5 +412,10 @@ export const footageEditDefaults: FootageEditProps = {
   speech: [],
   faceBoxes: {},
   effects: [],
+  looks: [],
+  punches: [],
+  orbit: [],
+  inserts: [],
+  sfx: [],
   cutSources: [],
 };

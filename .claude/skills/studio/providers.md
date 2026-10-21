@@ -114,4 +114,6 @@ Final typography, logos, numbers, charts, captions, colour grade and audio mix a
 | **Imported transcripts** (`--from=…`) | ElevenLabs JSON, Remotion caption JSON, SRT/VTT, LRC | SRT and LRC give cue- or line-level times; word times are spread evenly |
 | **TranscriptX** connector | Transcribing a public link (YouTube, TikTok) when files can't be downloaded | Credits per video: quote first |
 | **yt-dlp** (`analyze-reference --fetch`) | Downloading reference videos to learn an editing style | User's computer only; downloads are for study, never reused in deliveries |
+| **MediaPipe selfie segmenter** (Apache 2.0) via **LiteRT** (`npm run matte`) | Cutting the speaker out of the background for words and inserts behind the head | CPU only; Python venv in `production/matte-venv`, model in `production/models/` (from storage.googleapis.com). No GPU or graphics libraries needed |
+| **"/video-edit" skill** (tenfoldmarc, no licence) | The idea source for the looks, words behind the head, inserts, word fixes and phone copies | Not installed and no code copied (the repo has no licence); rebuilt natively |
 | **video-use** (browser-use, MIT) | The method the edit lane follows (transcript-first, edit list, self-check at every cut) | Not installed; Motion Studio runs the same steps natively so edits get its gates, 4K finishing, QC and specs |

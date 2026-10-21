@@ -19,4 +19,6 @@ Verify before reporting back:
 - `npm run lint` passes.
 - Render stills at the scene's first frame, middle, last frame and every key moment with `npm run render -- <Comp> still --frame=<n>`. Read each one and check it against the design checklist in the `studio` skill. Fix problems and re-render.
 
+Inserts for footage edits: when asked to build or restyle an insert (an app on screen, a profile follow, a file scrolling, or a new kind), work in `src/inserts/`, keep it generic (no platform logos or copied interfaces), take its content as `data` props, and check it with a still of the edit at the insert's middle frame. Never cover the speaker's face.
+
 Report: the files you changed, the frames you checked (with paths), anything that differs from the storyboard and why, and how long it took.

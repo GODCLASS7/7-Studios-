@@ -57,7 +57,11 @@
     "timeline": "node scripts/timeline.mjs",
     "cutcheck": "node scripts/cutcheck.mjs",
     "lyrics": "node scripts/lyrics.mjs",
-    "analyze-reference": "node scripts/analyze-reference.mjs"
+    "analyze-reference": "node scripts/analyze-reference.mjs",
+    "matte": "node scripts/matte.mjs",
+    "sfx": "node scripts/sfx.mjs",
+    "fix-words": "node scripts/fix-words.mjs",
+    "phone": "node scripts/phone-copy.mjs"
   },
   "allowScripts": {
     "esbuild": false

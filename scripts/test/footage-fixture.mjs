@@ -6,6 +6,8 @@
 //
 // --vertical makes a 1080×1920 phone-style take (head about 30% of the width,
 // eyes a quarter down), the framing the shoulder-zoom effect expects.
+// --photo=<image> builds a vertical take from a real photo of a person instead,
+// with a slow camera drift, to test the background cutout (scripts/matte.mjs).
 // Writes public/jobs/<job>/footage/take-a.mp4 (1920×1080, 30 fps): a presenter
 // silhouette with the SOURCE timecode burned in, so every cut can be checked by
 // eye, and a "voice" of tone bursts, one per word, with fillers (um, uh), a
@@ -18,7 +20,8 @@ import { join } from "node:path";
 import { ff, writeJson } from "../lib/media.mjs";
 
 const job = process.argv[2];
-const vertical = process.argv.includes("--vertical");
+const photo = process.argv.find((a) => a.startsWith("--photo="))?.slice(8);
+const vertical = photo || process.argv.includes("--vertical");
 if (!job) {
   console.error("Usage: node scripts/test/footage-fixture.mjs <job>");
   process.exit(1);
@@ -84,14 +87,19 @@ const geq =
   "lum='if(lt(pow((X-960)/150,2)+pow((Y-430)/190,2),1),170,if(lt(pow((X-960)/430,2)+pow((Y-1020)/330,2),1),120,40+20*Y/H))':cb=128:cr='if(lt(pow((X-960)/150,2)+pow((Y-430)/190,2),1),142,128)'";
 const geqV =
   "lum='if(lt(pow((X-540)/165,2)+pow((Y-560)/205,2),1),170,if(lt(pow((X-540)/430,2)+pow((Y-1330)/400,2),1),120,40+20*Y/H))':cb=128:cr='if(lt(pow((X-540)/165,2)+pow((Y-560)/205,2),1),142,128)'";
-let r = ff(["-f", "lavfi", "-i", `color=c=black:s=${vertical ? "1080x1920" : "1920x1080"}`, "-frames:v", "1", "-vf", `format=yuv444p,geq=${vertical ? geqV : geq}`, still]);
+let r = photo
+  ? // The photo, sharp, at the bottom of a 9:16 frame over a blurred copy of itself.
+    ff(["-i", photo, "-i", photo, "-filter_complex", "[0]scale=1920:1920,crop=1080:1920,gblur=sigma=40[bg];[1]scale=1400:1400[fg];[bg][fg]overlay=x=-75:y=520,format=yuv420p", "-frames:v", "1", still])
+  : ff(["-f", "lavfi", "-i", `color=c=black:s=${vertical ? "1080x1920" : "1920x1080"}`, "-frames:v", "1", "-vf", `format=yuv444p,geq=${vertical ? geqV : geq}`, still]);
 if (r.status !== 0) throw new Error(r.stderr);
+// A photo gets a slow drift and breathing zoom, so the cutout is tested on moving footage.
+const drift = photo ? "scale=1188:2112,crop=1080:1920:x='54+40*sin(t/2.1)':y='96+36*sin(t/2.9)'," : "";
 const out = join("public", "jobs", job, "footage", "take-a.mp4");
 mkdirSync(join("public", "jobs", job, "footage"), { recursive: true });
 const font = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf";
 r = ff([
   "-loop", "1", "-framerate", "30", "-i", still, "-i", wav, "-t", String(total),
-  "-vf", `drawtext=fontfile=${font}:text='TAKE A  %{pts\\:hms}':x=60:y=60:fontsize=54:fontcolor=white:box=1:boxcolor=black@0.5:boxborderw=14,format=yuv420p`,
+  "-vf", `${drift}drawtext=fontfile=${font}:text='TAKE A  %{pts\\:hms}':x=60:y=60:fontsize=54:fontcolor=white:box=1:boxcolor=black@0.5:boxborderw=14,format=yuv420p`,
   "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-r", "30", "-c:a", "aac", "-b:a", "192k", "-shortest", out,
 ]);
 if (r.status !== 0) throw new Error(r.stderr);

@@ -39,6 +39,8 @@ motion-studio/
 │   ├── storyboard/           ← storyboard schema, panel drawing, approval sheet, animatic
 │   ├── templates/            ← reusable, props-driven templates: ScriptureLyric (verses, songs), FootageEdit (edits of real footage)
 │   ├── effects/              ← talking-head effects used by FootageEdit: LiquidGlassGraph, ScreenPush, ShoulderZoom
+│   ├── looks/                ← talking-head looks: bold, cool-girl, cool-dude (punch words, sparkles, orbiting reels)
+│   ├── inserts/              ← animated inserts: app window, profile follow, file scroll
 │   ├── videos/               ← one folder per deliverable (scenes, stills, concepts)
 │   │   └── StudioCheck.tsx   ← 4 s test card (used by the benchmark; keep it)
 │   └── components/           ← job-specific components shared across videos
@@ -91,6 +93,10 @@ npm run timeline -- <id> <media> <from> <to>         # filmstrip + waveform + wo
 npm run cutcheck -- <id> <render.mp4>                # pops, black frames, flashes, jump cuts, text over faces + cut sheet
 npm run lyrics -- <id> --audio=<song> --lyrics=<txt> [--lrc=file]   # timed lyric cards for ScriptureLyric
 npm run analyze-reference -- <name> <videos…|--fetch urls…>         # measure an editing style to learn a recipe
+npm run matte -- <id> [--check]                      # cut the speaker out of the background (words behind the head)
+npm run fix-words -- <id> "heard=>meant" …           # correct misheard words before captions
+npm run sfx                                          # build the studio's own sound-effects pack (once)
+npm run phone -- <render.mp4>                        # 720p phone copy for review
 npx remotion compositions              # list composition IDs
 ```
 
@@ -321,7 +327,8 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 2. `autocut --keep=…` in play order, then refine `edl.json` (face boxes, framing, captions, overlays, grade, music) → `edl`.
 3. Render `FootageEdit-<format>` `review`, run `cutcheck`, read the cut sheet and fix every FAIL before sending. Take notes in plain English, versioning each round.
 4. Finals: `loudnorm`, `qc`, `cutcheck`, master spec, and lasting feedback into `house-notes.md`.
-5. Premium accents, as `effects` in `edl.json` (studio-edit §3b): `liquid-glass` (a refracting glass card with a graph and counter), `screen-push` (pixel-monitor close-up, one word per cut as it's said), `shoulder-zoom` (camera to cards over each shoulder, optional light-speed text transition).
+5. Looks (studio-edit §3c): `bold`, `cool-girl` and `cool-dude`, switched per section by a word in the script, with words behind the head (`npm run matte`), orbiting reels, inserts (app window, profile follow, file scroll) and subtle sound effects.
+6. Premium accents, as `effects` in `edl.json` (studio-edit §3b): `liquid-glass` (a refracting glass card with a graph and counter), `screen-push` (pixel-monitor close-up, one word per cut as it's said), `shoulder-zoom` (camera to cards over each shoulder, optional light-speed text transition).
 
 ### 10.11 Lyric video for a song
 
