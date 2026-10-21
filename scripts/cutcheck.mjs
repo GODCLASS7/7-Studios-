@@ -88,16 +88,21 @@ const overlaps = (a, b) => a && b && a.x1 < b.x2 && b.x1 < a.x2 && a.y1 < b.y2 &
 const faceHits = [];
 // A title's box at frame f, estimated from its style and text (src/titles/TitleFX.tsx sizes:
 // base size, average letter width in em, line height). Close enough to flag a clash.
-const TITLE_METRICS = { cutout: [150, 0.8, 1.3], editorial: [320, 0.5, 1.0], inflate: [230, 0.78, 1.2], neon: [210, 0.42, 1.1], extrude: [240, 0.5, 1.05], poster: [400, 0.5, 0.92], outline: [230, 0.74, 1.05] };
+const TITLE_METRICS = { cutout: [150, 0.8, 1.3], editorial: [320, 0.5, 1.0], inflate: [230, 0.78, 1.2], neon: [210, 0.42, 1.1], extrude: [240, 0.5, 1.05], poster: [400, 0.5, 0.92], outline: [230, 0.74, 1.05], tag: [40, 0.55, 1.05] };
 const titleBox = (t, f) => {
   const u = Math.min(W, H) / 1080;
   const ls = t.text.split("|").map((l) => l.replace(/\*/g, "").trim());
   const n = ls.length + (t.sub ? 0.3 : 0);
-  const [base, em, lh] = TITLE_METRICS[t.style];
+  const [base, em, lh] = TITLE_METRICS[t.style] || [200, 0.6, 1.1]; // a style added later still gets a rough box
   const longest = Math.max(...ls.map((l) => l.length));
   let w;
   let h;
-  if (t.style === "poster") {
+  if (t.style === "tag") {
+    // A one-line label (lines joined) at a fixed size, with padding, a dot and an optional sub line.
+    const fs = base * u * t.size;
+    w = ls.join(" ").length * em * fs + 78 * u * t.size;
+    h = fs * lh + (t.sub ? fs * 0.5 + 4 * u : 0) + 28 * u * t.size;
+  } else if (t.style === "poster") {
     w = Math.min(W * 0.84, 900 * u * t.size);
     h = Math.min(H * 0.62, ls.reduce((sum, l) => sum + Math.min(400 * u, w / Math.max(1, l.length * em)) * lh, 0));
   } else {
