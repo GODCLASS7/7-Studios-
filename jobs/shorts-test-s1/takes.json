@@ -1,0 +1,624 @@
+{
+  "job": "shorts-test",
+  "gap": 0.5,
+  "sources": [
+    {
+      "key": "A",
+      "file": "jobs/shorts-test/footage/take-a.mp4",
+      "transcript": "jobs/shorts-test/transcripts/take-a.json",
+      "duration": 132.73
+    }
+  ],
+  "phrases": [
+    {
+      "id": "A.1",
+      "source": "A",
+      "start": 0.6,
+      "end": 2.11,
+      "text": "Good morning everyone.",
+      "words": [
+        0,
+        1,
+        2
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.2",
+      "source": "A",
+      "start": 2.66,
+      "end": 9.08,
+      "text": "so today, we're going to talk about, you know, a few things.",
+      "words": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "fillers": 2,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.3",
+      "source": "A",
+      "start": 9.63,
+      "end": 11.35,
+      "text": "Let's get settled first.",
+      "words": [
+        17,
+        18,
+        19,
+        20
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.4",
+      "source": "A",
+      "start": 13.2,
+      "end": 16.76,
+      "text": "Here's the truth nobody tells you about waiting.",
+      "words": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.5",
+      "source": "A",
+      "start": 17.31,
+      "end": 19.03,
+      "text": "Waiting is not wasting.",
+      "words": [
+        29,
+        30,
+        31,
+        32
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.6",
+      "source": "A",
+      "start": 19.58,
+      "end": 24.31,
+      "text": "God is working in the wait, even when you can't see it.",
+      "words": [
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.7",
+      "source": "A",
+      "start": 26.16,
+      "end": 29,
+      "text": "I remember the year everything stopped.",
+      "words": [
+        45,
+        46,
+        47,
+        48,
+        49,
+        50
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.8",
+      "source": "A",
+      "start": 29.55,
+      "end": 33.57,
+      "text": "I had sent forty applications and heard nothing back.",
+      "words": [
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.9",
+      "source": "A",
+      "start": 34.12,
+      "end": 35.23,
+      "text": "Not one reply.",
+      "words": [
+        60,
+        61,
+        62
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.10",
+      "source": "A",
+      "start": 35.78,
+      "end": 38.38,
+      "text": "I thought my life was on pause.",
+      "words": [
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.11",
+      "source": "A",
+      "start": 38.93,
+      "end": 43.45,
+      "text": "But looking back, that was the year my faith grew up.",
+      "words": [
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.12",
+      "source": "A",
+      "start": 45.3,
+      "end": 48.67,
+      "text": "So, anyway, where was I.",
+      "words": [
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87
+      ],
+      "fillers": 2,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.13",
+      "source": "A",
+      "start": 49.22,
+      "end": 49.61,
+      "text": "Right.",
+      "words": [
+        88
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.14",
+      "source": "A",
+      "start": 50.16,
+      "end": 52.4,
+      "text": "Let me check my notes here.",
+      "words": [
+        89,
+        90,
+        91,
+        92,
+        93,
+        94
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.15",
+      "source": "A",
+      "start": 52.95,
+      "end": 53.29,
+      "text": "Okay.",
+      "words": [
+        95
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.16",
+      "source": "A",
+      "start": 55.14,
+      "end": 57.74,
+      "text": "Why do we hate waiting so much?",
+      "words": [
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.17",
+      "source": "A",
+      "start": 58.29,
+      "end": 61.28,
+      "text": "Because waiting feels like losing control.",
+      "words": [
+        103,
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.18",
+      "source": "A",
+      "start": 61.83,
+      "end": 65.76,
+      "text": "And control is the thing we trust more than God.",
+      "words": [
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.19",
+      "source": "A",
+      "start": 66.31,
+      "end": 67.88,
+      "text": "That's the hard part.",
+      "words": [
+        119,
+        120,
+        121,
+        122
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.20",
+      "source": "A",
+      "start": 69.73,
+      "end": 76.31,
+      "text": "Isaiah forty thirty one says they that wait upon the Lord shall renew their strength.",
+      "words": [
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.21",
+      "source": "A",
+      "start": 76.86,
+      "end": 77.25,
+      "text": "Renew.",
+      "words": [
+        138
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.22",
+      "source": "A",
+      "start": 77.8,
+      "end": 78.5,
+      "text": "Not lose.",
+      "words": [
+        139,
+        140
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.23",
+      "source": "A",
+      "start": 79.05,
+      "end": 82.41,
+      "text": "The wait is where your strength is rebuilt.",
+      "words": [
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.24",
+      "source": "A",
+      "start": 84.26,
+      "end": 87.01,
+      "text": "Three things to do while you wait.",
+      "words": [
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.25",
+      "source": "A",
+      "start": 87.56,
+      "end": 89.46,
+      "text": "First, keep showing up.",
+      "words": [
+        156,
+        157,
+        158,
+        159
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.26",
+      "source": "A",
+      "start": 90.01,
+      "end": 92.62,
+      "text": "Second, keep serving someone else.",
+      "words": [
+        160,
+        161,
+        162,
+        163,
+        164
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.27",
+      "source": "A",
+      "start": 93.17,
+      "end": 97.38,
+      "text": "Third, keep a record of what God has already done.",
+      "words": [
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.28",
+      "source": "A",
+      "start": 99.23,
+      "end": 108.98,
+      "text": "And, you know, there's more I could say about that, but, we'll, we'll get to it another time maybe.",
+      "words": [
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195
+      ],
+      "fillers": 2,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.29",
+      "source": "A",
+      "start": 110.83,
+      "end": 115.3,
+      "text": "If you're in a season of waiting today, don't give up.",
+      "words": [
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.30",
+      "source": "A",
+      "start": 115.85,
+      "end": 117.93,
+      "text": "Your waiting is not wasted.",
+      "words": [
+        207,
+        208,
+        209,
+        210,
+        211
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.31",
+      "source": "A",
+      "start": 118.48,
+      "end": 119.59,
+      "text": "It is working.",
+      "words": [
+        212,
+        213,
+        214
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.32",
+      "source": "A",
+      "start": 120.14,
+      "end": 123.35,
+      "text": "And the answer is closer than you think.",
+      "words": [
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.33",
+      "source": "A",
+      "start": 125.2,
+      "end": 125.95,
+      "text": "Let's pray.",
+      "words": [
+        223,
+        224
+      ],
+      "fillers": 0,
+      "speaker": "speaker_0"
+    },
+    {
+      "id": "A.34",
+      "source": "A",
+      "start": 126.5,
+      "end": 131.38,
+      "text": "Thank you all for coming, and, see you next week.",
+      "words": [
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235
+      ],
+      "fillers": 1,
+      "speaker": "speaker_0"
+    }
+  ]
+}

@@ -18,45 +18,18 @@
 // Hair against a busy background and fast hand moves are where a matte shows
 // its limits: check a frame before building looks on it.
 
-import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { diskPath, parseArgs, readJson, sourceKey, writeJson } from "./lib/media.mjs";
+import { ensurePython, MODEL, PY, run } from "./lib/py.mjs";
 
 const { opt, pos } = parseArgs(process.argv.slice(2));
 const [job, ...wanted] = pos;
 if (!job) {
-  console.error("Usage: node scripts/matte.mjs <job> [source…] [--work=512] [--smooth=0.55] [--feather=2.5] [--grow=0]");
+  console.error("Usage: node scripts/matte.mjs <job> [source…] [--work=540] [--smooth=0.5] [--feather=1.5] [--grow=0] [--check]");
   process.exit(1);
 }
-const VENV = join("production", "matte-venv");
-const PY = join(VENV, process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
-const MODEL = join("production", "models", "selfie_multiclass_256x256.tflite");
-const MODEL_URL = "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite";
-
-const run = (cmd, args, label) => {
-  const r = spawnSync(cmd, args, { stdio: "inherit" });
-  if (r.status !== 0) {
-    console.error(`✖ ${label} failed.`);
-    process.exit(1);
-  }
-};
-if (!existsSync(PY)) {
-  console.log("Setting up the cutout environment (once): python venv + LiteRT…");
-  const py = process.platform === "win32" ? "python" : "python3";
-  run(py, ["-m", "venv", VENV], "Creating the Python environment (needs Python 3.10+)");
-  run(PY, ["-m", "pip", "install", "-q", "ai-edge-litert", "numpy", "pillow", "scipy"], "pip install ai-edge-litert numpy pillow scipy");
-}
-if (!existsSync(MODEL)) {
-  console.log("Downloading the segmentation model (once, 16 MB)…");
-  mkdirSync(join("production", "models"), { recursive: true });
-  const res = await fetch(MODEL_URL);
-  if (!res.ok) {
-    console.error(`✖ Model download failed (${res.status}). On a locked-down network, allow storage.googleapis.com or place the model at ${MODEL}.`);
-    process.exit(1);
-  }
-  writeFileSync(MODEL, Buffer.from(await res.arrayBuffer()));
-}
+await ensurePython();
 
 const edlPath = join("jobs", job, "edl.json");
 const edl = readJson(edlPath);

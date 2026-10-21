@@ -30,3 +30,9 @@ public/jobs/*/matte/
 # Test-only media made from fixtures and earlier renders.
 public/jobs/look-test/footage/
 public/jobs/look-test/reels/
+# Test material rebuilt by `npm test` (scripts/test/run.mjs): fixture footage, music beds, stand-in b-roll.
+public/jobs/reframe-test/footage/
+public/jobs/shorts-test/footage/
+public/jobs/prelive-test/broll/
+public/audio/test/
+jobs/*/beats-*.json

@@ -13,6 +13,7 @@
     "@remotion/cli": "4.0.537",
     "@remotion/fonts": "4.0.537",
     "@remotion/install-whisper-cpp": "4.0.537",
+    "@remotion/lambda": "4.0.537",
     "@remotion/layout-utils": "4.0.537",
     "@remotion/light-leaks": "4.0.537",
     "@remotion/media-utils": "4.0.537",
@@ -61,7 +62,15 @@
     "matte": "node scripts/matte.mjs",
     "sfx": "node scripts/sfx.mjs",
     "fix-words": "node scripts/fix-words.mjs",
-    "phone": "node scripts/phone-copy.mjs"
+    "phone": "node scripts/phone-copy.mjs",
+    "track": "node scripts/track.mjs",
+    "shorts": "node scripts/shorts.mjs",
+    "beats": "node scripts/beats.mjs",
+    "broll-suggest": "node scripts/broll-suggest.mjs",
+    "review-page": "node scripts/review-page.mjs",
+    "render-cloud": "node scripts/render-cloud.mjs",
+    "doctor": "node scripts/doctor.mjs",
+    "test": "node scripts/test/run.mjs"
   },
   "allowScripts": {
     "esbuild": false

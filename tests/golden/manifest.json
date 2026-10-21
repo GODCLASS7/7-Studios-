@@ -1,0 +1,69 @@
+{
+  "jobs": {
+    "edit-test": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        41,
+        153,
+        280,
+        407
+      ]
+    },
+    "look-test": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        41,
+        153,
+        280,
+        407
+      ]
+    },
+    "lyric-test": {
+      "comp": "ScriptureLyric-9x16",
+      "durationInFrames": 538,
+      "frames": [
+        43,
+        161,
+        296,
+        430
+      ]
+    },
+    "reframe-test": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        41,
+        153,
+        280,
+        407
+      ]
+    },
+    "shorts-test-s1": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 562,
+      "frames": [
+        45,
+        169,
+        309,
+        450
+      ]
+    },
+    "prelive-test": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 584,
+      "frames": [
+        47,
+        175,
+        321,
+        467
+      ]
+    }
+  },
+  "shorts": [
+    "A.24-27,A.29-30",
+    "A.4-11",
+    "A.16-23"
+  ]
+}

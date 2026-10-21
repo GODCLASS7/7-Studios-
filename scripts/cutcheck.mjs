@@ -14,13 +14,13 @@
 //   Length        render length differs from the edit list           → FAIL
 // Also draws out/<job>/cutcheck-v<N>.png: the frame before and after each cut,
 // with the render time burned in, to read before sending the cut.
-// Appends the report to jobs/<job>/qc.md. Exits 1 on any FAIL.
+// Appends the report to jobs/<job>/qc.md (not with --no-log, as the test runner uses). Exits 1 on any FAIL.
 
 import { appendFileSync } from "node:fs";
 import { join } from "node:path";
 import { diskPath, ff, mapBox, parseArgs, pcm, popAt, readJson, ts, videoInfo } from "./lib/media.mjs";
 
-const { pos } = parseArgs(process.argv.slice(2));
+const { pos, opt } = parseArgs(process.argv.slice(2));
 const [job, render] = pos;
 const p = readJson(join("jobs", job || "", ".edl.resolved.json"));
 if (!p || !render) {
@@ -74,7 +74,7 @@ add("Unmasked jump cuts", jumps.length ? "WARN" : "PASS", jumps.length ? `same t
 // Face boxes: source-normalised [x, y, w, h] mapped through the cover crop and punch-in.
 const srcInfo = {};
 const faceRect = (seg, key) => {
-  const box = p.faceBoxes[key];
+  const box = seg.faceBox || p.faceBoxes[key];
   if (!box) return null;
   srcInfo[seg.src] ??= videoInfo(diskPath(seg.src));
   return mapBox(box, srcInfo[seg.src], [W, H], seg.focusX, seg.focusY, seg.zoom);
@@ -128,7 +128,7 @@ for (const e of p.effects || []) {
     if (overlaps(card, { x1: fx1, x2: fx2, y1: fy1, y2: fy2 })) faceHits.push(`shoulder ${label} at ${ts((e.from + Math.round(t * fps)) / fps)}`);
   }
 }
-const anyFace = Object.keys(p.faceBoxes).length > 0;
+const anyFace = Object.keys(p.faceBoxes).length > 0 || p.segments.some((s) => s.faceBox);
 
 // Cut sheet: last frame before and first frame after each cut, render time burned in.
 const sheet = join("out", job, `cutcheck-v${p.version}.png`);
@@ -199,5 +199,5 @@ if (fxFrames.length) {
 const icon = { PASS: "✅", WARN: "⚠️", FAIL: "❌" };
 const report = `\n## Cut check — ${render} — ${new Date().toISOString()}\n\n${cuts.length} cuts in edit v${p.version}.\n\n| Check | Result | Detail |\n|---|---|---|\n${results.map((r) => `| ${r.name} | ${icon[r.status]} ${r.status} | ${r.detail} |`).join("\n")}\n`;
 console.log(report);
-appendFileSync(join("jobs", job, "qc.md"), report);
+if (!opt["no-log"]) appendFileSync(join("jobs", job, "qc.md"), report);
 process.exit(results.some((r) => r.status === "FAIL") ? 1 : 0);

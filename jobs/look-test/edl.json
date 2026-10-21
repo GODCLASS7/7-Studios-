@@ -13,7 +13,8 @@
         0.25,
         0.41,
         0.2
-      ]
+      ],
+      "track": "jobs/look-test/tracks/A.json"
     }
   },
   "segments": [
@@ -116,9 +117,9 @@
         "title": "Motion Studio",
         "lines": [
           "> /video-edit",
-          "Transcribing 5 clips\u2026",
-          "Picking the best takes\u2026",
-          "Rendering reel.mp4 \u2713"
+          "Transcribing 5 clips…",
+          "Picking the best takes…",
+          "Rendering reel.mp4 ✓"
         ]
       }
     },
@@ -135,7 +136,7 @@
     },
     {
       "kind": "profile-follow",
-      "at": 14.0,
+      "at": 14,
       "seconds": 2.9,
       "y": 0.63,
       "w": 0.72,

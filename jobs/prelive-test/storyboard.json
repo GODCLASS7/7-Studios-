@@ -1,0 +1,133 @@
+{
+  "project": "Pre-live combined test",
+  "version": 1,
+  "date": "2026-10-21",
+  "format": "9x16",
+  "fps": 30,
+  "status": "draft",
+  "panels": [
+    {
+      "id": "1",
+      "title": "Hook",
+      "seconds": 3,
+      "shot": "Close",
+      "camera": "punch-in",
+      "source": "footage",
+      "action": "The strongest line in the footage, cold, first.",
+      "onScreenText": "<hook line as pop captions>",
+      "audio": "Voice",
+      "draw": [
+        {
+          "type": "figure",
+          "x": 50,
+          "y": 92,
+          "h": 62
+        },
+        {
+          "type": "rect",
+          "x": 18,
+          "y": 62,
+          "w": 64,
+          "h": 7,
+          "label": "CAPTIONS"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Setup",
+      "seconds": 12,
+      "shot": "Medium",
+      "camera": "static",
+      "source": "footage",
+      "action": "Context in the speaker's best take; fillers and dead air cut; lower third with name.",
+      "onScreenText": "<Name> · <role>",
+      "audio": "Voice (+ bed)",
+      "draw": [
+        {
+          "type": "figure",
+          "x": 50,
+          "y": 95,
+          "h": 55
+        },
+        {
+          "type": "rect",
+          "x": 10,
+          "y": 50,
+          "w": 40,
+          "h": 6,
+          "label": "name"
+        },
+        {
+          "type": "rect",
+          "x": 18,
+          "y": 62,
+          "w": 64,
+          "h": 7,
+          "label": "CAPTIONS"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Point",
+      "seconds": 20,
+      "shot": "Medium/Close",
+      "camera": "punch-in",
+      "source": "footage",
+      "action": "The one idea; punch-in on every jump cut; pop-up on the key phrase or number.",
+      "onScreenText": "<key phrase pop-up>",
+      "audio": "Voice",
+      "draw": [
+        {
+          "type": "figure",
+          "x": 50,
+          "y": 98,
+          "h": 70
+        },
+        {
+          "type": "rect",
+          "x": 26,
+          "y": 10,
+          "w": 48,
+          "h": 7,
+          "label": "POP-UP"
+        },
+        {
+          "type": "rect",
+          "x": 18,
+          "y": 62,
+          "w": 64,
+          "h": 7,
+          "label": "CAPTIONS"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Close + CTA",
+      "seconds": 10,
+      "shot": "Medium",
+      "camera": "static",
+      "source": "footage",
+      "action": "Strongest closing line; series name or CTA as a title.",
+      "onScreenText": "<CTA>",
+      "audio": "Voice; bed resolves",
+      "draw": [
+        {
+          "type": "figure",
+          "x": 50,
+          "y": 95,
+          "h": 55
+        },
+        {
+          "type": "text",
+          "x": 50,
+          "y": 14,
+          "text": "CTA",
+          "size": 6
+        }
+      ]
+    }
+  ]
+}

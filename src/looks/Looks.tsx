@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, Img, interpolate, OffthreadVideo, random, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
-import { color, font, springs } from "../lib";
+import { color, font, springs, useBrand } from "../lib";
 
 // Talking-head looks for FootageEdit, switchable per section (edl.json "look" + "sections"):
 //   classic    the pop captions (FootageEdit's own)
@@ -12,11 +12,12 @@ import { color, font, springs } from "../lib";
 export type LookName = "classic" | "bold" | "cool-girl" | "cool-dude";
 export type LookRange = { from: number; to: number; look: LookName };
 export type Cue = { startMs: number; endMs: number; words: { text: string; startMs: number; endMs: number }[] };
-export type Punch = { text: string; startMs: number; endMs: number; look: LookName; cueStartMs: number; cueEndMs: number };
+export type Punch = { text: string; startMs: number; endMs: number; look: LookName; cueStartMs: number; cueEndMs: number; y?: number };
 export type OrbitItem = { src: string; credit: string | null; image: boolean };
 
 export const YELLOW = "#FFD60A";
 const SERIF_YELLOW = "#FFD34E";
+const HOUSE_PUNCH = "#FFD60A"; // the house punch colour; a brand kit's own punch colour replaces both yellows
 const clean = (t: string) => t.replace(/[.,!?;:]+$/, "");
 const norm = (t: string) => t.toLowerCase().replace(/[^\p{L}\p{N}']/gu, "");
 
@@ -29,6 +30,7 @@ const useU = () => {
 
 // ---------- the words behind the head (bold, cool-dude) ----------
 export const PunchBehind: React.FC<{ punches: Punch[]; hasMatte: boolean }> = ({ punches, hasMatte }) => {
+  const brand = useBrand();
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const { u, width, height } = useU();
@@ -43,7 +45,7 @@ export const PunchBehind: React.FC<{ punches: Punch[]; hasMatte: boolean }> = ({
   const text = bold ? p.text.toLowerCase() : p.text;
   const size = Math.min((bold ? 330 : 230) * u, (0.94 * width) / Math.max(3, text.length * (bold ? 0.58 : 0.52)));
   // With a cutout the word sits across the head, behind it; without one it moves above the head.
-  const y = hasMatte ? 0.26 : 0.1;
+  const y = hasMatte ? (p.y ?? 0.26) : 0.1;
   return (
     <AbsoluteFill style={{ alignItems: "center" }}>
       <div
@@ -52,12 +54,12 @@ export const PunchBehind: React.FC<{ punches: Punch[]; hasMatte: boolean }> = ({
           top: height * y,
           transform: `translateY(-50%) scale(${interpolate(enter, [0, 1], [bold ? 0.55 : 0.92, 1])}) rotate(${bold ? interpolate(enter, [0, 1], [-4, 0]) : 0}deg)`,
           opacity: Math.min(1, enter * 1.5) * exit,
-          fontFamily: bold ? font.display : font.serif,
+          fontFamily: bold ? brand.displayFont : brand.serifFont,
           fontWeight: bold ? 900 : 600,
           fontSize: size,
           lineHeight: 1,
           letterSpacing: bold ? "-0.04em" : "-0.02em",
-          color: bold ? YELLOW : color.text,
+          color: bold ? brand.punch : brand.text,
           whiteSpace: "nowrap",
           textShadow: bold ? `0 ${8 * u}px ${30 * u}px rgba(0,0,0,0.35)` : `0 ${6 * u}px ${40 * u}px rgba(0,0,0,0.5)`,
           fontVariationSettings: bold ? undefined : '"opsz" 144, "SOFT" 30',
@@ -78,6 +80,7 @@ const Star: React.FC<{ x: number; y: number; s: number; o: number; c: string }> 
 
 // ---------- captions per look ----------
 export const LookCaptions: React.FC<{ cues: Cue[]; punches: Punch[]; look: LookName; position: number; emphasis: string[] }> = ({ cues, punches, look, position, emphasis }) => {
+  const brand = useBrand();
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const { u, width, height } = useU();
@@ -101,7 +104,7 @@ export const LookCaptions: React.FC<{ cues: Cue[]; punches: Punch[]; look: LookN
     return (
       <AbsoluteFill>
         {stars.map((s, i) => (
-          <Star key={i} {...s} c={i % 3 ? "#FFFFFF" : SERIF_YELLOW} />
+          <Star key={i} {...s} c={i % 3 ? "#FFFFFF" : brand.punch === HOUSE_PUNCH ? SERIF_YELLOW : brand.punch} />
         ))}
         <div
           style={{
@@ -111,12 +114,12 @@ export const LookCaptions: React.FC<{ cues: Cue[]; punches: Punch[]; look: LookN
             textAlign: "center",
             transform: `translateY(-50%) translateY(${interpolate(enter, [0, 1], [16 * u, 0])}px)`,
             opacity: enter,
-            fontFamily: font.serif,
+            fontFamily: brand.serifFont,
             fontStyle: "italic",
             fontWeight: 600,
             fontSize: size,
             lineHeight: 1.05,
-            color: SERIF_YELLOW,
+            color: brand.punch === HOUSE_PUNCH ? SERIF_YELLOW : brand.punch,
             textShadow: `0 ${4 * u}px ${24 * u}px rgba(0,0,0,0.45)`,
             padding: `0 ${0.07 * width}px`,
             boxSizing: "border-box",
@@ -144,12 +147,12 @@ export const LookCaptions: React.FC<{ cues: Cue[]; punches: Punch[]; look: LookN
                 style={{
                   display: "inline-block",
                   margin: `0 ${0.14 * 66 * u}px`,
-                  fontFamily: font.display,
+                  fontFamily: brand.displayFont,
                   fontWeight: 800,
                   fontSize: 66 * u,
                   lineHeight: 1.15,
                   letterSpacing: "-0.02em",
-                  color: hot ? YELLOW : color.text,
+                  color: hot ? brand.punch : brand.text,
                   opacity: on ? s : 0,
                   transform: `translateY(${interpolate(s, [0, 1], [26 * u, 0])}px) scale(${interpolate(s, [0, 1], [0.8, 1])})`,
                   textShadow: `0 ${3 * u}px ${16 * u}px rgba(0,0,0,0.55)`,

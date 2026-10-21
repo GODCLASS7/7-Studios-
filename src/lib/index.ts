@@ -6,3 +6,4 @@ export { FootageShot } from "./FootageShot";
 export { KineticTitle } from "./KineticTitle";
 export { SpeedRamp } from "./SpeedRamp";
 export { PAPER, PaperTexture, CutoutStrip, InkText, InkFilter, HandUnderline, onTwos } from "./paper";
+export { BrandEndCard, BrandProvider, HOUSE_BRAND, useBrand, type Brand } from "./brand";

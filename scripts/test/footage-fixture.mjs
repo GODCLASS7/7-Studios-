@@ -8,6 +8,9 @@
 // eyes a quarter down), the framing the shoulder-zoom effect expects.
 // --photo=<image> builds a vertical take from a real photo of a person instead,
 // with a slow camera drift, to test the background cutout (scripts/matte.mjs).
+// --script=<file> voices your own text instead of the built-in lines ("…" = a long pause).
+// --photo=<image> --wide makes it 16:9 instead, with the speaker moving across
+// the frame, to test face tracking and automatic reframing (scripts/track.mjs).
 // Writes public/jobs/<job>/footage/take-a.mp4 (1920×1080, 30 fps): a presenter
 // silhouette with the SOURCE timecode burned in, so every cut can be checked by
 // eye, and a "voice" of tone bursts, one per word, with fillers (um, uh), a
@@ -15,19 +18,22 @@
 // in ElevenLabs JSON format to jobs/<job>/fixtures/take-a.elevenlabs.json, to
 // exercise `transcribe --from=…`.
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { ff, writeJson } from "../lib/media.mjs";
 
 const job = process.argv[2];
 const photo = process.argv.find((a) => a.startsWith("--photo="))?.slice(8);
-const vertical = photo || process.argv.includes("--vertical");
+const wide = photo && process.argv.includes("--wide");
+const vertical = (photo && !wide) || process.argv.includes("--vertical");
 if (!job) {
   console.error("Usage: node scripts/test/footage-fixture.mjs <job>");
   process.exit(1);
 }
-const script =
-  "So um the hardest part of waiting is … uh … The hardest part of waiting is not knowing when it ends. " +
+const scriptFile = process.argv.find((a) => a.startsWith("--script="))?.slice(9);
+const script = scriptFile
+  ? readFileSync(scriptFile, "utf8").replace(/\s+/g, " ").trim()
+  : "So um the hardest part of waiting is … uh … The hardest part of waiting is not knowing when it ends. " +
   "But here's what I learned. Um. Waiting is not wasting. God is working in the wait. … " +
   "So if you're in a season of waiting today, uh, don't give up. Keep showing up.";
 
@@ -87,13 +93,20 @@ const geq =
   "lum='if(lt(pow((X-960)/150,2)+pow((Y-430)/190,2),1),170,if(lt(pow((X-960)/430,2)+pow((Y-1020)/330,2),1),120,40+20*Y/H))':cb=128:cr='if(lt(pow((X-960)/150,2)+pow((Y-430)/190,2),1),142,128)'";
 const geqV =
   "lum='if(lt(pow((X-540)/165,2)+pow((Y-560)/205,2),1),170,if(lt(pow((X-540)/430,2)+pow((Y-1330)/400,2),1),120,40+20*Y/H))':cb=128:cr='if(lt(pow((X-540)/165,2)+pow((Y-560)/205,2),1),142,128)'";
-let r = photo
+let r = wide
+  ? // A 2400×1080 canvas with the speaker in the middle; the crop below moves across it.
+    ff(["-i", photo, "-i", photo, "-filter_complex", "[0]scale=2400:2400,crop=2400:1080,gblur=sigma=40[bg];[1]scale=1080:1080[fg];[bg][fg]overlay=x=660:y=0,format=yuv420p", "-frames:v", "1", still])
+  : photo
   ? // The photo, sharp, at the bottom of a 9:16 frame over a blurred copy of itself.
     ff(["-i", photo, "-i", photo, "-filter_complex", "[0]scale=1920:1920,crop=1080:1920,gblur=sigma=40[bg];[1]scale=1400:1400[fg];[bg][fg]overlay=x=-75:y=520,format=yuv420p", "-frames:v", "1", still])
   : ff(["-f", "lavfi", "-i", `color=c=black:s=${vertical ? "1080x1920" : "1920x1080"}`, "-frames:v", "1", "-vf", `format=yuv444p,geq=${vertical ? geqV : geq}`, still]);
 if (r.status !== 0) throw new Error(r.stderr);
 // A photo gets a slow drift and breathing zoom, so the cutout is tested on moving footage.
-const drift = photo ? "scale=1188:2112,crop=1080:1920:x='54+40*sin(t/2.1)':y='96+36*sin(t/2.9)'," : "";
+const drift = wide
+  ? "crop=1920:1080:x='240+240*sin(t/3)':y=0,"
+  : photo
+    ? "scale=1188:2112,crop=1080:1920:x='54+40*sin(t/2.1)':y='96+36*sin(t/2.9)',"
+    : "";
 const out = join("public", "jobs", job, "footage", "take-a.mp4");
 mkdirSync(join("public", "jobs", job, "footage"), { recursive: true });
 const font = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf";

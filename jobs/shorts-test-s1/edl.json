@@ -1,0 +1,72 @@
+{
+  "job": "shorts-test-s1",
+  "version": 1,
+  "format": "9x16",
+  "fps": 30,
+  "sources": {
+    "A": {
+      "file": "jobs/shorts-test/footage/take-a.mp4",
+      "transcript": "jobs/shorts-test/transcripts/take-a.json"
+    }
+  },
+  "segments": [
+    {
+      "source": "A",
+      "in": 84.2,
+      "out": 87.07,
+      "phrase": "A.24",
+      "text": "Three things to do while you wait."
+    },
+    {
+      "source": "A",
+      "in": 87.5,
+      "out": 89.52,
+      "phrase": "A.25",
+      "text": "First, keep showing up.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 89.95,
+      "out": 92.68,
+      "phrase": "A.26",
+      "text": "Second, keep serving someone else."
+    },
+    {
+      "source": "A",
+      "in": 93.11,
+      "out": 97.44,
+      "phrase": "A.27",
+      "text": "Third, keep a record of what God has already done.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 110.77,
+      "out": 115.36,
+      "phrase": "A.29",
+      "text": "If you're in a season of waiting today, don't give up."
+    },
+    {
+      "source": "A",
+      "in": 115.79,
+      "out": 117.99,
+      "phrase": "A.30",
+      "text": "Your waiting is not wasted.",
+      "zoom": 1.12
+    }
+  ],
+  "captions": {
+    "style": "pop",
+    "maxWords": 3,
+    "position": 0.66,
+    "uppercase": true,
+    "highlight": "#E8B44A"
+  },
+  "grade": "none",
+  "overlays": [],
+  "hook": "Three things to do while you wait.",
+  "audio": {
+    "clean": "light"
+  }
+}

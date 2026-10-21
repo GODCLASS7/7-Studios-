@@ -1,0 +1,373 @@
+{
+  "source": "jobs/reframe-test/footage/take-a.mp4",
+  "engine": "import",
+  "duration": 29.79,
+  "language": "en",
+  "words": [
+    {
+      "text": "So",
+      "start": 0.6,
+      "end": 0.84,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "um",
+      "start": 0.91,
+      "end": 1.15,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "the",
+      "start": 1.22,
+      "end": 1.51,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "hardest",
+      "start": 1.58,
+      "end": 2.07,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "part",
+      "start": 2.14,
+      "end": 2.48,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "of",
+      "start": 2.55,
+      "end": 2.79,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "waiting",
+      "start": 2.86,
+      "end": 3.35,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "is",
+      "start": 3.42,
+      "end": 3.66,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "uh",
+      "start": 5.03,
+      "end": 5.27,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "The",
+      "start": 6.64,
+      "end": 6.93,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "hardest",
+      "start": 7,
+      "end": 7.49,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "part",
+      "start": 7.56,
+      "end": 7.9,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "of",
+      "start": 7.97,
+      "end": 8.21,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "waiting",
+      "start": 8.28,
+      "end": 8.77,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "is",
+      "start": 8.84,
+      "end": 9.08,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "not",
+      "start": 9.15,
+      "end": 9.44,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "knowing",
+      "start": 9.51,
+      "end": 10,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "when",
+      "start": 10.07,
+      "end": 10.41,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "it",
+      "start": 10.48,
+      "end": 10.72,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "ends.",
+      "start": 10.79,
+      "end": 11.13,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "But",
+      "start": 11.68,
+      "end": 11.97,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "here's",
+      "start": 12.04,
+      "end": 12.43,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "what",
+      "start": 12.5,
+      "end": 12.84,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "I",
+      "start": 12.91,
+      "end": 13.1,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "learned.",
+      "start": 13.17,
+      "end": 13.66,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "Um.",
+      "start": 14.21,
+      "end": 14.45,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "Waiting",
+      "start": 15,
+      "end": 15.49,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "is",
+      "start": 15.56,
+      "end": 15.8,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "not",
+      "start": 15.87,
+      "end": 16.16,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "wasting.",
+      "start": 16.23,
+      "end": 16.72,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "God",
+      "start": 17.27,
+      "end": 17.56,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "is",
+      "start": 17.63,
+      "end": 17.87,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "working",
+      "start": 17.94,
+      "end": 18.43,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "in",
+      "start": 18.5,
+      "end": 18.74,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "the",
+      "start": 18.81,
+      "end": 19.1,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "wait.",
+      "start": 19.17,
+      "end": 19.51,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "So",
+      "start": 21.36,
+      "end": 21.6,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "if",
+      "start": 21.67,
+      "end": 21.91,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "you're",
+      "start": 21.98,
+      "end": 22.37,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "in",
+      "start": 22.44,
+      "end": 22.68,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "a",
+      "start": 22.75,
+      "end": 22.94,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "season",
+      "start": 23.01,
+      "end": 23.45,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "of",
+      "start": 23.52,
+      "end": 23.76,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "waiting",
+      "start": 23.83,
+      "end": 24.32,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "today,",
+      "start": 24.39,
+      "end": 24.78,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "uh,",
+      "start": 25.08,
+      "end": 25.32,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "don't",
+      "start": 25.62,
+      "end": 25.96,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "give",
+      "start": 26.03,
+      "end": 26.37,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "up.",
+      "start": 26.44,
+      "end": 26.68,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "Keep",
+      "start": 27.23,
+      "end": 27.57,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "showing",
+      "start": 27.64,
+      "end": 28.13,
+      "type": "word",
+      "speaker": "speaker_0"
+    },
+    {
+      "text": "up.",
+      "start": 28.2,
+      "end": 28.44,
+      "type": "word",
+      "speaker": "speaker_0"
+    }
+  ],
+  "createdAt": "2026-10-21T13:07:35.921Z"
+}

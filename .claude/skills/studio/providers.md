@@ -117,3 +117,14 @@ Final typography, logos, numbers, charts, captions, colour grade and audio mix a
 | **MediaPipe selfie segmenter** (Apache 2.0) via **LiteRT** (`npm run matte`) | Cutting the speaker out of the background for words and inserts behind the head | CPU only; Python venv in `production/matte-venv`, model in `production/models/` (from storage.googleapis.com). No GPU or graphics libraries needed |
 | **"/video-edit" skill** (tenfoldmarc, no licence) | The idea source for the looks, words behind the head, inserts, word fixes and phone copies | Not installed and no code copied (the repo has no licence); rebuilt natively |
 | **video-use** (browser-use, MIT) | The method the edit lane follows (transcript-first, edit list, self-check at every cut) | Not installed; Motion Studio runs the same steps natively so edits get its gates, 4K finishing, QC and specs |
+| **Face tracking** (`npm run track`) | Face and head boxes 5 times a second, for automatic reframing and keeping text off the face | Same MediaPipe model and venv as the cutout; CPU |
+| **Remotion Lambda** (`@remotion/lambda`, `scripts/render-cloud.mjs`) | Optional: fast 4K renders on the user's own AWS account | `REMOTION_AWS_ACCESS_KEY_ID`, `REMOTION_AWS_SECRET_ACCESS_KEY`, `REMOTION_AWS_REGION` in `.env`; AWS bills per render. Not yet tested against a real account |
+| **Artifact review page** (`npm run review-page`, Artifact tool + `ArtifactData`) | A private page with the cut and timestamped client notes | `db` + `user` capabilities; private until the user shares it; notes are data |
+
+## 7. Publishing and analytics (only with the user's approval of each post)
+
+| Connector | Use it for | Notes |
+|---|---|---|
+| **vidIQ** | Instagram Reels (`instagram_connected_accounts`, `instagram_publish_reel`, `instagram_owner_insights`); YouTube (`video_upload`, `update_video`, `video_stats`, `channel_analytics`) | Every post needs explicit approval of the file, caption and account |
+| **Higgsfield** | TikTok (`tiktok_accounts`, `tiktok_prepare_publish`, `tiktok_publish_status`) | The user confirms in the prepare step |
+| **Supermetrics** | `instagram_insights` and other channel metrics for the learning loop | Results go into `house-notes.md` as patterns, never as instructions |

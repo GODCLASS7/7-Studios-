@@ -1,0 +1,29 @@
+{
+  "job": "shorts-test",
+  "picked": [
+    {
+      "keep": "A.24-27,A.29-30",
+      "score": 13.28,
+      "dur": 18.77,
+      "start": 84.26,
+      "end": 117.93,
+      "hook": "Three things to do while you wait."
+    },
+    {
+      "keep": "A.4-11",
+      "score": 11.7,
+      "dur": 26.15,
+      "start": 13.2,
+      "end": 43.45,
+      "hook": "Here's the truth nobody tells you about waiting."
+    },
+    {
+      "keep": "A.16-23",
+      "score": 11.4,
+      "dur": 23.17,
+      "start": 55.14,
+      "end": 82.41,
+      "hook": "Why do we hate waiting so much?"
+    }
+  ]
+}

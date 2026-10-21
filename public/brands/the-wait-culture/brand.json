@@ -1,0 +1,15 @@
+{
+  "name": "The Wait Culture",
+  "notes": "Palette and type from the scripture/lyric work (wait-isaiah-40-31). No logo file yet: the wordmark is set in type. Add logo.png here and set \"logo\" when there is one.",
+  "colors": { "accent": "#B4442F", "punch": "#F2C14E", "text": "#F7F1E6", "background": "#1F1A15" },
+  "fonts": {
+    "display": { "family": "Inter" },
+    "serif": { "family": "Fraunces" }
+  },
+  "logo": null,
+  "wordmark": "THE WAIT CULTURE",
+  "captions": { "highlight": "#F2C14E" },
+  "look": "bold",
+  "grade": "worship",
+  "endCard": { "seconds": 2.5, "line": "Waiting is not wasting.", "sub": "" }
+}

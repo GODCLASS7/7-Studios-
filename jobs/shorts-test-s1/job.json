@@ -1,0 +1,28 @@
+{
+  "id": "shorts-test-s1",
+  "title": "shorts-test · Short 1",
+  "created": "2026-10-21T13:11:00.572Z",
+  "preset": "talking-head",
+  "recipes": [
+    "hook-2s",
+    "phone-first-volume"
+  ],
+  "researchUrl": null,
+  "aiProvider": "higgsfield",
+  "deliverables": [
+    {
+      "name": "Edit 9:16",
+      "type": "motion",
+      "composition": "FootageEdit-9x16",
+      "format": "9x16",
+      "seconds": 45,
+      "fps": 30,
+      "preset": "hd",
+      "complexity": "simple",
+      "rawMinutes": 10,
+      "aiVideoShots": 0,
+      "aiImages": 0,
+      "upscaleShots": 0
+    }
+  ]
+}
