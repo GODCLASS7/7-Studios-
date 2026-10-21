@@ -24,7 +24,8 @@
 //   edl           every test job builds its props, voice track and cue list
 //   voice         voice cleanup (shorts-test-s1): voice at least 30 dB above the noise between words
 //   shorts        the Shorts finder still picks the same clips from the long test talk
-//   frames        golden frames of every test edit
+//   pin           a spot pinned on the panning 16:9 test take stays within 1 px of the truth
+//   frames        golden frames of every test edit, the title styles, the tutorial and the cards
 //   track (full)  face found in at least 95% of the moving 16:9 test take
 //   cutcheck (full) each test edit rendered and passed by the cut check
 //
@@ -35,6 +36,7 @@ import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { findBeats } from "../lib/beats.mjs";
 import { parseArgs, pcm, readJson, writeJson } from "../lib/media.mjs";
+import { ensureModule, ensurePython, PY } from "../lib/py.mjs";
 
 const { opt } = parseArgs(process.argv.slice(2));
 const ONLY = opt.only ? new Set(String(opt.only).split(",")) : null;
@@ -53,14 +55,21 @@ mkdirSync(TMP, { recursive: true });
 mkdirSync(OUT, { recursive: true });
 const manifest = readJson(MANIFEST, { jobs: {} });
 
-// The test jobs. footageJob: whose fixture footage the job cuts from.
+// The test jobs. footageJob: whose fixture footage the job cuts from. layoutComp: an
+// edit-list job rendered with another template. comp: a template rendered from a props
+// file (or its default props), with fixed frames to compare.
 const JOBS = {
   "edit-test": { fixture: ["--vertical"] },
   "look-test": { fixture: [`--photo=${PHOTO}`], reels: true },
   "reframe-test": { fixture: [`--photo=${PHOTO}`, "--wide"] },
   "shorts-test-s1": { footageJob: "shorts-test", fixture: ["--vertical", "--script=jobs/shorts-test/talk.txt"] },
   "prelive-test": { footageJob: "reframe-test", fixture: [`--photo=${PHOTO}`, "--wide"], music: [100], broll: true },
+  "titles-test": { footageJob: "reframe-test", fixture: [`--photo=${PHOTO}`, "--wide"] },
+  "tutorial-test": { footageJob: "look-test", fixture: [`--photo=${PHOTO}`], screen: true, layoutComp: "Tutorial-9x16" },
   "lyric-test": { comp: "ScriptureLyric-9x16", props: "jobs/lyric-test/lyrics.props.json" },
+  "titles-reel": { comp: "Titles-9x16", dur: 420, frames: [36, 96, 156, 216, 276, 336, 396] },
+  cards: { comp: "Cards-9x16", dur: 255, frames: [40, 78, 125, 200] },
+  "cards-stack": { comp: "Cards-16x9", props: "tests/fixtures/cards-stack.json", dur: 189, frames: [30, 60, 100, 160] },
 };
 
 const results = [];
@@ -100,6 +109,7 @@ if (want("beats")) {
 // ── test material ────────────────────────────────────────────────────────────
 const jobs = Object.entries(JOBS).filter(([job]) => want(job) || want("frames") || want("edl") || (job === "shorts-test-s1" && want("voice")) || (FULL && want("cutcheck")));
 const ready = new Set();
+let fixtureBundle = null;
 for (const [job, cfg] of jobs) {
   if (cfg.comp) {
     ready.add(job);
@@ -116,6 +126,21 @@ for (const [job, cfg] of jobs) {
     const r = node("scripts/test/footage-fixture.mjs", [fj, ...cfg.fixture]);
     if (r.status !== 0) {
       record("edl", job, "fail", `footage fixture: ${tail(r)}`);
+      continue;
+    }
+  }
+  // A generic app screen "recording" for the tutorial layout, rendered from TestScreen.
+  const screen = join("public", "jobs", job, "screen", "app.mp4");
+  if (cfg.screen && !existsSync(screen)) {
+    console.log("   rendering the test screen recording…");
+    if (!fixtureBundle) {
+      fixtureBundle = join(TMP, "fixture-bundle");
+      run("npx", ["remotion", "bundle", `--out-dir=${fixtureBundle}`, "--log=error"]);
+    }
+    mkdirSync(join("public", "jobs", job, "screen"), { recursive: true });
+    const r = run("npx", ["remotion", "render", fixtureBundle, "TestScreen", screen, "--codec=h264", "--crf=20", "--log=error", ...BROWSER]);
+    if (r.status !== 0) {
+      record("edl", job, "fail", `test screen: ${tail(r)}`);
       continue;
     }
   }
@@ -202,6 +227,27 @@ if (want("shorts")) {
   }
 }
 
+// ── pin tracking ─────────────────────────────────────────────────────────────
+// The 16:9 test take pans by crop x = 240 + 240·sin(t/3), so a spot on the photo has a known path.
+if (want("pin")) {
+  const take = join("public", "jobs", "reframe-test", "footage", "take-a.mp4");
+  if (!existsSync(take)) node("scripts/test/footage-fixture.mjs", ["reframe-test", `--photo=${PHOTO}`, "--wide"]);
+  await ensurePython();
+  ensureModule("cv2", "opencv-python-headless");
+  const out = join(TMP, "pin.json");
+  const r = run(PY, [join("scripts", "matte", "pin.py"), take, out, "--at=5", "--point=0.542,0.426"]);
+  const pin = readJson(out);
+  if (r.status !== 0 || !pin) record("pin", "panning take", "fail", tail(r));
+  else {
+    const crop = (t) => 240 + 240 * Math.sin(t / 3);
+    const s0 = pin.samples.find((s) => Math.abs(s[0] - 5) < 0.02);
+    const errs = pin.samples.map(([t, x, y]) => Math.hypot(x * 1920 - (s0[1] * 1920 - (crop(t) - crop(5))), y * 1080 - s0[2] * 1080));
+    const mean = errs.reduce((a, b) => a + b, 0) / errs.length;
+    const max = Math.max(...errs);
+    record("pin", "panning take", mean < 1 && max < 3 ? "pass" : "fail", `${errs.length} frames, off by ${mean.toFixed(2)} px on average (max ${max.toFixed(2)})`);
+  }
+}
+
 // ── golden frames ────────────────────────────────────────────────────────────
 const gray = (f) => spawnSync("ffmpeg", ["-v", "error", "-i", f, "-vf", "format=gray,gblur=sigma=1.5", "-f", "rawvideo", "-"], { maxBuffer: 1e9 }).stdout;
 const changed = (a, b) => {
@@ -226,24 +272,24 @@ const ensureBundle = () => {
 };
 for (const job of frameJobs) {
   const cfg = JOBS[job];
-  const propsFile = cfg.props || join("jobs", job, ".edl.resolved.json");
-  const p = readJson(propsFile);
-  const comp = cfg.comp || `FootageEdit-${readJson(join("jobs", job, "edl.json")).format}`;
+  const propsFile = cfg.comp ? cfg.props : join("jobs", job, ".edl.resolved.json");
+  const p = propsFile ? readJson(propsFile) : {};
+  const comp = cfg.comp || cfg.layoutComp || `FootageEdit-${readJson(join("jobs", job, "edl.json")).format}`;
   const fps = p.fps || 30;
   // Frames to compare: spread over the edit (or over the lyric cards).
-  const dur = p.durationInFrames || Math.round((Math.max(...p.phrases.map((ph) => (ph.start ?? 0) + ph.seconds)) + 1) * fps);
+  const dur = cfg.dur || p.durationInFrames || Math.round((Math.max(...p.phrases.map((ph) => (ph.start ?? 0) + ph.seconds)) + 1) * fps);
   const was = manifest.jobs[job];
   if (was && !UPDATE && was.durationInFrames !== dur) {
     record("frames", job, "fail", `length changed: ${was.durationInFrames} → ${dur} frames (re-run with --update if that was meant)`);
     continue;
   }
-  const frames = !UPDATE && was?.frames ? was.frames : [0.08, 0.3, 0.55, 0.8].map((f) => Math.round(f * dur));
+  const frames = !UPDATE && was?.frames ? was.frames : cfg.frames || [0.08, 0.3, 0.55, 0.8].map((f) => Math.round(f * dur));
   if (!ensureBundle()) break;
   mkdirSync(join(GOLD, job), { recursive: true });
   const fails = [];
   for (const f of frames) {
     const now = join(TMP, `${job}-f${f}.png`);
-    const r = run("npx", ["remotion", "still", bundle, comp, now, `--props=${propsFile}`, `--frame=${f}`, "--scale=0.5", "--image-format=png", "--log=error", ...BROWSER]);
+    const r = run("npx", ["remotion", "still", bundle, comp, now, ...(propsFile ? [`--props=${propsFile}`] : []), `--frame=${f}`, "--scale=0.5", "--image-format=png", "--log=error", ...BROWSER]);
     if (r.status !== 0) {
       fails.push(`frame ${f} did not render: ${tail(r)}`);
       continue;
@@ -276,7 +322,7 @@ if (FULL && want("track")) {
 if (FULL && want("cutcheck")) {
   for (const job of [...ready].filter((j) => !JOBS[j].comp && (want("cutcheck") || want(j)))) {
     if (!ensureBundle()) break;
-    const comp = `FootageEdit-${readJson(join("jobs", job, "edl.json")).format}`;
+    const comp = JOBS[job].layoutComp || `FootageEdit-${readJson(join("jobs", job, "edl.json")).format}`;
     const out = join(OUT, `${job}.mp4`);
     const t0 = Date.now();
     const r = run("npx", ["remotion", "render", bundle, comp, out, `--props=${join("jobs", job, ".edl.resolved.json")}`, "--codec=h264", "--crf=20", "--log=error", ...BROWSER]);

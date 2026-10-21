@@ -23,7 +23,7 @@ These instructions are for anyone working in this repo, whether a person or Clau
 | Bundler | Rspack (`Config.setRspack(true)` in `remotion.config.ts`) |
 | Frame format | JPEG by default (fast drafts); final presets switch to PNG |
 | Finishing kit | `@remotion/transitions`, `motion-blur`, `light-leaks`, `noise`, `paths`, `shapes`, `layout-utils`, `media-utils`, `captions`, `fonts`, `zod-types`; `zod` 4 |
-| Fonts | Bundled in `public/brand/fonts` (Inter variable, Fraunces, Plus Jakarta Sans, DM Mono; SIL OFL) and loaded with `@remotion/fonts` |
+| Fonts | Bundled in `public/brand/fonts` (Inter variable, Fraunces, Plus Jakarta Sans, DM Mono, Caveat, Anton; SIL OFL, listed in `LICENSES.md`) and loaded with `@remotion/fonts` |
 | Transcription | ElevenLabs Scribe + forced alignment (key in `.env`), or `@remotion/install-whisper-cpp` (local Whisper); a full system **ffmpeg** on PATH for cutting, analysis and checks |
 
 ## 2. Layout
@@ -37,7 +37,9 @@ motion-studio/
 │   ├── Root.tsx              ← registers every <Composition> and <Still>
 │   ├── lib/                  ← THE DESIGN SYSTEM: tokens, formats, Grade, Grain, FootageShot, KineticTitle
 │   ├── storyboard/           ← storyboard schema, panel drawing, approval sheet, animatic
-│   ├── templates/            ← reusable, props-driven templates: ScriptureLyric (verses, songs), FootageEdit (edits of real footage)
+│   ├── templates/            ← reusable, props-driven templates: ScriptureLyric (verses, songs), FootageEdit (edits of real footage),
+│   │                           Tutorial (presenter + screen recordings), Cards (kinetic 3D card line-ups)
+│   ├── titles/               ← TitleFX: 7 cinematic title styles (in edits, or alone on transparency via Titles-*)
 │   ├── effects/              ← talking-head effects used by FootageEdit: LiquidGlassGraph, ScreenPush, ShoulderZoom
 │   ├── looks/                ← talking-head looks: bold, cool-girl, cool-dude (punch words, sparkles, orbiting reels)
 │   ├── inserts/              ← animated inserts: app window, profile follow, file scroll
@@ -105,6 +107,7 @@ npm run fix-words -- <id> "heard=>meant" …           # correct misheard words 
 npm run sfx                                          # build the studio's own sound-effects pack (once)
 npm run phone -- <render.mp4>                        # 720p phone copy for review
 npm run track -- <id>                                # follow the face: automatic reframing, text kept off the face
+npm run pin -- <id> <source> --point=x,y --at=<s> --name=<pin>   # stick a title to a spot in moving footage
 npm run shorts -- <id> [--count=5] | --make=1,3      # find the best Shorts in a long video, then make them jobs
 npm run beats -- <audio>                             # tempo and beat times of a music track
 npm run broll-suggest -- <id>                        # b-roll ideas for each line, from the library or as AI prompts
@@ -116,6 +119,8 @@ npm run doctor [-- --network]                        # what's ready, what's miss
 npm test [-- --full] [-- --update]                   # regression tests on the studio's own test material
 npx remotion compositions              # list composition IDs
 ```
+
+**Templates you render with `--props`:** `FootageEdit-*` and `Tutorial-*` (from `jobs/<id>/.edl.resolved.json`), `Titles-*` (titles alone, e.g. transparent with `webm-alpha`), `Cards-*` (card line-ups), `ScriptureLyric-*`. Each opens on a showcase in `npm run dev`.
 
 **Render presets:** `draft` · `review` · `hd` (1080p final) · `4k` · `4k-hevc` · `master` (ProRes 422 HQ) · `alpha` (ProRes 4444) · `webm-alpha` · `still` · `still-4k` · `still-print`. See the `studio-finishing` skill.
 
@@ -348,6 +353,7 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 6. Premium accents, as `effects` in `edl.json` (studio-edit §3b): `liquid-glass` (a refracting glass card with a graph and counter), `screen-push` (pixel-monitor close-up, one word per cut as it's said), `shoulder-zoom` (camera to cards over each shoulder, optional light-speed text transition).
 7. Finishing touches (studio-edit §3d): `npm run track` for 16:9 footage in a vertical edit (the crop follows the face), `"audio": { "clean": "light" }` for room noise, `"brand": "<slug>"` for the client's kit and end card, `"music": { …, "snap": true }` to land graphics on the beat, and `broll` cutaways (`npm run broll-suggest` finds spots).
 8. Send the review as a private page with timestamped notes (`npm run review-page`, studio-edit §4), and post only with the user's approval of each post (§5b).
+9. Cinematic titles in the shot (studio-edit §3e): `titles` in 7 styles, behind or in front of the person, pinned to a moving spot with `npm run pin`.
 
 ### 10.11 Lyric video for a song
 
@@ -373,6 +379,30 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 2. `--make=` the chosen ones. Each becomes its own job: `track` (if the source is 16:9), looks, brand kit, `edl`, review render, cut check, finals, as in 10.10.
 3. After posting, pull the numbers a week later and write the patterns into house notes (studio-edit §5b).
 
+### 10.14 Motion from a design reference
+
+> Here's a design I like: `<screenshot / screen recording / link>`. Make motion like this for `<brand / content>`.
+
+1. Follow *Rebuilding a design reference* in the **`studio-styles`** skill: get the file, break it down (grid, type, palette, components, motion and timing), and say what's licensed and can't be copied.
+2. Map it onto what exists first: `Cards`, `TitleFX`, `KineticTitle`, `paper.tsx`, `src/effects` and the brand kit. Then build only what's missing, as reusable components.
+3. Rebuild it with the user's own content and brand, in every format asked for, through the normal gates. Take the techniques, never the logo, photos, copy or whole layout.
+
+### 10.15 Tutorial / how-to reel
+
+> Make a tutorial reel from my talking-head take and these screen recordings: `<files>`.
+
+1. Edit the talking head as in 10.10 (`transcribe` → `pack` → plan ⏸ → `autocut` → `edl`).
+2. Add `tutorial` to `edl.json` (studio-edit §3f). Recordings go in `public/jobs/<id>/screen/`. Steps are timed by words. Read click moments and positions off the recordings (seconds and fractions of the recording) for `clicks` (zoom-ins) and `notes` (hand-drawn circles, boxes, underlines and arrows).
+3. Render `Tutorial-9x16` `review`, run the cut check (audio, cuts and length; read the frames for layout), then finals as usual.
+
+### 10.16 Card line-up (speakers, campuses, products, stats)
+
+> Make a card line-up for `<list>`: `<name, label, number, photo>` each, `<format(s)>`.
+
+1. Gather the facts from the user or the brief. Don't invent numbers: a card without a real number leaves `value` empty. Put photos or clips in `public/jobs/<id>/`.
+2. Write the props: `cards[]` (`label`, `title`, `sub`, `value`/`prefix`/`suffix`/`valueLabel`, `image`, `colors`), `title`/`kicker`, `mode` (`carousel` or `stack`), `secondsPerCard`. For music, set `music` and land the cards on beats with `landOn` (frames from `npm run beats`).
+3. Render `Cards-9x16` / `-16x9` / `-1x1` / `-4x5` with `--props`. Use the brand kit for colours (`brand`).
+
 ### Bonus ideas
 
 These combine the playbooks:
@@ -382,6 +412,8 @@ These combine the playbooks:
 - **Cinematic brand film:** 10.7 footage with 10.2 beat-cut titles and 10.5 captions.
 - **Sermon → Shorts:** 10.13, then 10.10 on each clip with the church's brand kit.
 - **Release week:** 10.11 lyric video plus 10.10 behind-the-scenes edit from studio footage.
+- **Campus Invasion recap:** 10.16 line-up of the campuses, then 10.10 highlights with `extrude` or `poster` titles of each campus name.
+- **Teach the studio:** 10.15 tutorial reels showing Motion Studio itself, with 10.14 to rebuild a reference live.
 
 ## 11. Don'ts
 

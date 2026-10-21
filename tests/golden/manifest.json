@@ -59,6 +59,59 @@
         321,
         467
       ]
+    },
+    "titles-test": {
+      "comp": "FootageEdit-16x9",
+      "durationInFrames": 509,
+      "frames": [
+        41,
+        153,
+        280,
+        407
+      ]
+    },
+    "tutorial-test": {
+      "comp": "Tutorial-9x16",
+      "durationInFrames": 584,
+      "frames": [
+        47,
+        175,
+        321,
+        467
+      ]
+    },
+    "titles-reel": {
+      "comp": "Titles-9x16",
+      "durationInFrames": 420,
+      "frames": [
+        36,
+        96,
+        156,
+        216,
+        276,
+        336,
+        396
+      ]
+    },
+    "cards": {
+      "comp": "Cards-9x16",
+      "durationInFrames": 255,
+      "frames": [
+        40,
+        78,
+        125,
+        200
+      ]
+    },
+    "cards-stack": {
+      "comp": "Cards-16x9",
+      "durationInFrames": 189,
+      "frames": [
+        30,
+        60,
+        100,
+        160
+      ]
     }
   },
   "shorts": [

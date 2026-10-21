@@ -4,13 +4,41 @@ import { DemoTitle } from "./videos/Demo/DemoTitle";
 import { Teaser } from "./videos/Teaser/Teaser";
 import { TeaserThumb } from "./videos/Teaser/Thumbnail";
 import { f, SCENES } from "./videos/Teaser/beats";
-import { calcFootageEdit, FootageEdit, footageEditDefaults, footageEditSchema } from "./templates/FootageEdit/FootageEdit";
-import { calcScripture, isaiah4031, ScriptureLyric, scriptureSchema } from "./templates/ScriptureLyric/ScriptureLyric";
+import {
+  calcFootageEdit,
+  FootageEdit,
+  footageEditDefaults,
+  footageEditSchema,
+} from "./templates/FootageEdit/FootageEdit";
+import {
+  calcScripture,
+  isaiah4031,
+  ScriptureLyric,
+  scriptureSchema,
+} from "./templates/ScriptureLyric/ScriptureLyric";
+import { calcTutorial, Tutorial, tutorialSchema } from "./templates/Tutorial/Tutorial";
+import { TestScreen } from "./videos/TestScreen";
 import { calcAnimatic, StoryboardAnimatic } from "./storyboard/Animatic";
 import { sampleStoryboard } from "./storyboard/sample";
 import { storyboardSchema } from "./storyboard/schema";
 import { calcSheet, StoryboardSheet } from "./storyboard/StoryboardSheet";
-import { TimelineView, timelineDefaults, timelineSchema } from "./storyboard/TimelineView";
+import {
+  TimelineView,
+  timelineDefaults,
+  timelineSchema,
+} from "./storyboard/TimelineView";
+import {
+  calcTitleReel,
+  TitleReel,
+  titleReelDefaults,
+  titleReelSchema,
+} from "./titles/TitleReel";
+import {
+  calcCards,
+  Cards,
+  cardsDefaults,
+  cardsSchema,
+} from "./templates/Cards/Cards";
 
 // Register each new video here: one <Composition> per video (and per format).
 // Register each still graphic as a <Still>.
@@ -42,7 +70,13 @@ export const RemotionRoot: React.FC = () => {
         id="Teaser-16x9"
         component={Teaser}
         defaultProps={{ variant: "full" as const }}
-        durationInFrames={f(SCENES.coldOpen + SCENES.title + SCENES.sketch + SCENES.formats + SCENES.end)}
+        durationInFrames={f(
+          SCENES.coldOpen +
+            SCENES.title +
+            SCENES.sketch +
+            SCENES.formats +
+            SCENES.end,
+        )}
         fps={30}
         width={1920}
         height={1080}
@@ -51,23 +85,211 @@ export const RemotionRoot: React.FC = () => {
         id="Teaser-9x16"
         component={Teaser}
         defaultProps={{ variant: "cutdown" as const }}
-        durationInFrames={f(SCENES.title + SCENES.sketch + SCENES.formats + SCENES.end)}
+        durationInFrames={f(
+          SCENES.title + SCENES.sketch + SCENES.formats + SCENES.end,
+        )}
         fps={30}
         width={1080}
         height={1920}
       />
-      <Still id="TeaserThumb" component={TeaserThumb} width={1280} height={720} />
+      <Still
+        id="TeaserThumb"
+        component={TeaserThumb}
+        width={1280}
+        height={720}
+      />
 
       {/* Template: animated scripture / lyric (style recipe "illustrated-type"). Pass any verse or lyric with --props. */}
-      <Composition id="ScriptureLyric-9x16" component={ScriptureLyric} schema={scriptureSchema} defaultProps={isaiah4031} calculateMetadata={calcScripture} durationInFrames={600} fps={30} width={1080} height={1920} />
-      <Composition id="ScriptureLyric-16x9" component={ScriptureLyric} schema={scriptureSchema} defaultProps={isaiah4031} calculateMetadata={calcScripture} durationInFrames={600} fps={30} width={1920} height={1080} />
-      <Still id="ScriptureCard-4x5" component={ScriptureLyric} schema={scriptureSchema} defaultProps={{ ...isaiah4031, stillPhrase: 0 }} width={1080} height={1350} />
+      <Composition
+        id="ScriptureLyric-9x16"
+        component={ScriptureLyric}
+        schema={scriptureSchema}
+        defaultProps={isaiah4031}
+        calculateMetadata={calcScripture}
+        durationInFrames={600}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="ScriptureLyric-16x9"
+        component={ScriptureLyric}
+        schema={scriptureSchema}
+        defaultProps={isaiah4031}
+        calculateMetadata={calcScripture}
+        durationInFrames={600}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Still
+        id="ScriptureCard-4x5"
+        component={ScriptureLyric}
+        schema={scriptureSchema}
+        defaultProps={{ ...isaiah4031, stillPhrase: 0 }}
+        width={1080}
+        height={1350}
+      />
 
       {/* Template: footage edit (talking heads, interviews, testimonies) from a resolved edit list. Props: jobs/<job>/.edl.resolved.json */}
-      <Composition id="FootageEdit-9x16" component={FootageEdit} schema={footageEditSchema} defaultProps={footageEditDefaults} calculateMetadata={calcFootageEdit} durationInFrames={90} fps={30} width={1080} height={1920} />
-      <Composition id="FootageEdit-16x9" component={FootageEdit} schema={footageEditSchema} defaultProps={footageEditDefaults} calculateMetadata={calcFootageEdit} durationInFrames={90} fps={30} width={1920} height={1080} />
-      <Composition id="FootageEdit-1x1" component={FootageEdit} schema={footageEditSchema} defaultProps={footageEditDefaults} calculateMetadata={calcFootageEdit} durationInFrames={90} fps={30} width={1080} height={1080} />
-      <Composition id="FootageEdit-4x5" component={FootageEdit} schema={footageEditSchema} defaultProps={footageEditDefaults} calculateMetadata={calcFootageEdit} durationInFrames={90} fps={30} width={1080} height={1350} />
+      <Composition
+        id="FootageEdit-9x16"
+        component={FootageEdit}
+        schema={footageEditSchema}
+        defaultProps={footageEditDefaults}
+        calculateMetadata={calcFootageEdit}
+        durationInFrames={90}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="FootageEdit-16x9"
+        component={FootageEdit}
+        schema={footageEditSchema}
+        defaultProps={footageEditDefaults}
+        calculateMetadata={calcFootageEdit}
+        durationInFrames={90}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="FootageEdit-1x1"
+        component={FootageEdit}
+        schema={footageEditSchema}
+        defaultProps={footageEditDefaults}
+        calculateMetadata={calcFootageEdit}
+        durationInFrames={90}
+        fps={30}
+        width={1080}
+        height={1080}
+      />
+      <Composition
+        id="FootageEdit-4x5"
+        component={FootageEdit}
+        schema={footageEditSchema}
+        defaultProps={footageEditDefaults}
+        calculateMetadata={calcFootageEdit}
+        durationInFrames={90}
+        fps={30}
+        width={1080}
+        height={1350}
+      />
+
+      {/* Title effects on their own (over a colour, image, video, or transparent for other editors). Props: titles + background. */}
+      <Composition
+        id="Titles-9x16"
+        component={TitleReel}
+        schema={titleReelSchema}
+        defaultProps={titleReelDefaults}
+        calculateMetadata={calcTitleReel}
+        durationInFrames={420}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="Titles-16x9"
+        component={TitleReel}
+        schema={titleReelSchema}
+        defaultProps={titleReelDefaults}
+        calculateMetadata={calcTitleReel}
+        durationInFrames={420}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Titles-1x1"
+        component={TitleReel}
+        schema={titleReelSchema}
+        defaultProps={titleReelDefaults}
+        calculateMetadata={calcTitleReel}
+        durationInFrames={420}
+        fps={30}
+        width={1080}
+        height={1080}
+      />
+
+      {/* Template: kinetic 3D cards (line-ups, campuses, speakers, products, stats). Props: cards + mode. */}
+      <Composition
+        id="Cards-9x16"
+        component={Cards}
+        schema={cardsSchema}
+        defaultProps={cardsDefaults}
+        calculateMetadata={calcCards}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="Cards-16x9"
+        component={Cards}
+        schema={cardsSchema}
+        defaultProps={cardsDefaults}
+        calculateMetadata={calcCards}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Cards-1x1"
+        component={Cards}
+        schema={cardsSchema}
+        defaultProps={cardsDefaults}
+        calculateMetadata={calcCards}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1080}
+      />
+      <Composition
+        id="Cards-4x5"
+        component={Cards}
+        schema={cardsSchema}
+        defaultProps={cardsDefaults}
+        calculateMetadata={calcCards}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1350}
+      />
+
+      {/* Template: tutorial reels (presenter + screen recordings with zoom-to-click, steps, hand-drawn notes). Props: jobs/<job>/.edl.resolved.json with "tutorial". */}
+      <Composition
+        id="Tutorial-9x16"
+        component={Tutorial}
+        schema={tutorialSchema}
+        defaultProps={{ ...footageEditDefaults, tutorial: null }}
+        calculateMetadata={calcTutorial}
+        durationInFrames={90}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="Tutorial-16x9"
+        component={Tutorial}
+        schema={tutorialSchema}
+        defaultProps={{ ...footageEditDefaults, tutorial: null }}
+        calculateMetadata={calcTutorial}
+        durationInFrames={90}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      {/* Test material: a generic app screen "recording" for the tutorial tests (npm test renders it). */}
+      <Composition
+        id="TestScreen"
+        component={TestScreen}
+        durationInFrames={360}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
 
       {/* Studio pipeline: storyboard approval sheet + timed animatic. */}
       <Still
@@ -80,7 +302,14 @@ export const RemotionRoot: React.FC = () => {
         height={2000}
       />
       {/* Edit tools: filmstrip + waveform + words for a stretch of footage (scripts/timeline.mjs). */}
-      <Still id="TimelineView" component={TimelineView} schema={timelineSchema} defaultProps={timelineDefaults} width={2400} height={900} />
+      <Still
+        id="TimelineView"
+        component={TimelineView}
+        schema={timelineSchema}
+        defaultProps={timelineDefaults}
+        width={2400}
+        height={900}
+      />
       <Composition
         id="StoryboardAnimatic"
         component={StoryboardAnimatic}

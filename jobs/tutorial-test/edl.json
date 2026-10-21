@@ -1,0 +1,177 @@
+{
+  "job": "tutorial-test",
+  "version": 1,
+  "format": "9x16",
+  "fps": 30,
+  "brand": "the-wait-culture",
+  "sources": {
+    "A": {
+      "file": "jobs/look-test/footage/take-a.mp4",
+      "transcript": "jobs/look-test/transcripts/take-a.json",
+      "track": "jobs/look-test/tracks/A.json"
+    }
+  },
+  "segments": [
+    {
+      "source": "A",
+      "in": 14.94,
+      "out": 16.78,
+      "phrase": "A.6",
+      "text": "Waiting is not wasting."
+    },
+    {
+      "source": "A",
+      "in": 6.58,
+      "out": 11.19,
+      "phrase": "A.3",
+      "text": "The hardest part of waiting is not knowing when it ends.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 11.62,
+      "out": 13.72,
+      "phrase": "A.4",
+      "text": "But here's what I learned."
+    },
+    {
+      "source": "A",
+      "in": 17.21,
+      "out": 19.57,
+      "phrase": "A.7",
+      "text": "God is working in the wait.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 21.3,
+      "out": 24.84,
+      "phrase": "A.8",
+      "text": "So if you're in a season of waiting today,"
+    },
+    {
+      "source": "A",
+      "in": 25.56,
+      "out": 26.74,
+      "phrase": "A.8",
+      "text": "don't give up.",
+      "zoom": 1.12
+    },
+    {
+      "source": "A",
+      "in": 27.17,
+      "out": 28.5,
+      "phrase": "A.9",
+      "text": "Keep showing up."
+    }
+  ],
+  "captions": {
+    "style": "pop",
+    "maxWords": 3,
+    "position": 0.7,
+    "uppercase": true,
+    "emphasis": []
+  },
+  "look": "classic",
+  "grade": "none",
+  "tutorial": {
+    "style": "stack",
+    "split": 0.42,
+    "banner": "How to animate a title",
+    "steps": [
+      {
+        "atPhrase": "A.3",
+        "text": "Pick the best model"
+      },
+      {
+        "atPhrase": "A.4",
+        "text": "Download it"
+      },
+      {
+        "atPhrase": "A.7",
+        "text": "Describe the animation"
+      },
+      {
+        "atPhrase": "A.8",
+        "text": "Get your title"
+      }
+    ],
+    "screens": [
+      {
+        "file": "jobs/tutorial-test/screen/app.mp4",
+        "atPhrase": "A.3",
+        "from": 1.6,
+        "seconds": 6.6,
+        "clicks": [
+          {
+            "t": 2.45,
+            "x": 0.826,
+            "y": 0.043,
+            "zoom": 2.2
+          },
+          {
+            "t": 3.6,
+            "x": 0.807,
+            "y": 0.106,
+            "zoom": 2.2
+          },
+          {
+            "t": 5.5,
+            "x": 0.939,
+            "y": 0.043,
+            "zoom": 2.2
+          }
+        ],
+        "notes": [
+          {
+            "t": 3,
+            "kind": "circle",
+            "x": 0.735,
+            "y": 0.08,
+            "w": 0.145,
+            "h": 0.05,
+            "text": "best model",
+            "side": "bottom",
+            "seconds": 1.5
+          }
+        ]
+      },
+      {
+        "file": "jobs/tutorial-test/screen/app.mp4",
+        "atPhrase": "A.7",
+        "from": 6.2,
+        "seconds": 5.8,
+        "cursor": true,
+        "clicks": [
+          {
+            "t": 6.4,
+            "x": 0.37,
+            "y": 0.896,
+            "zoom": 1.7,
+            "hold": 2.4
+          },
+          {
+            "t": 9.3,
+            "x": 0.945,
+            "y": 0.896,
+            "zoom": 2
+          }
+        ],
+        "notes": [
+          {
+            "t": 10.4,
+            "kind": "arrow",
+            "x": 0.42,
+            "y": 0.3,
+            "w": 0.3,
+            "h": 0.32,
+            "text": "your title",
+            "side": "top",
+            "seconds": 1.6
+          }
+        ]
+      }
+    ]
+  },
+  "sfx": "auto"
+}

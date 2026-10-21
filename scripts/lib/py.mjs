@@ -37,3 +37,11 @@ export const ensurePython = async () => {
     writeFileSync(MODEL, Buffer.from(await res.arrayBuffer()));
   }
 };
+
+// Extra Python packages one tool needs (e.g. OpenCV for pins), installed on first use.
+export const ensureModule = (module, pkg) => {
+  const r = spawnSync(PY, ["-c", `import ${module}`], { stdio: "ignore" });
+  if (r.status === 0) return;
+  console.log(`Installing ${pkg} into the footage-analysis environment (once)…`);
+  run(PY, ["-m", "pip", "install", "-q", pkg], `pip install ${pkg}`);
+};

@@ -86,6 +86,43 @@ const u = Math.min(W, H) / 1080;
 const capSize = (portrait ? 74 : 58) * u * (p.captions.size || 1);
 const overlaps = (a, b) => a && b && a.x1 < b.x2 && b.x1 < a.x2 && a.y1 < b.y2 && b.y1 < a.y2;
 const faceHits = [];
+// A title's box at frame f, estimated from its style and text (src/titles/TitleFX.tsx sizes:
+// base size, average letter width in em, line height). Close enough to flag a clash.
+const TITLE_METRICS = { cutout: [150, 0.8, 1.3], editorial: [320, 0.5, 1.0], inflate: [230, 0.78, 1.2], neon: [210, 0.42, 1.1], extrude: [240, 0.5, 1.05], poster: [400, 0.5, 0.92], outline: [230, 0.74, 1.05] };
+const titleBox = (t, f) => {
+  const u = Math.min(W, H) / 1080;
+  const ls = t.text.split("|").map((l) => l.replace(/\*/g, "").trim());
+  const n = ls.length + (t.sub ? 0.3 : 0);
+  const [base, em, lh] = TITLE_METRICS[t.style];
+  const longest = Math.max(...ls.map((l) => l.length));
+  let w;
+  let h;
+  if (t.style === "poster") {
+    w = Math.min(W * 0.84, 900 * u * t.size);
+    h = Math.min(H * 0.62, ls.reduce((sum, l) => sum + Math.min(400 * u, w / Math.max(1, l.length * em)) * lh, 0));
+  } else {
+    const maxW = W * (t.style === "editorial" ? 0.9 : 0.82);
+    const fs = Math.min(base * u * t.size, (H * 0.55) / (n * lh), maxW / Math.max(1, longest * em));
+    w = Math.min(maxW, longest * em * fs);
+    h = n * fs * lh;
+  }
+  const rel = f - t.from;
+  const pinned = t.pin && t.pin.length > 1;
+  const pk = pinned ? t.pin.reduce((best, k) => (Math.abs(k[0] - rel) < Math.abs(best[0] - rel) ? k : best)) : null;
+  const cx = ((pk ? pk[1] : 0) + t.x) * W;
+  const cy = ((pk ? pk[2] : 0) + t.y) * H;
+  return { x1: cx - w / 2, x2: cx + w / 2, y1: cy - h / 2, y2: cy + h / 2 };
+};
+for (const t of p.titles || []) {
+  if (t.layer !== "front") continue;
+  for (const f of [t.from + Math.round(t.durationInFrames * 0.3), t.from + Math.round(t.durationInFrames * 0.7)]) {
+    const i = segAt(f);
+    if (i >= 0 && overlaps(faceRect(p.segments[i], p.cutSources[i]), titleBox(t, f))) {
+      faceHits.push(`${t.style} title "${t.text.replace(/\|/g, " ")}" at ${ts(f / fps)}`);
+      break;
+    }
+  }
+}
 const checkBand = (label, frame, band) => {
   const i = segAt(frame);
   if (i < 0) return;
@@ -144,7 +181,10 @@ if (cuts.length) {
 }
 
 // Platform safe zone (vertical only): the top bar, the right-hand buttons and the caption/audio strip.
-if (portrait) {
+// The tutorial layout frames the presenter in a panel of its own, so the full-frame
+// face and safe-zone geometry below doesn't apply: look at its frames instead.
+const tutorialLayout = Boolean(p.tutorial);
+if (portrait && !tutorialLayout) {
   const SAFE = { x1: 0.06 * W, x2: 0.89 * W, y1: 0.11 * H, y2: 0.82 * H };
   const out = [];
   const outside = (b) => b.x1 < SAFE.x1 - 2 || b.x2 > SAFE.x2 + 2 || b.y1 < SAFE.y1 - 2 || b.y2 > SAFE.y2 + 2;
@@ -166,6 +206,9 @@ if (portrait) {
     const k = p.segments.findIndex((s) => i.from + 15 >= s.from && i.from + 15 < s.from + s.durationInFrames);
     if (k >= 0 && i.layer === "front" && overlaps(faceRect(p.segments[k], p.cutSources[k]), b)) faceHits.push(`${i.kind} at ${ts(i.from / fps)}`);
   }
+  for (const t of p.titles || []) {
+    if (t.layer === "front" && outside(titleBox(t, t.from + Math.round(t.durationInFrames / 2)))) out.push(`${t.style} title at ${ts(t.from / fps)}`);
+  }
   for (const e of p.effects || []) {
     if (e.kind === "liquid-glass") {
       const half = (portrait ? 410 : 450) * u;
@@ -184,7 +227,8 @@ if (portrait) {
   add("Safe zone (9:16)", out.length ? "WARN" : "PASS", out.length ? `outside the platform safe area: ${out.slice(0, 8).join(", ")}${out.length > 8 ? ` +${out.length - 8} more` : ""}` : "all text and graphics inside the safe area");
 }
 
-add("Text over faces", faceHits.length ? "WARN" : "PASS", anyFace ? (faceHits.length ? faceHits.join(", ") : "captions and overlays clear of faces") : "not checked: add \"faceBox\": [x, y, w, h] (0–1 of the source frame) to each source in edl.json");
+if (tutorialLayout) add("Text over faces", "PASS", "not checked: tutorial layout (presenter in a panel); read the frames");
+else add("Text over faces", faceHits.length ? "WARN" : "PASS", anyFace ? (faceHits.length ? faceHits.join(", ") : "captions and overlays clear of faces") : "not checked: add \"faceBox\": [x, y, w, h] (0–1 of the source frame) to each source in edl.json");
 
 // Effect check frames: the moments to look at (glass card with the line drawn, first
 // screen word, both shoulder cards), side by side in out/<job>/effects-v<N>.png.

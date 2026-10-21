@@ -6,6 +6,7 @@ Motion Studio is an agentic design studio that runs on Claude. It makes still an
 
 - **Remotion** makes everything exact: typography, layouts, charts, captions, motion, timing, grade and audio.
 - **Generative models** reached through Claude's connectors make the realistic footage and imagery. Higgsfield gives access to Seedance, Kling, Veo, Cinema Studio, FLUX, Nano Banana, Seedream, GPT Image and Topaz.
+- **Ready-made motion templates:** cinematic title effects (7 styles, in footage or on transparency), tutorial reels (presenter plus screen recordings that zoom to each click), and kinetic 3D card line-ups.
 - **Footage editing from the transcript:** talking heads, interviews, sermons and podcasts are cut from a word-level transcript. Captions, looks, effects, face-tracked reframing, voice cleanup, brand kits, beat-synced music, b-roll, Shorts from long videos, cut checks, and a client review page with timestamped notes.
 
 ## Start a job

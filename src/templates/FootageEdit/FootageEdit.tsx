@@ -28,6 +28,7 @@ import {
   useBrand,
 } from "../../lib";
 import { LookCaptions, lookAt, Orbit, PunchBehind } from "../../looks/Looks";
+import { TitleFX, titleSchema } from "../../titles/TitleFX";
 
 // Edit of real footage (talking heads, interviews, testimonies, vlogs) from a
 // resolved edit list: run scripts/autocut.mjs, then scripts/edl.mjs, and pass
@@ -65,6 +66,9 @@ export const footageEditSchema = z.object({
         .default(null),
       // The speaker's head for this segment, as fractions of the source frame (for checks and placement).
       faceBox: z.array(z.number()).nullable().default(null),
+      // Source size in pixels (layouts that frame the speaker themselves, e.g. Tutorial).
+      srcW: z.number().nullable().default(null),
+      srcH: z.number().nullable().default(null),
     }),
   ),
   // Looks per section (src/looks), punch words, orbiting reels, inserts and sound effects (all from edl.mjs).
@@ -176,6 +180,8 @@ export const footageEditSchema = z.object({
       outro: z.number().default(2),
     })
     .nullable(),
+  // Cinematic titles (src/titles), behind or in front of the speaker, optionally pinned.
+  titles: z.array(titleSchema).default([]),
   // B-roll cutaways over the speaker; the voice carries on underneath.
   broll: z
     .array(
@@ -730,6 +736,12 @@ export const FootageEdit: React.FC<FootageEditProps> = (p) => {
           i.layer === "behind" &&
           frame >= i.from &&
           frame < i.from + i.durationInFrames,
+      ) ||
+      p.titles.some(
+        (t) =>
+          t.layer === "behind" &&
+          frame >= t.from &&
+          frame < t.from + t.durationInFrames,
       ));
   const coolGirl = p.looks.filter((r) => r.look === "cool-girl");
   // Anything "behind" the speaker is drawn between the background and the cut-out person.
@@ -755,6 +767,18 @@ export const FootageEdit: React.FC<FootageEditProps> = (p) => {
             layout="none"
           >
             <Insert {...ins} />
+          </Sequence>
+        ) : null,
+      )}
+      {p.titles.map((t, i) =>
+        t.layer === "behind" ? (
+          <Sequence
+            key={`tb${i}`}
+            from={t.from}
+            durationInFrames={t.durationInFrames}
+            layout="none"
+          >
+            <TitleFX t={t} id={`t${i}`} />
           </Sequence>
         ) : null,
       )}
@@ -836,6 +860,18 @@ export const FootageEdit: React.FC<FootageEditProps> = (p) => {
             )}
           </Sequence>
         ))}
+        {p.titles.map((t, i) =>
+          t.layer === "front" ? (
+            <Sequence
+              key={`tf${i}`}
+              from={t.from}
+              durationInFrames={t.durationInFrames}
+              layout="none"
+            >
+              <TitleFX t={t} id={`t${i}`} />
+            </Sequence>
+          ) : null,
+        )}
         {p.overlays.map((o, i) => (
           <Sequence
             key={i}
@@ -924,6 +960,7 @@ export const footageEditDefaults: FootageEditProps = {
   punches: [],
   orbit: [],
   inserts: [],
+  titles: [],
   sfx: [],
   brand: null,
   cutSources: [],

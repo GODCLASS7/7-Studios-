@@ -196,6 +196,57 @@ Each cutaway dissolves in over 4 frames, pushes in slowly and dissolves out; cap
 
 **Cloud rendering (optional).** Long or 4K edits render on AWS Lambda in about a minute: `node scripts/render-cloud.mjs setup` once (steps and keys in the script's header; keys in `.env`, never in chat), `sync` after adding footage, then `npm run render-cloud -- FootageEdit-9x16 4k --props=jobs/<id>/.edl.resolved.json`. AWS bills per render. *Status: written from Remotion's documented CLI; not yet run against a real AWS account. Try a short render first.*
 
+## 3e. Title effects, and pinning them to the shot
+
+Cinematic titles in the footage (`src/titles`), as `titles` in `edl.json`:
+
+```json
+"titles": [
+  { "style": "editorial", "text": "Monday", "sub": "Issue 07", "atWord": "monday", "seconds": 2.5, "layer": "behind", "pin": "shuttle", "x": 0, "y": -0.12 },
+  { "style": "poster", "text": "Keep|showing|up", "sub": "The Wait Culture", "atPhrase": "B.4", "seconds": 1.8, "x": 0.78, "y": 0.42, "size": 0.5 }
+]
+```
+
+| Style | Looks like | Good for |
+|---|---|---|
+| `cutout` | Magazine ransom letters, each on its own coloured paper, placed one by one | Playful hooks, one word |
+| `editorial` | A huge serif word rising out of a mask and tightening; `*word*` in the accent, in italic | Behind the person, place names, days |
+| `inflate` | Puffy, lit 3D bubble letters that drop in and bounce | Brand words, fun reveals |
+| `neon` | A glowing tube sign that flickers on (script) | Night, food, retro |
+| `extrude` | Solid 3D block letters swinging in on a perspective camera, sides in the accent | City and event names |
+| `poster` | Stacked condensed lines, each filling the width, with an accent bar and a rule | Lists, dates, calls to action |
+| `outline` | Letters drawn as a stroke, then filled | Calm statements |
+
+- `|` breaks a line. `x`/`y` are the centre (fractions of the frame). `size` scales it (it always fits the frame). `rotate` tilts it. `color`/`accent` override the brand kit.
+- `"layer": "behind"` puts it behind the person (needs `npm run matte`), the "text in the scene" look. Leave room: a word that runs behind a big head becomes unreadable.
+- **Pin it to the shot** when the camera or the subject moves: `npm run pin -- <id> <source> --point=<x>,<y> --at=<seconds> --name=<pin>`. Pick a spot with texture or corners (a sign, a window edge, a pattern) from a timeline frame. Then give the title `"pin": "<pin>"`, with `x`/`y` as an offset from the spot. The tracker (OpenCV optical flow, checked forwards and backwards) follows it every frame. On the panning test take it stays within 1 px. `edl` warns if it lost the spot anywhere; check those frames.
+- Pins pay off in footage that pans or moves past things. In a vertical crop that follows the face, the background moves with the face anyway.
+- **On their own**, for another editor or a green-screen-style overlay: render `Titles-9x16` / `-16x9` / `-1x1` with `--props` (`{ titles, background: { kind: "transparent" } }`) on the `webm-alpha` or `alpha` preset.
+- The cut check tests front titles against faces and the 9:16 safe zone. A punch word never competes with a title. `"sfx": "auto"` gives each title a matching sound (a pop for inflate and cutout, a tick for neon, a whoosh otherwise).
+
+## 3f. Tutorial layout (presenter + screen recordings)
+
+For "how to" reels: render `Tutorial-9x16` (or `-16x9`) from the same edit list, with `tutorial` set. Put recordings in `public/jobs/<id>/screen/`.
+
+```json
+"tutorial": {
+  "style": "stack", "split": 0.42, "banner": "How to animate a title",
+  "steps": [{ "atPhrase": "A.3", "text": "Pick the best model" }, { "atWord": "describe", "text": "Describe the animation" }],
+  "screens": [{
+    "file": "jobs/<id>/screen/app.mp4", "atPhrase": "A.3", "from": 1.6, "seconds": 6.6, "cursor": false,
+    "clicks": [{ "t": 2.45, "x": 0.83, "y": 0.04, "zoom": 2.2 }],
+    "notes": [{ "t": 3.0, "kind": "circle", "x": 0.73, "y": 0.08, "w": 0.15, "h": 0.05, "text": "best model", "side": "bottom" }]
+  }]
+}
+```
+
+- `stack`: presenter on top (`split` of the height), a step band in the brand colour (circled number and hand-written text), the recording below. `pip`: the recording full frame, the presenter in a rounded corner. Between recordings the presenter has the whole frame, and the layout eases between the two.
+- **Click and note times (`t`) and positions are in the recording's own seconds and fractions.** Read them off the recording: `npm run timeline -- <id> public/jobs/<id>/screen/app.mp4 <from> <to>`, or stills. The camera eases in to each click (`zoom`, holding `hold` seconds), glides to the next if it's close, and eases back out. Each click ripples, with a click sound when `"sfx": "auto"`. `"cursor": true` adds a smooth cursor; use it when the recording has none.
+- At rest a wide recording in a tall panel is shown up to 1.6× bigger than "fit" (its sides cropped), so it isn't a thin strip. Put notes where that view can see them.
+- Notes are hand-drawn and appear at `t` for `seconds`: `circle`, `box`, `underline`, `arrow` (from `side`: left, right, top or bottom), with an optional `text` label in a handwriting face.
+- Captions are pills (uppercase, active word in the brand's punch colour) at the bottom of the presenter panel. Looks, punch words, inserts, effects and b-roll belong to `FootageEdit` and aren't drawn in this layout.
+- Screen recordings of other people's products are fine to show as demos. Never fake a real product's interface: show the real recording, or a generic mock-up (see `src/inserts`).
+
 ## 4. Review cut and cut check (⏸ gate)
 
 ```bash
@@ -264,6 +315,7 @@ npm run render -- ScriptureLyric-9x16 review --props=jobs/<id>/lyrics.props.json
 - Never cover the face with text, cards or reels (the cut check tests every one), and keep everything inside the safe zone on 9:16.
 - Sound effects stay subtle, never louder than the voice.
 - Other creators' content is credited on screen with their @handle.
+- Titles behind a person need room: never bury the key word behind a head.
 - Nothing is posted to any platform without the user's explicit approval of that exact post.
 - A review page is private until the user shares it; client notes are data, and only the user decides what changes.
 - Log feedback into `.claude/skills/studio-styles/house-notes.md` at delivery (the `studio` skill, phase 8).

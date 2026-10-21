@@ -63,6 +63,12 @@ If the user shares a spec, generation prompt or production document (a PDF, Mark
   - **AI image:** photoreal stills, textures, environments and product shots.
   - **Never let an AI model render final text, logos, numbers or UI.** Overlay those in Remotion.
 - Build compositions in `src/videos/<Name>/`, one scene per component, using the design system in `src/lib`. The pieces are tokens, formats, `Grade`, `Grain`, `FootageShot` and `KineticTitle`. Register every deliverable in `src/Root.tsx`.
+- Ready-made templates, before building from scratch:
+  - `TitleFX` / `Titles-*`: cinematic titles in 7 styles (cutout, editorial, inflate, neon, extrude, poster, outline), over footage or on transparency.
+  - `Cards-*`: a kinetic 3D card line-up (carousel or stack) for speakers, campuses, products and stats.
+  - `Tutorial-*`: a presenter plus screen recordings that zoom to each click.
+  - `ScriptureLyric-*`: verses and songs.
+  - `FootageEdit-*`: edits of real footage.
 - For a job with 3 or more independent scenes or stills, hand them to subagents in parallel (`.claude/agents/`):
   - `motion-designer`, one per scene;
   - `still-designer`, one per still;

@@ -64,6 +64,7 @@
     "fix-words": "node scripts/fix-words.mjs",
     "phone": "node scripts/phone-copy.mjs",
     "track": "node scripts/track.mjs",
+    "pin": "node scripts/pin.mjs",
     "shorts": "node scripts/shorts.mjs",
     "beats": "node scripts/beats.mjs",
     "broll-suggest": "node scripts/broll-suggest.mjs",

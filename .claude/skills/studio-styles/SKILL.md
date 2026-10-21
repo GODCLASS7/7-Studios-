@@ -138,6 +138,31 @@ When the user shares 3–5 videos whose editing they like (theirs or another cre
    Show it and ask about anything unclear.
 5. **Once approved, save it** under *Learned recipes* below, in the same table format as recipes 1–6 (Pacing, Look, Sound, Type, Remotion, Shoot, QA). Put the measured numbers in the rules, and map each rule onto Motion Studio settings, such as `edl.json` captions, `autocut --pause`, punch-in `zoom`, a `Grade` look and recipe `hook-2s`. Name the source videos in a References line.
 
+## Rebuilding a design reference (screenshot or screen recording → motion)
+
+When the user shares a design they like (a section of a site from Awwwards, a poster, a frame of someone's reel) and wants "motion like this":
+
+1. **Get it as a file.** A screenshot, or a screen recording if the motion matters. In a cloud session, ask for the file: Instagram, TikTok and most design galleries are blocked. A link the user owns or that's public can be fetched with Firecrawl or WebFetch for its text and images.
+2. **Break it down before building**, and show the breakdown:
+   - layout grid and spacing;
+   - type (families or close free alternatives, weights, case, sizes relative to the frame);
+   - palette as hex values;
+   - components (cards, pills, borders, gradients, textures);
+   - motion: what moves, in what order, how far, with what easing and timing (in frames at 30 fps).
+
+   Say what's licensed (fonts, photos, logos) and therefore can't be copied.
+3. **Map it onto Motion Studio** before writing new code:
+   - `Cards` for card line-ups and stats;
+   - `TitleFX` styles for type moments;
+   - `KineticTitle`, `paper.tsx` (cut-outs, ink) and `src/effects` for the rest;
+   - the brand kit for colours and fonts.
+
+   Only what's left becomes a new component, and it goes into `src/` so the next job can reuse it.
+4. **Rebuild it with the user's own content and brand**, in every format asked for (one composition per format, with `useVideoConfig` for sizes). Never reuse their logo, photos, illustrations, copy or exact layout as a whole; take the techniques. The result should be recognisably the user's, inspired by the reference.
+5. Normal gates: a style frame for approval, then the full motion, renders, QC.
+
+The breakdowns of reels the user shared are kept in `references/<name>/analysis.md` (e.g. `references/creator-reels-2026-10/`).
+
 ## Learned recipes
 
 _None yet. Recipes learned from reference videos go here (section 7 onwards)._

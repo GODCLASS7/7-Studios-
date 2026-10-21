@@ -44,7 +44,7 @@ else {
 }
 
 // Fonts
-const fonts = ["Inter-Variable-latin.woff2", "Fraunces-Variable-latin.woff2", "Fraunces-Italic-Variable-latin.woff2", "PlusJakartaSans-Variable-latin.woff2", "DMMono-500-latin.woff2"];
+const fonts = ["Inter-Variable-latin.woff2", "Fraunces-Variable-latin.woff2", "Fraunces-Italic-Variable-latin.woff2", "PlusJakartaSans-Variable-latin.woff2", "DMMono-500-latin.woff2", "Caveat-Variable-latin.woff2", "Anton-400-latin.woff2"];
 const missFonts = fonts.filter((x) => !existsSync(join("public", "brand", "fonts", x)));
 add("Fonts", missFonts.length ? "fail" : "ok", missFonts.length ? `missing ${missFonts.join(", ")}` : `${fonts.length} bundled`, "Restore public/brand/fonts from the project zip");
 
@@ -54,6 +54,8 @@ const py = sh(process.platform === "win32" ? "python" : "python3", ["--version"]
 const pyv = (py.stdout || py.stderr || "").match(/(\d+)\.(\d+)/);
 add("Python", pyv && (Number(pyv[1]) > 3 || Number(pyv[2]) >= 10) ? "ok" : "warn", pyv ? pyv[0] : "not found: no cutout or face tracking", "Install Python 3.10+ (python.org)");
 add("Cutout / tracking", existsSync("production/matte-venv") && existsSync("production/models/selfie_multiclass_256x256.tflite") ? "ok" : "warn", existsSync("production/matte-venv") ? "environment ready" : "sets itself up on first npm run matte / track", "");
+const cv = existsSync("production/matte-venv") && sh(join("production", "matte-venv", process.platform === "win32" ? "Scripts/python.exe" : "bin/python"), ["-c", "import cv2"]).status === 0;
+add("Pins (OpenCV)", cv ? "ok" : "warn", cv ? "ready" : "installs itself on first npm run pin", "");
 add("Sound effects", existsSync("public/audio/sfx/pop.wav") ? "ok" : "warn", existsSync("public/audio/sfx/pop.wav") ? "pack built" : "not built", "npm run sfx");
 add("Cloud rendering", process.env.REMOTION_AWS_ACCESS_KEY_ID ? (existsSync("production/lambda.json") ? "ok" : "warn") : "warn", process.env.REMOTION_AWS_ACCESS_KEY_ID ? (existsSync("production/lambda.json") ? "set up" : "keys set; run setup") : "optional: no AWS keys", "See scripts/render-cloud.mjs");
 

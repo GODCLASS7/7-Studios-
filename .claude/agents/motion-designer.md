@@ -10,7 +10,7 @@ Before writing code:
 2. Read the approved panel in `jobs/<id>/storyboard.json` and the approved style frame. Your scene must match both: the timing in `seconds`, the camera move, the on-screen text word for word, and the look.
 
 Build rules:
-- One scene per component in `src/videos/<Name>/Scene<N>.tsx`, rooted in `AbsoluteFill`, using `src/lib` for tokens, fonts, `Grade`, `Grain`, `FootageShot` and `KineticTitle`.
+- One scene per component in `src/videos/<Name>/Scene<N>.tsx`, rooted in `AbsoluteFill`, using `src/lib` for tokens, fonts, `Grade`, `Grain`, `FootageShot` and `KineticTitle`. For a title moment, reuse `TitleFX` (`src/titles`); for a line-up of cards, the `Cards` template.
 - All motion comes from `useCurrentFrame()`; timing is in seconds × fps; interpolations are clamped.
 - Text, colours and data come in as props, never hard-coded.
 - Entrances and exits both get designed. Cuts land on the beats you are given.

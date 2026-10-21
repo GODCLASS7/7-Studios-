@@ -1,0 +1,34 @@
+{
+  "hardRules": [
+    "Never change what the speaker meant by cutting; no invented quotes.",
+    "Every cut on a word boundary or in a pause; zero audio pops (cutcheck).",
+    "Captions match the audio word for word, never cover the face, and stay out of the bottom 20% and right 12%.",
+    "Consent from everyone on camera."
+  ],
+  "credits": [],
+  "visualNotes": [
+    "Recipes: hook-2s + phone-first-volume. Template FootageEdit; edit lane in the studio-edit skill (transcribe → pack → autocut → edl → cutcheck)."
+  ],
+  "motionVocabulary": [
+    {
+      "name": "Punch-in jump cut",
+      "how": "autocut alternates zoom 1.0 / 1.12 on cuts inside one take, so the jump reads as intentional."
+    },
+    {
+      "name": "Pop captions",
+      "how": "Max 3 words, Inter 900 uppercase with a black stroke; active word in the accent colour with a small spring pop."
+    },
+    {
+      "name": "Pop-up",
+      "how": "White card with the key phrase, springs in above the face for 2–3 s (overlay kind popup)."
+    }
+  ],
+  "adaptations": [],
+  "soundDesign": [],
+  "qaChecklist": [
+    "Hook plays in the first 2 s and is the strongest line.",
+    "cutcheck: no FAILs; any WARN explained.",
+    "Length within ±5 s of the target."
+  ],
+  "pitfalls": []
+}

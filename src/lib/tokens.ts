@@ -26,6 +26,13 @@ const MONO = "DM Mono";
 loadFont({ family: MONO, url: staticFile("brand/fonts/DMMono-400-latin.woff2"), weight: "400" });
 loadFont({ family: MONO, url: staticFile("brand/fonts/DMMono-500-latin.woff2"), weight: "500" });
 
+// Caveat (hand-drawn notes, arrows and step headers in tutorials) and Anton (condensed
+// poster and banner type in the title effects) (SIL OFL).
+const HAND = "Caveat";
+loadFont({ family: HAND, url: staticFile("brand/fonts/Caveat-Variable-latin.woff2"), weight: "400 700" });
+const CONDENSED = "Anton";
+loadFont({ family: CONDENSED, url: staticFile("brand/fonts/Anton-400-latin.woff2"), weight: "400" });
+
 export const color = {
   bg: "#0B0B0D",
   surface: "#17171B",
@@ -43,6 +50,8 @@ export const font = {
   serif: `${FRAUNCES}, Georgia, "Times New Roman", serif`,
   card: `"${JAKARTA}", ${INTER}, Helvetica, Arial, sans-serif`,
   mono: `"${MONO}", ui-monospace, Menlo, monospace`,
+  hand: `${HAND}, "Comic Sans MS", cursive`,
+  condensed: `${CONDENSED}, Impact, "Arial Narrow", sans-serif`,
 } as const;
 
 // Type scale in px at the 1080p authoring size (rendered 2x for 4K).

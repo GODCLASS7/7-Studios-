@@ -433,6 +433,117 @@ const inserts = (edl.inserts || []).map((i) => {
   };
 });
 
+// Titles (src/titles): cinematic type in the footage, behind or in front of the speaker,
+// optionally pinned to a spot tracked with `npm run pin` so it moves with the shot.
+// "titles": [{ style, text, sub, atWord | atPhrase | at, seconds, x, y, size, rotate, color, accent, layer, pin }]
+const TITLE_STYLES = ["cutout", "editorial", "inflate", "neon", "extrude", "poster", "outline"];
+const pinData = {};
+const pinOf = (name) => {
+  const ref = edl.pins?.[name];
+  if (!ref || !existsSync(ref.file)) throw new Error(`title: pin "${name}" not found. Run: npm run pin -- ${job} <source> --point=<x>,<y> --name=${name}`);
+  return (pinData[name] ??= { ...ref, ...readJson(ref.file) });
+};
+const lerpKeys = (keys, f, k) => {
+  if (f <= keys[0][0]) return keys[0][k];
+  for (let i = 1; i < keys.length; i++) if (f <= keys[i][0]) return keys[i - 1][k] + ((keys[i][k] - keys[i - 1][k]) * (f - keys[i - 1][0])) / Math.max(1, keys[i][0] - keys[i - 1][0]);
+  return keys[keys.length - 1][k];
+};
+// Where a pinned spot lands in the output frame at output frame f (null while another source is on screen).
+const pinAt = (pin, f) => {
+  const s = segs.find((x) => f >= x.from && f < x.from + x.durationInFrames);
+  if (!s || s.source !== pin.source) return null;
+  const rel = f - s.from;
+  const k = Math.min(pin.samples.length - 1, Math.max(0, ((s.inF + rel) / fps) * pin.fps));
+  const [a, b, w] = [pin.samples[Math.floor(k)], pin.samples[Math.ceil(k)], k - Math.floor(k)];
+  const ft = s.focusTrack;
+  const [fx, fy] = ft && ft.length > 1 ? [lerpKeys(ft, rel, 1), lerpKeys(ft, rel, 2)] : focusOf(s);
+  const zoom = (s.zoom || 1) + (s.push || 0) * (rel / Math.max(1, s.durationInFrames));
+  const o = mapBox([a[1] + (b[1] - a[1]) * w, a[2] + (b[2] - a[2]) * w, 0, 0], infoOf(s.file), OUT, fx, fy, zoom);
+  return [o.x1 / OUT[0], o.y1 / OUT[1]];
+};
+const titles = (edl.titles || []).map((t, n) => {
+  if (!TITLE_STYLES.includes(t.style)) throw new Error(`Unknown title style "${t.style}" (${TITLE_STYLES.join(", ")})`);
+  if (!t.text) throw new Error(`title ${n + 1}: needs "text"`);
+  const from = snapF(Math.round(startOf({ kind: "title", ...t }) * fps));
+  const len = Math.max(1, Math.min(Math.round((t.seconds || 2.5) * fps), total - from));
+  let pin = null;
+  if (t.pin) {
+    const pd = pinOf(t.pin);
+    pin = [];
+    for (let f = 0; f <= len; f += 2) {
+      const at = pinAt(pd, from + Math.min(f, len - 1));
+      if (at) pin.push([f, Number(at[0].toFixed(4)), Number(at[1].toFixed(4))]);
+    }
+    if (pin.length < 2) {
+      notes.push(`title "${t.text}": the pin's source (${pd.source}) isn't on screen then, so it's placed without the pin.`);
+      pin = null;
+    } else if (pd.samples.some((x) => !x[3])) notes.push(`title "${t.text}": pin "${t.pin}" was held (not tracked) in places; check the title in a frame.`);
+  }
+  return {
+    style: t.style,
+    text: String(t.text),
+    sub: t.sub ?? null,
+    from,
+    durationInFrames: len,
+    x: t.x ?? (pin ? 0 : 0.5),
+    y: t.y ?? (pin ? 0 : 0.3),
+    size: t.size ?? 1,
+    rotate: t.rotate ?? 0,
+    color: t.color ?? null,
+    accent: t.accent ?? null,
+    pin,
+    layer: t.layer === "behind" ? "behind" : "front",
+  };
+});
+// A punch word never competes with a title.
+for (let k = punches.length - 1; k >= 0; k--) {
+  const f = Math.round((punches[k].startMs / 1000) * fps);
+  if (titles.some((t) => f + 30 > t.from && f < t.from + t.durationInFrames)) punches.splice(k, 1);
+}
+if (titles.some((t) => t.layer === "behind") && Object.values(edl.sources).some((x) => !x.matte))
+  notes.push(`Titles set "behind" need the cutout, or they sit in front of the speaker. Run: npm run matte -- ${job}`);
+
+// Tutorial layout (Tutorial-9x16 / -16x9): the presenter plus screen recordings that zoom
+// to each click, numbered steps and hand-drawn notes. Click and note times ("t") are
+// seconds into the recording, read off the recording itself.
+// "tutorial": { style: "stack" | "pip", split, banner, steps: [{ atWord | atPhrase | at, text }],
+//   screens: [{ file, atWord | atPhrase | at, seconds, from, cursor, clicks: [{ t, x, y, zoom, hold }],
+//               notes: [{ t, kind: circle | box | underline | arrow, x, y, w, h, text, side, seconds }] }] }
+let tutorial = null;
+if (edl.tutorial) {
+  const T = edl.tutorial;
+  const screens = (T.screens || []).map((c, k) => {
+    if (!c.file || !existsSync(diskPath(c.file))) throw new Error(`tutorial screen ${k + 1}: ${c.file} not found under public/`);
+    const info = infoOf(c.file);
+    const from = Math.round(startOf({ kind: "screen", ...c }) * fps);
+    const recFrom = Number(c.from || 0);
+    const len = Math.max(1, Math.min(Math.round((c.seconds ?? info.duration - recFrom) * fps), Math.floor((info.duration - recFrom) * fps), total - from));
+    const rel = (t) => Math.round((Number(t) - recFrom) * fps);
+    const NOTES = ["circle", "box", "underline", "arrow"];
+    return {
+      src: c.file.replace(/^public\//, ""),
+      from,
+      durationInFrames: len,
+      trimBefore: Math.round(recFrom * fps),
+      width: info.width,
+      height: info.height,
+      cursor: Boolean(c.cursor),
+      clicks: (c.clicks || [])
+        .map((x) => ({ f: rel(x.t), x: x.x, y: x.y, zoom: x.zoom ?? 1.8, hold: Math.round((x.hold ?? 1.2) * fps) }))
+        .filter((x) => x.f >= 0 && x.f < len)
+        .sort((a, b) => a.f - b.f),
+      notes: (c.notes || [])
+        .map((n) => {
+          if (n.kind && !NOTES.includes(n.kind)) throw new Error(`tutorial note: unknown kind "${n.kind}" (${NOTES.join(", ")})`);
+          return { kind: n.kind || "circle", f: rel(n.t), durationInFrames: Math.round((n.seconds ?? 1.8) * fps), x: n.x, y: n.y, w: n.w ?? 0.12, h: n.h ?? 0.06, text: n.text ?? null, side: n.side ?? "left" };
+        })
+        .filter((n) => n.f >= 0 && n.f < len),
+    };
+  });
+  const steps = (T.steps || []).map((x, k) => ({ from: Math.round(startOf({ kind: "step", ...x }) * fps), n: x.n ?? k + 1, text: String(x.text) }));
+  tutorial = { style: T.style || (OUT[1] > OUT[0] ? "stack" : "pip"), split: T.split ?? 0.4, banner: T.banner ?? null, color: T.color ?? null, screens, steps };
+}
+
 // Sound effects: "auto" puts subtle ones on punch words, inserts, look changes and effects,
 // or list them yourself: [{ at, sound, volume }]. Always well under the voice.
 const SFX = { pop: "audio/sfx/pop.wav", whoosh: "audio/sfx/whoosh.wav", click: "audio/sfx/click.wav", shimmer: "audio/sfx/shimmer.wav", tick: "audio/sfx/tick.wav", riser: "audio/sfx/riser.wav" };
@@ -441,6 +552,8 @@ if (edl.sfx === "auto") {
   for (const p of punches) sfx.push({ from: Math.round((p.startMs / 1000) * fps) - 1, sound: p.look === "cool-girl" ? "shimmer" : "pop" });
   for (const i of inserts) sfx.push({ from: i.from, sound: "whoosh" }, ...(i.kind === "profile-follow" ? [{ from: i.from + Math.round(1.4 * fps), sound: "click" }] : []));
   for (const c of cuts) sfx.push({ from: c.from, sound: "whoosh" });
+  for (const sc of tutorial?.screens || []) sfx.push({ from: sc.from, sound: "whoosh" }, ...sc.clicks.map((c) => ({ from: sc.from + c.f, sound: "click" })));
+  for (const t of titles) sfx.push({ from: t.from, sound: t.style === "inflate" || t.style === "cutout" ? "pop" : t.style === "neon" ? "tick" : "whoosh" });
   for (const e of effects) sfx.push({ from: e.from + (e.kind === "shoulder-zoom" ? Math.round(2.4 * fps) : 0), sound: e.kind === "screen-push" ? "tick" : "whoosh" });
 } else if (Array.isArray(edl.sfx)) {
   sfx = edl.sfx.map((x) => ({ from: Math.round(Number(x.at) * fps), sound: x.sound, volume: x.volume }));
@@ -493,11 +606,15 @@ const props = {
     focusTrack: s.focusTrack || null,
     faceBox: faceBoxOf(s),
     matte: edl.sources[s.source].matte || null,
+    srcW: infoOf(s.file).width,
+    srcH: infoOf(s.file).height,
   })),
   looks: lookRanges,
   punches,
   orbit,
   inserts,
+  titles,
+  tutorial,
   sfx,
   cues: cap.style === "none" ? [] : cues,
   captions: { style: cap.style || "pop", position: cap.position ?? 0.66, uppercase: cap.uppercase ?? true, highlight: cap.highlight || "#E8B44A", size: cap.size || 1, emphasis: cap.emphasis || [] },
@@ -527,6 +644,16 @@ const lines = [
   ...(lookRanges.length > 1 || defaultLook !== "classic" ? ["## Looks", "", ...lookRanges.map((r) => `- ${ts(r.from / fps)}–${ts(r.to / fps)}: **${r.look}**`), ""] : []),
   ...(punches.length ? ["## Punch words", "", punches.map((p) => `${ts(p.startMs / 1000)} **${p.text}** (${p.look})`).join(" · "), ""] : []),
   ...(inserts.length ? ["## Inserts", "", ...inserts.map((i) => `- ${ts(i.from / fps)}–${ts((i.from + i.durationInFrames) / fps)}: ${i.kind} (${i.layer})${i.credit ? `, credit ${i.credit}` : ""}`), ""] : []),
+  ...(tutorial
+    ? [
+        `## Tutorial (${tutorial.style})`,
+        "",
+        ...tutorial.steps.map((x) => `- ${ts(x.from / fps)}: step ${x.n} "${x.text}"`),
+        ...tutorial.screens.map((x) => `- ${ts(x.from / fps)}–${ts((x.from + x.durationInFrames) / fps)}: ${x.src} (${x.clicks.length} clicks, ${x.notes.length} notes)`),
+        "",
+      ]
+    : []),
+  ...(titles.length ? ["## Titles", "", ...titles.map((t) => `- ${ts(t.from / fps)}–${ts((t.from + t.durationInFrames) / fps)}: ${t.style} "${t.text}" (${t.layer}${t.pin ? ", pinned" : ""})`), ""] : []),
   ...(broll.length ? ["## B-roll", "", ...broll.map((b) => `- ${ts(b.from / fps)}–${ts((b.from + b.durationInFrames) / fps)}: ${b.src}`), ""] : []),
   ...(brand || clean || edl.music?.file
     ? [

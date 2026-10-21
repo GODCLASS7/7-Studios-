@@ -1,0 +1,57 @@
+{
+  "fps": 30,
+  "title": "Campus Invasion",
+  "kicker": "Sample line-up",
+  "mode": "stack",
+  "secondsPerCard": 1.4,
+  "landOn": null,
+  "background": null,
+  "music": null,
+  "brand": null,
+  "cards": [
+    {
+      "label": "Campus 01",
+      "title": "University 1",
+      "sub": "Sample card",
+      "value": 250,
+      "prefix": "",
+      "suffix": "+",
+      "valueLabel": "students",
+      "image": null,
+      "colors": null
+    },
+    {
+      "label": "Campus 02",
+      "title": "University 2",
+      "sub": "Sample card",
+      "value": 500,
+      "prefix": "",
+      "suffix": "+",
+      "valueLabel": "students",
+      "image": null,
+      "colors": null
+    },
+    {
+      "label": "Campus 03",
+      "title": "University 3",
+      "sub": "Sample card",
+      "value": 750,
+      "prefix": "",
+      "suffix": "+",
+      "valueLabel": "students",
+      "image": null,
+      "colors": null
+    },
+    {
+      "label": "Campus 04",
+      "title": "University 4",
+      "sub": "Sample card",
+      "value": 1000,
+      "prefix": "",
+      "suffix": "+",
+      "valueLabel": "students",
+      "image": null,
+      "colors": null
+    }
+  ]
+}

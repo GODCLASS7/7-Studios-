@@ -36,3 +36,5 @@ public/jobs/shorts-test/footage/
 public/jobs/prelive-test/broll/
 public/audio/test/
 jobs/*/beats-*.json
+# The tutorial test's screen recording, rendered from the TestScreen composition by npm test.
+public/jobs/tutorial-test/screen/
