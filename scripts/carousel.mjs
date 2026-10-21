@@ -129,6 +129,8 @@ const files = readdirSync(out)
   .filter((f) => /\.jpe?g$/.test(f))
   .sort((a, b) => Number(a.match(/(\d+)/)[1]) - Number(b.match(/(\d+)/)[1]));
 files.forEach((f, i) => renameSync(join(out, f), join(out, `slide-${String(i + 1).padStart(2, "0")}.jpg`)));
-const cols = Math.min(5, files.length);
-ff(["-pattern_type", "glob", "-i", join(out, "slide-*.jpg"), "-vf", `scale=360:-2,tile=${cols}x${Math.ceil(files.length / cols)}:padding=8:color=0x222222`, "-frames:v", "1", join(out, "sheet.jpg")]);
+// Up to 5 a row, rows balanced (6 slides → 3 × 2, not 5 + 1).
+const rows = Math.ceil(files.length / 5);
+const cols = Math.ceil(files.length / rows);
+ff(["-pattern_type", "glob", "-i", join(out, "slide-*.jpg"), "-vf", `scale=360:-2,tile=${cols}x${rows}:padding=8:color=0x222222`, "-frames:v", "1", join(out, "sheet.jpg")]);
 console.log(`✔ ${files.length} slides in ${out}/ (slide-01.jpg …) and ${join(out, "sheet.jpg")}`);
