@@ -238,13 +238,6 @@
         100
       ]
     },
-    "captions-karaoke": {
-      "comp": "FootageEdit-9x16",
-      "durationInFrames": 509,
-      "frames": [
-        100
-      ]
-    },
     "captions-typewriter": {
       "comp": "FootageEdit-9x16",
       "durationInFrames": 509,
@@ -259,21 +252,7 @@
         100
       ]
     },
-    "captions-outline": {
-      "comp": "FootageEdit-9x16",
-      "durationInFrames": 509,
-      "frames": [
-        100
-      ]
-    },
     "captions-stack": {
-      "comp": "FootageEdit-9x16",
-      "durationInFrames": 509,
-      "frames": [
-        100
-      ]
-    },
-    "captions-neon": {
       "comp": "FootageEdit-9x16",
       "durationInFrames": 509,
       "frames": [
@@ -288,13 +267,6 @@
       ]
     },
     "captions-bubble": {
-      "comp": "FootageEdit-9x16",
-      "durationInFrames": 509,
-      "frames": [
-        100
-      ]
-    },
-    "captions-gradient": {
       "comp": "FootageEdit-9x16",
       "durationInFrames": 509,
       "frames": [
@@ -316,6 +288,34 @@
       ]
     },
     "captions-subtitle": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-karaoke": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-outline": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-neon": {
+      "comp": "FootageEdit-9x16",
+      "durationInFrames": 509,
+      "frames": [
+        100
+      ]
+    },
+    "captions-gradient": {
       "comp": "FootageEdit-9x16",
       "durationInFrames": 509,
       "frames": [

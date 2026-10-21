@@ -180,11 +180,12 @@ export const StyledCaptions: React.FC<{
               fontWeight: 900,
               fontSize: base * 0.9,
               textTransform: uppercase ? "uppercase" : "none",
-              backgroundImage: `linear-gradient(90deg, ${highlight} ${w.p * 100}%, rgba(255,255,255,0.55) ${w.p * 100}%)`,
+              backgroundImage: `linear-gradient(90deg, ${highlight} ${w.p * 100}%, #FFFFFF ${w.p * 100}%)`,
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
               color: "transparent",
-              filter: `drop-shadow(0 ${3 * u}px ${8 * u}px rgba(0,0,0,0.6))`,
+              // A tight dark edge, then a soft shadow, so white and colour both read on bright footage.
+              filter: `drop-shadow(0 0 ${1.5 * u}px rgba(0,0,0,0.9)) drop-shadow(0 ${3 * u}px ${8 * u}px rgba(0,0,0,0.6))`,
             }}
           >
             {w.t}
@@ -276,9 +277,10 @@ export const StyledCaptions: React.FC<{
               fontWeight: 900,
               fontSize: base,
               textTransform: "uppercase",
-              color: w.said ? highlight : "transparent",
+              // Hollow letters keep a faint dark fill and edge, so the stroke reads on light footage.
+              color: w.said ? highlight : "rgba(0,0,0,0.3)",
               WebkitTextStroke: `${3 * u}px ${w.said ? highlight : "#fff"}`,
-              filter: `drop-shadow(0 ${2 * u}px ${6 * u}px rgba(0,0,0,0.5))`,
+              filter: `drop-shadow(0 0 ${1.5 * u}px rgba(0,0,0,0.85)) drop-shadow(0 ${2 * u}px ${6 * u}px rgba(0,0,0,0.5))`,
             }}
           >
             {w.t}
@@ -349,8 +351,9 @@ export const StyledCaptions: React.FC<{
               fontWeight: 700,
               fontSize: base * 1.15,
               color: "#FFF6F0",
-              opacity: w.said ? 1 : 0.45,
-              textShadow: `0 0 ${3 * u}px #fff, 0 0 ${10 * u}px ${highlight}, 0 0 ${24 * u}px ${highlight}${w.active ? `, 0 0 ${48 * u}px ${highlight}` : ""}`,
+              opacity: w.said ? 1 : 0.7,
+              // The glow, over a dark halo so the tube still reads on bright footage.
+              textShadow: `0 0 ${3 * u}px #fff, 0 0 ${10 * u}px ${highlight}, 0 0 ${24 * u}px ${highlight}${w.active ? `, 0 0 ${48 * u}px ${highlight}` : ""}, 0 ${2 * u}px ${10 * u}px rgba(0,0,0,0.75)`,
             }}
           >
             {w.t}
@@ -451,8 +454,8 @@ export const StyledCaptions: React.FC<{
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
               color: "transparent",
-              filter: `drop-shadow(0 ${3 * u}px ${6 * u}px rgba(0,0,0,0.55))`,
-              opacity: w.said ? 1 : 0.5,
+              filter: `drop-shadow(0 0 ${1.5 * u}px rgba(0,0,0,0.9)) drop-shadow(0 ${3 * u}px ${6 * u}px rgba(0,0,0,0.55))`,
+              opacity: w.said ? 1 : 0.75,
             }}
           >
             {w.t}
