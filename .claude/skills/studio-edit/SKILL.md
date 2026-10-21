@@ -1,6 +1,6 @@
 ---
 name: studio-edit
-description: Edit real footage in Motion Studio from a word-level transcript - talking heads, interviews, testimonies, sermons, vlogs, podcasts. Covers transcription (ElevenLabs Scribe, local Whisper or an imported transcript), choosing the best takes, cutting fillers and dead air, punch-ins, word-by-word captions, overlays, music ducking, cut checks at every edit and timed lyric cards for songs. Use whenever raw footage or a song is the input - "edit my footage", "cut this down", "remove the ums", "add captions", "make a Short from this interview", "lyric video for my song".
+description: Edit real footage in Motion Studio from a word-level transcript - talking heads, interviews, testimonies, sermons, vlogs, podcasts. Covers transcription (ElevenLabs Scribe, local Whisper or an imported transcript), choosing the best takes, cutting fillers and dead air, punch-ins, word-by-word captions, overlays, premium talking-head effects (liquid glass graph, pixel-monitor screen push, over-the-shoulder zoom), music ducking, cut checks at every edit and timed lyric cards for songs. Use whenever raw footage or a song is the input - "edit my footage", "cut this down", "remove the ums", "add captions", "make a Short from this interview", "lyric video for my song".
 ---
 
 # Editing footage from the transcript
@@ -71,6 +71,30 @@ npm run edl -- <id>     # frame-accurate cuts, voice track with 30 ms fades, cap
 ```
 
 `jobs/<id>/edit.md` maps output time to source time and text. Use it to answer notes like "at 0:12, cut straight to …".
+
+## 3b. Talking-head effects (optional)
+
+Three premium effects live in `src/effects/` (adapted from the "Effect of the Day" prompts, EP. 02–04). Add them to `edl.json` → `effects`, and `edl` times them from the transcript. Use **one effect per idea**, at most one every 8–10 s: they're accents, not wallpaper.
+
+| `kind` | What it does | Settings (defaults) |
+|---|---|---|
+| `liquid-glass` | A frosted glass card rises over the footage and **really refracts it** (lens bend, colour split at the rim). A glowing line draws up on a velocity ramp while a counter counts to the value, then punches, holds and sinks away. About 3.2 s. | `at` / `atPhrase` / `atWord`, `title` ("RETENTION"), `value` ("82%", "$10K", "2.4M"), `colour` (green/gold/blue/red/purple/orange or hex), `drawSeconds` 1.16, `holdSeconds` 1.5, `cardY` (0.4 on 9:16), `frost` 7, `bend` 1, `shape` |
+| `screen-push` | Hard-cuts to an extreme close-up of an LCD monitor showing the words, **one word per cut as they're said**, then cuts back. Captions step aside while it runs. | `text` (shown exactly as typed), `when`: `"said"` (default; found in the transcript) or `[from, to]` seconds, `colour` (white/green/amber/red/blue or hex), `zoom` 3.1, `pixelSize` 10, `fringe` 3, `glow` 0.85, `focusFalloff` 5 |
+| `shoulder-zoom` | The camera pushes in, looks to a card over one shoulder, whips to a card over the other and eases out. `"style": "transition"` turns the first card's big text into points of light that streak into the second. 4.6 s. **Vertical formats only.** | `at` / `atPhrase` / `atWord`, `start` and `end` as `"LABEL \| big \| small"` (big text up to about 9 characters), `style` normal/transition, `colour` (clay/gold/green/blue/red/purple or hex) |
+
+```json
+"effects": [
+  { "kind": "screen-push", "text": "Stop scrolling.", "colour": "amber" },
+  { "kind": "liquid-glass", "atWord": "retention", "title": "Retention", "value": "82%", "colour": "gold" },
+  { "kind": "shoulder-zoom", "atPhrase": "B.4", "style": "transition", "start": "OLD WAY | 4 hours | per edit", "end": "NEW WAY | 4 minutes | per edit", "colour": "gold" }
+]
+```
+
+- The screen push and the cards show text **exactly as typed**. Check spelling and numbers against the brief.
+- `shoulder-zoom` frames from the source's `faceBox`: head about 32% of the frame width, eyes about a quarter down. `edl` warns if the head is too big for the cards (move the camera back, or use a wider take). The cut check tests both cards against the face.
+- `edit.md` lists every effect with its time; the cut check draws `out/<id>/effects-v<N>.png` at each effect's key moments. **Read it.**
+- Effects are heavy to render: the glass refracts a second copy of the footage, and the screen is a pixel grid. Expect a 1080p render to take about twice as long.
+- Fonts (Plus Jakarta Sans, DM Mono, Inter) are bundled, so renders don't depend on Google Fonts. The refraction maths follows liquid-glass-js by Armagan Amcalar (MIT).
 
 ## 4. Review cut and cut check (⏸ gate)
 

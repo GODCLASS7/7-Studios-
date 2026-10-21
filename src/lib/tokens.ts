@@ -19,6 +19,13 @@ const FRAUNCES = "Fraunces";
 loadFont({ family: FRAUNCES, url: staticFile("brand/fonts/Fraunces-Variable-latin.woff2"), weight: "300 900", style: "normal" });
 loadFont({ family: FRAUNCES, url: staticFile("brand/fonts/Fraunces-Italic-Variable-latin.woff2"), weight: "300 900", style: "italic" });
 
+// Plus Jakarta Sans (bold numbers on cards) and DM Mono (small labels): the talking-head effects in src/effects (SIL OFL).
+const JAKARTA = "Plus Jakarta Sans";
+loadFont({ family: JAKARTA, url: staticFile("brand/fonts/PlusJakartaSans-Variable-latin.woff2"), weight: "200 800" });
+const MONO = "DM Mono";
+loadFont({ family: MONO, url: staticFile("brand/fonts/DMMono-400-latin.woff2"), weight: "400" });
+loadFont({ family: MONO, url: staticFile("brand/fonts/DMMono-500-latin.woff2"), weight: "500" });
+
 export const color = {
   bg: "#0B0B0D",
   surface: "#17171B",
@@ -34,6 +41,8 @@ export const font = {
   display: inter.fontFamily,
   body: inter.fontFamily,
   serif: `${FRAUNCES}, Georgia, "Times New Roman", serif`,
+  card: `"${JAKARTA}", ${INTER}, Helvetica, Arial, sans-serif`,
+  mono: `"${MONO}", ui-monospace, Menlo, monospace`,
 } as const;
 
 // Type scale in px at the 1080p authoring size (rendered 2x for 4K).

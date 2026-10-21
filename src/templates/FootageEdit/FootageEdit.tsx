@@ -1,5 +1,8 @@
 import { AbsoluteFill, Audio, CalculateMetadataFunction, interpolate, OffthreadVideo, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { z } from "zod";
+import { LiquidGlassGraph } from "../../effects/LiquidGlassGraph";
+import { ScreenPush } from "../../effects/ScreenPush";
+import { ShoulderCards, shoulderCamera } from "../../effects/ShoulderZoom";
 import { color, font, Grade, Grain, LOOKS, type Look, springs } from "../../lib";
 
 // Edit of real footage (talking heads, interviews, testimonies, vlogs) from a
@@ -26,6 +29,60 @@ export const footageEditSchema = z.object({
   music: z.object({ src: z.string(), volume: z.number(), duck: z.number() }).nullable(),
   speech: z.array(z.tuple([z.number(), z.number()])),
   faceBoxes: z.record(z.string(), z.array(z.number())),
+  // Talking-head effects (src/effects), timed by edl.mjs: from/durationInFrames in output frames.
+  effects: z
+    .array(
+      z.discriminatedUnion("kind", [
+        z.object({
+          kind: z.literal("liquid-glass"),
+          from: z.number(),
+          durationInFrames: z.number(),
+          title: z.string(),
+          startValue: z.number(),
+          endValue: z.number(),
+          prefix: z.string(),
+          suffix: z.string(),
+          decimals: z.number(),
+          lineColour: z.string(),
+          nodeColour: z.string(),
+          textColour: z.string(),
+          shape: z.array(z.number()),
+          drawSeconds: z.number(),
+          holdSeconds: z.number(),
+          cardY: z.number(),
+          frost: z.number(),
+          bend: z.number(),
+        }),
+        z.object({
+          kind: z.literal("screen-push"),
+          from: z.number(),
+          durationInFrames: z.number(),
+          words: z.array(z.object({ text: z.string(), start: z.number() })),
+          endAt: z.number(),
+          textColour: z.string(),
+          allCaps: z.boolean(),
+          zoom: z.number(),
+          pixelSize: z.number(),
+          screenColour: z.string(),
+          fringe: z.number(),
+          glow: z.number(),
+          focusFalloff: z.number(),
+        }),
+        z.object({
+          kind: z.literal("shoulder-zoom"),
+          from: z.number(),
+          durationInFrames: z.number(),
+          style: z.enum(["normal", "transition"]),
+          start: z.object({ label: z.string(), big: z.string(), small: z.string() }),
+          end: z.object({ label: z.string(), big: z.string(), small: z.string() }),
+          accent: z.string(),
+          faceX: z.number(),
+          faceWidth: z.number(),
+          eyeY: z.number(),
+        }),
+      ]),
+    )
+    .default([]),
   cutSources: z.array(z.string()),
 });
 export type FootageEditProps = z.infer<typeof footageEditSchema>;
@@ -142,25 +199,78 @@ const Overlay: React.FC<{ o: FootageEditProps["overlays"][number] }> = ({ o }) =
   );
 };
 
+const Footage: React.FC<{ p: FootageEditProps }> = ({ p }) => {
+  const look = (p.grade in LOOKS ? p.grade : "neutral") as Look;
+  return (
+    <Grade look={look} vignette={look === "neutral" ? 0 : 0.25}>
+      {p.segments.map((s, i) => (
+        <Sequence key={i} from={s.from} durationInFrames={s.durationInFrames} layout="none">
+          <Shot s={s} />
+        </Sequence>
+      ))}
+    </Grade>
+  );
+};
+
+// The footage layer, moved by an over-the-shoulder camera while one is running.
+const Camera: React.FC<{ p: FootageEditProps; children: React.ReactNode }> = ({ p, children }) => {
+  const frame = useCurrentFrame();
+  const { fps, width, height } = useVideoConfig();
+  const fx = p.effects.find((e) => e.kind === "shoulder-zoom" && frame >= e.from && frame < e.from + e.durationInFrames);
+  const cam = fx && fx.kind === "shoulder-zoom" ? shoulderCamera((frame - fx.from) / fps, fx, width, height) : undefined;
+  if (!cam) return <AbsoluteFill>{children}</AbsoluteFill>;
+  return (
+    <AbsoluteFill style={{ overflow: "hidden" }}>
+      <AbsoluteFill style={cam.outer}>
+        <AbsoluteFill style={cam.inner}>{children}</AbsoluteFill>
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
+
 export const FootageEdit: React.FC<FootageEditProps> = (p) => {
+  const frame = useCurrentFrame();
   const look = (p.grade in LOOKS ? p.grade : "neutral") as Look;
   const ducked = (f: number) => p.speech.some(([a, b]) => f >= a - 6 && f <= b + 6);
+  // The screen push carries the words itself, so captions step aside while it runs.
+  const screenOn = p.effects.some((e) => e.kind === "screen-push" && frame >= e.from && frame < e.from + e.durationInFrames);
+  // Captions drop below a glass card while it's up (never into the bottom 20%).
+  const { width, height } = useVideoConfig();
+  const glass = p.effects.find((e) => e.kind === "liquid-glass" && frame >= e.from && frame < e.from + e.durationInFrames);
+  const capPos =
+    glass && glass.kind === "liquid-glass" ? Math.min(0.79, Math.max(p.captions.position, glass.cardY + (610 * (Math.min(width, height) / 1080)) / height + 0.03)) : p.captions.position;
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>
-      <Grade look={look} vignette={look === "neutral" ? 0 : 0.25}>
-        {p.segments.map((s, i) => (
-          <Sequence key={i} from={s.from} durationInFrames={s.durationInFrames} layout="none">
-            <Shot s={s} />
-          </Sequence>
-        ))}
-      </Grade>
+      <Camera p={p}>
+        <Footage p={p} />
+      </Camera>
       {look === "neutral" ? null : <Grain opacity={0.04} />}
+      {p.effects.map((e, i) => (
+        <Sequence key={`fx${i}`} from={e.from} durationInFrames={e.durationInFrames} layout="none">
+          {e.kind === "liquid-glass" ? (
+            <LiquidGlassGraph
+              {...e}
+              id={String(i)}
+              footage={
+                // The same footage, shifted back to the edit's timeline, for the glass to refract.
+                <Sequence from={-e.from} layout="none">
+                  <Footage p={p} />
+                </Sequence>
+              }
+            />
+          ) : e.kind === "screen-push" ? (
+            <ScreenPush {...e} />
+          ) : (
+            <ShoulderCards {...e} id={String(i)} />
+          )}
+        </Sequence>
+      ))}
       {p.overlays.map((o, i) => (
         <Sequence key={i} from={o.from} durationInFrames={o.durationInFrames} layout="none">
           <Overlay o={o} />
         </Sequence>
       ))}
-      <Captions cues={p.cues} c={p.captions} />
+      {screenOn ? null : <Captions cues={p.cues} c={{ ...p.captions, position: capPos }} />}
       {p.voice ? <Audio src={staticFile(p.voice)} /> : null}
       {p.music ? <Audio src={staticFile(p.music.src)} loop volume={(f) => p.music!.volume * (ducked(f) ? p.music!.duck : 1)} /> : null}
     </AbsoluteFill>
@@ -182,5 +292,6 @@ export const footageEditDefaults: FootageEditProps = {
   music: null,
   speech: [],
   faceBoxes: {},
+  effects: [],
   cutSources: [],
 };

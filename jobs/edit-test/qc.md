@@ -83,3 +83,18 @@
 | Unmasked jump cuts | ✅ PASS | every jump cut changes framing |
 | Text over faces | ✅ PASS | captions and overlays clear of faces |
 | Cut sheet | ✅ PASS | out/edit-test/cutcheck-v1.png (pairs: before | after, in cut order) |
+
+## Cut check — out/edit-test/delivery/edit-test_effects_9x16_1080x1920_v1.mp4 — 2026-10-21T11:58:11.844Z
+
+6 cuts in edit v1.
+
+| Check | Result | Detail |
+|---|---|---|
+| Length | ✅ PASS | 16.97 s (edit list 16.97 s) |
+| Audio pops | ✅ PASS | none at 6 cuts |
+| Black frames at cuts | ✅ PASS | none |
+| Flash pieces | ✅ PASS | none under 0.3 s |
+| Unmasked jump cuts | ✅ PASS | every jump cut changes framing |
+| Text over faces | ✅ PASS | captions and overlays clear of faces |
+| Cut sheet | ✅ PASS | out/edit-test/cutcheck-v1.png (pairs: before | after, in cut order) |
+| Effect frames | ✅ PASS | out/edit-test/effects-v1.png (0:00.13, 0:01.00, 0:08.07, 0:12.83, 0:14.23, 0:13.53): read it |

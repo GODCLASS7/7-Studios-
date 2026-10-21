@@ -11,3 +11,11 @@
 | 0:10.93 | A (A.8) | 0:21.30–0:24.83 | 1× | So if you're in a season of waiting today, |
 | 0:14.47 | A (A.8) | 0:25.57–0:26.73 | 1.12× | don't give up. |
 | 0:15.63 | A (A.9) | 0:27.17–0:28.50 | 1× | Keep showing up. |
+
+## Effects
+
+| In | Out | Effect | Detail |
+|---|---|---|---|
+| 0:00.07 | 0:02.20 | screen-push | Waiting@0.00 is@0.56 not@0.87 wasting.@1.23 |
+| 0:06.47 | 0:09.67 | liquid-glass | FAITH 82% #E8B44A |
+| 0:10.93 | 0:15.53 | shoulder-zoom | transition: Waiting → Working; face x 0.50 w 0.31 eyes 0.27 |

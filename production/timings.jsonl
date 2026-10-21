@@ -82,3 +82,11 @@
 {"kind":"phase","job":"wait-isaiah-40-31","phase":"build","estimatedMin":16.65,"actualMin":22,"at":"2026-10-21T07:41:52.569Z"}
 {"kind":"phase","job":"wait-isaiah-40-31","phase":"final-render","estimatedMin":16.52875064231597,"actualMin":32,"at":"2026-10-21T07:41:52.617Z"}
 {"kind":"phase","job":"wait-isaiah-40-31","phase":"qc","estimatedMin":7.790697674418604,"actualMin":4,"at":"2026-10-21T07:41:52.667Z"}
+{"kind":"render","id":"FootageEdit-9x16","preset":"still","frames":null,"seconds":6.156,"ok":true,"at":"2026-10-21T11:51:44.651Z"}
+{"kind":"render","id":"FootageEdit-9x16","preset":"still","frames":null,"seconds":5.998,"ok":true,"at":"2026-10-21T11:51:50.703Z"}
+{"kind":"render","id":"FootageEdit-9x16","preset":"still","frames":null,"seconds":6.201,"ok":true,"at":"2026-10-21T11:51:56.975Z"}
+{"kind":"render","id":"FootageEdit-9x16","preset":"still","frames":null,"seconds":4.38,"ok":true,"at":"2026-10-21T11:52:01.403Z"}
+{"kind":"render","id":"FootageEdit-9x16","preset":"still","frames":null,"seconds":4.928,"ok":true,"at":"2026-10-21T11:52:06.389Z"}
+{"kind":"render","id":"FootageEdit-9x16","preset":"still","frames":null,"seconds":5.826,"ok":true,"at":"2026-10-21T11:52:12.269Z"}
+{"kind":"render","id":"FootageEdit-9x16","preset":"still","frames":null,"seconds":5.314,"ok":true,"at":"2026-10-21T11:52:17.633Z"}
+{"kind":"render","id":"FootageEdit-9x16","preset":"hd","frames":null,"seconds":257.648,"ok":true,"at":"2026-10-21T11:57:59.475Z"}

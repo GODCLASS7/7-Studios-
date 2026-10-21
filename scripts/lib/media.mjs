@@ -104,3 +104,21 @@ export const popAt = (x, rate) => {
   const typical = sorted[Math.floor(sorted.length * 0.9)] || 1e-6;
   return peak > 0.08 && peak / typical > 4 ? peak : 0;
 };
+
+// Composition size for an edit format.
+export const FORMAT_SIZE = { "9x16": [1080, 1920], "16x9": [1920, 1080], "1x1": [1080, 1080], "4x5": [1080, 1350] };
+
+// A face box [x, y, w, h] (0–1 of the source frame) mapped onto the output frame
+// through the cover crop (object-position = focus) and the punch-in zoom.
+export const mapBox = (box, src, out, focusX, focusY, zoom) => {
+  const [W, H] = out;
+  const s = Math.max(W / src.width, H / src.height);
+  const offX = (W - src.width * s) * focusX;
+  const offY = (H - src.height * s) * focusY;
+  const ox = focusX * W;
+  const oy = focusY * H;
+  const map = (px, py) => [ox + (offX + px * src.width * s - ox) * zoom, oy + (offY + py * src.height * s - oy) * zoom];
+  const [x1, y1] = map(box[0], box[1]);
+  const [x2, y2] = map(box[0] + box[2], box[1] + box[3]);
+  return { x1, y1, x2, y2 };
+};

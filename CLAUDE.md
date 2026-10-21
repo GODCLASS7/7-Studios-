@@ -23,7 +23,7 @@ These instructions are for anyone working in this repo, whether a person or Clau
 | Bundler | Rspack (`Config.setRspack(true)` in `remotion.config.ts`) |
 | Frame format | JPEG by default (fast drafts); final presets switch to PNG |
 | Finishing kit | `@remotion/transitions`, `motion-blur`, `light-leaks`, `noise`, `paths`, `shapes`, `layout-utils`, `media-utils`, `captions`, `fonts`, `zod-types`; `zod` 4 |
-| Fonts | Bundled in `public/brand/fonts` (Inter variable, Fraunces; SIL OFL) and loaded with `@remotion/fonts` |
+| Fonts | Bundled in `public/brand/fonts` (Inter variable, Fraunces, Plus Jakarta Sans, DM Mono; SIL OFL) and loaded with `@remotion/fonts` |
 | Transcription | ElevenLabs Scribe + forced alignment (key in `.env`), or `@remotion/install-whisper-cpp` (local Whisper); a full system **ffmpeg** on PATH for cutting, analysis and checks |
 
 ## 2. Layout
@@ -38,6 +38,7 @@ motion-studio/
 │   ├── lib/                  ← THE DESIGN SYSTEM: tokens, formats, Grade, Grain, FootageShot, KineticTitle
 │   ├── storyboard/           ← storyboard schema, panel drawing, approval sheet, animatic
 │   ├── templates/            ← reusable, props-driven templates: ScriptureLyric (verses, songs), FootageEdit (edits of real footage)
+│   ├── effects/              ← talking-head effects used by FootageEdit: LiquidGlassGraph, ScreenPush, ShoulderZoom
 │   ├── videos/               ← one folder per deliverable (scenes, stills, concepts)
 │   │   └── StudioCheck.tsx   ← 4 s test card (used by the benchmark; keep it)
 │   └── components/           ← job-specific components shared across videos
@@ -320,6 +321,7 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 2. `autocut --keep=…` in play order, then refine `edl.json` (face boxes, framing, captions, overlays, grade, music) → `edl`.
 3. Render `FootageEdit-<format>` `review`, run `cutcheck`, read the cut sheet and fix every FAIL before sending. Take notes in plain English, versioning each round.
 4. Finals: `loudnorm`, `qc`, `cutcheck`, master spec, and lasting feedback into `house-notes.md`.
+5. Premium accents, as `effects` in `edl.json` (studio-edit §3b): `liquid-glass` (a refracting glass card with a graph and counter), `screen-push` (pixel-monitor close-up, one word per cut as it's said), `shoulder-zoom` (camera to cards over each shoulder, optional light-speed text transition).
 
 ### 10.11 Lyric video for a song
 

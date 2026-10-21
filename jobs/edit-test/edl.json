@@ -8,10 +8,14 @@
       "file": "jobs/edit-test/footage/take-a.mp4",
       "transcript": "jobs/edit-test/transcripts/take-a.json",
       "faceBox": [
-        0.42,
-        0.2,
-        0.16,
-        0.38
+        0.347,
+        0.185,
+        0.306,
+        0.214
+      ],
+      "focus": [
+        0.5,
+        0.4
       ]
     }
   },
@@ -83,19 +87,34 @@
   "grade": "warm",
   "overlays": [
     {
-      "kind": "popup",
-      "text": "Waiting \u2260 wasting",
-      "atPhrase": "A.7",
-      "seconds": 2.2,
-      "y": 0.8
-    },
-    {
       "kind": "lower-third",
       "text": "Pastor Sample",
       "sub": "The Wait Culture",
       "at": 2.2,
       "seconds": 3,
       "y": 0.79
+    }
+  ],
+  "effects": [
+    {
+      "kind": "screen-push",
+      "text": "Waiting is not wasting.",
+      "colour": "amber"
+    },
+    {
+      "kind": "liquid-glass",
+      "atPhrase": "A.4",
+      "title": "Faith",
+      "value": "82%",
+      "colour": "gold"
+    },
+    {
+      "kind": "shoulder-zoom",
+      "atPhrase": "A.8",
+      "style": "transition",
+      "start": "BEFORE | Waiting | feels wasted",
+      "end": "AFTER | Working | in the wait",
+      "colour": "gold"
     }
   ]
 }

@@ -2,8 +2,10 @@
 // Make a synthetic talking-head take plus its transcript, to test the footage
 // edit pipeline without a camera or a paid transcription call.
 //
-//   node scripts/test/footage-fixture.mjs <job>
+//   node scripts/test/footage-fixture.mjs <job> [--vertical]
 //
+// --vertical makes a 1080×1920 phone-style take (head about 30% of the width,
+// eyes a quarter down), the framing the shoulder-zoom effect expects.
 // Writes public/jobs/<job>/footage/take-a.mp4 (1920×1080, 30 fps): a presenter
 // silhouette with the SOURCE timecode burned in, so every cut can be checked by
 // eye, and a "voice" of tone bursts, one per word, with fillers (um, uh), a
@@ -16,6 +18,7 @@ import { join } from "node:path";
 import { ff, writeJson } from "../lib/media.mjs";
 
 const job = process.argv[2];
+const vertical = process.argv.includes("--vertical");
 if (!job) {
   console.error("Usage: node scripts/test/footage-fixture.mjs <job>");
   process.exit(1);
@@ -79,7 +82,9 @@ writeFileSync(wav, Buffer.concat([header, Buffer.from(pcm.buffer)]));
 const still = join(tmp, `${job}-presenter.png`);
 const geq =
   "lum='if(lt(pow((X-960)/150,2)+pow((Y-430)/190,2),1),170,if(lt(pow((X-960)/430,2)+pow((Y-1020)/330,2),1),120,40+20*Y/H))':cb=128:cr='if(lt(pow((X-960)/150,2)+pow((Y-430)/190,2),1),142,128)'";
-let r = ff(["-f", "lavfi", "-i", "color=c=black:s=1920x1080", "-frames:v", "1", "-vf", `format=yuv444p,geq=${geq}`, still]);
+const geqV =
+  "lum='if(lt(pow((X-540)/165,2)+pow((Y-560)/205,2),1),170,if(lt(pow((X-540)/430,2)+pow((Y-1330)/400,2),1),120,40+20*Y/H))':cb=128:cr='if(lt(pow((X-540)/165,2)+pow((Y-560)/205,2),1),142,128)'";
+let r = ff(["-f", "lavfi", "-i", `color=c=black:s=${vertical ? "1080x1920" : "1920x1080"}`, "-frames:v", "1", "-vf", `format=yuv444p,geq=${vertical ? geqV : geq}`, still]);
 if (r.status !== 0) throw new Error(r.stderr);
 const out = join("public", "jobs", job, "footage", "take-a.mp4");
 mkdirSync(join("public", "jobs", job, "footage"), { recursive: true });

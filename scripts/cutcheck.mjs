@@ -16,7 +16,7 @@
 
 import { appendFileSync } from "node:fs";
 import { join } from "node:path";
-import { diskPath, ff, parseArgs, pcm, popAt, readJson, ts, videoInfo } from "./lib/media.mjs";
+import { diskPath, ff, mapBox, parseArgs, pcm, popAt, readJson, ts, videoInfo } from "./lib/media.mjs";
 
 const { pos } = parseArgs(process.argv.slice(2));
 const [job, render] = pos;
@@ -75,16 +75,7 @@ const faceRect = (seg, key) => {
   const box = p.faceBoxes[key];
   if (!box) return null;
   srcInfo[seg.src] ??= videoInfo(diskPath(seg.src));
-  const { width: w, height: h } = srcInfo[seg.src];
-  const s = Math.max(W / w, H / h);
-  const offX = (W - w * s) * seg.focusX;
-  const offY = (H - h * s) * seg.focusY;
-  const ox = seg.focusX * W;
-  const oy = seg.focusY * H;
-  const map = (px, py) => [ox + (offX + px * w * s - ox) * seg.zoom, oy + (offY + py * h * s - oy) * seg.zoom];
-  const [x1, y1] = map(box[0], box[1]);
-  const [x2, y2] = map(box[0] + box[2], box[1] + box[3]);
-  return { x1, y1, x2, y2 };
+  return mapBox(box, srcInfo[seg.src], [W, H], seg.focusX, seg.focusY, seg.zoom);
 };
 const segAt = (frame) => p.segments.findIndex((s) => frame >= s.from && frame < s.from + s.durationInFrames);
 const portrait = H > W;
@@ -107,6 +98,34 @@ for (const o of p.overlays) {
   const y = (o.y ?? (o.kind === "lower-third" ? (portrait ? 0.56 : 0.82) : o.kind === "title" ? (portrait ? 0.16 : 0.14) : 0.12)) * H;
   checkBand(o.kind, o.from + Math.round(o.durationInFrames / 2), { x1: W * 0.1, x2: W * 0.9, y1: y - 70 * u, y2: y + 70 * u });
 }
+// Effects: the glass card sits over the footage for its whole run.
+for (const e of p.effects || []) {
+  if (e.kind === "liquid-glass") {
+    const top = e.cardY * H;
+    checkBand("liquid-glass card", e.from + Math.round(1.6 * fps), { x1: W / 2 - 450 * u, x2: W / 2 + 450 * u, y1: top, y2: top + 610 * u });
+  }
+}
+// Shoulder cards against the face, with the camera where it is while each card holds.
+for (const e of p.effects || []) {
+  if (e.kind !== "shoulder-zoom") continue;
+  const s = Math.max(1, 0.32 / e.faceWidth);
+  const tx = Math.min(0, Math.max(W - s * W, W / 2 - s * e.faceX * W));
+  const ty = Math.min(0, Math.max(H - s * H, 0.255 * H - s * e.eyeY * H));
+  const faceH = e.faceWidth * W * 1.35;
+  const sc = W / 1080;
+  const off = (H - 1920 * sc) / 2;
+  for (const [label, t, panX, left] of [["start card", 1.9, 110, true], ["end card", 3.3, -110, false]]) {
+    const z = 1.25;
+    const room = (W / 2) * (z - 1);
+    const x = Math.max(-room, Math.min(room, panX * sc));
+    const pt = (px, py) => [0.5 * W + (px * s + tx - 0.5 * W) * z + x, 0.25 * H + (py * s + ty - 0.25 * H) * z];
+    const [fx1, fy1] = pt(e.faceX * W - (e.faceWidth * W) / 2, e.eyeY * H - 0.4 * faceH);
+    const [fx2, fy2] = pt(e.faceX * W + (e.faceWidth * W) / 2, e.eyeY * H + 0.6 * faceH);
+    const cardX = left ? 70 : 1080 - 70 - 330;
+    const card = { x1: cardX * sc, x2: (cardX + 330) * sc, y1: 520 * sc + off, y2: 720 * sc + off };
+    if (overlaps(card, { x1: fx1, x2: fx2, y1: fy1, y2: fy2 })) faceHits.push(`shoulder ${label} at ${ts((e.from + Math.round(t * fps)) / fps)}`);
+  }
+}
 const anyFace = Object.keys(p.faceBoxes).length > 0;
 add("Text over faces", faceHits.length ? "WARN" : "PASS", anyFace ? (faceHits.length ? faceHits.join(", ") : "captions and overlays clear of faces") : "not checked: add \"faceBox\": [x, y, w, h] (0–1 of the source frame) to each source in edl.json");
 
@@ -120,6 +139,18 @@ if (cuts.length) {
   let r = ff(["-i", render, "-vf", `${label}select='${sel}',scale=${portrait ? 270 : 480}:-2,tile=4x${rows}:padding=6:color=0x0B0B0D`, "-frames:v", "1", "-fps_mode", "passthrough", sheet]);
   if (r.status !== 0) r = ff(["-i", render, "-vf", `select='${sel}',scale=${portrait ? 270 : 480}:-2,tile=4x${rows}:padding=6:color=0x0B0B0D`, "-frames:v", "1", "-fps_mode", "passthrough", sheet]);
   add("Cut sheet", r.status === 0 ? "PASS" : "WARN", r.status === 0 ? `${sheet} (pairs: before | after, in cut order)` : "could not draw");
+}
+
+// Effect check frames: the moments to look at (glass card with the line drawn, first
+// screen word, both shoulder cards), side by side in out/<job>/effects-v<N>.png.
+const fxFrames = (p.effects || []).flatMap((e) =>
+  e.kind === "liquid-glass" ? [e.from + Math.round(1.6 * fps)] : e.kind === "screen-push" ? [e.from + 2, e.from + Math.round((e.words[Math.min(2, e.words.length - 1)].start + 0.05) * fps)] : [e.from + Math.round(1.9 * fps), e.from + Math.round(3.3 * fps), e.from + Math.round(2.6 * fps)],
+).filter((f) => f < p.durationInFrames);
+if (fxFrames.length) {
+  const fxSheet = join("out", job, `effects-v${p.version}.png`);
+  const sel = fxFrames.map((f) => `eq(n\\,${f})`).join("+");
+  const r = ff(["-i", render, "-vf", `select='${sel}',scale=${portrait ? 360 : 640}:-2,tile=${Math.min(4, fxFrames.length)}x${Math.ceil(fxFrames.length / 4)}:padding=6:color=0x0B0B0D`, "-frames:v", "1", "-fps_mode", "passthrough", fxSheet]);
+  add("Effect frames", r.status === 0 ? "PASS" : "WARN", r.status === 0 ? `${fxSheet} (${fxFrames.map((f) => ts(f / fps)).join(", ")}): read it` : "could not draw");
 }
 
 const icon = { PASS: "✅", WARN: "⚠️", FAIL: "❌" };
