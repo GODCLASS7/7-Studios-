@@ -107,7 +107,8 @@ export const LiquidGlassGraph: React.FC<LiquidGlassProps> = (S) => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
   const u = Math.min(width, height) / 1080;
-  const W = 900 * u;
+  // Narrower on vertical formats, so the card stays clear of the platform's buttons on the right (x ≤ 89%).
+  const W = (height > width ? 820 : 900) * u;
   const HC = 610 * u;
   const R = 34 * u;
   const GRAPH_H = 420 * u;

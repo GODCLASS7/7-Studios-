@@ -123,7 +123,7 @@ for (const [job, cfg] of jobs) {
     const dir = join("public", "jobs", job, "reels");
     mkdirSync(dir, { recursive: true });
     const reels = [
-      ["reel-1.mp4", "gradients=s=360x640:c0=0x1F1A15:c1=0xB4442F:c2=0xF2C14E:n=3:speed=0.03:d=6:r=30"],
+      ["reel-1.mp4", "gradients=s=360x640:c0=0x1F1A15:c1=0xB4442F:c2=0xF2C14E:n=3:speed=0.03:seed=1:d=6:r=30"],
       ["reel-2.mp4", "life=s=360x640:mold=10:r=30:ratio=0.12:seed=7:death_color=#1F1A15:life_color=#F2C14E,trim=duration=6"],
     ];
     for (const [f, src] of reels) if (!existsSync(join(dir, f))) ffmpeg(["-f", "lavfi", "-i", src, "-pix_fmt", "yuv420p", "-c:v", "libx264", "-crf", "24", join(dir, f)]);
@@ -140,7 +140,7 @@ for (const [job, cfg] of jobs) {
     mkdirSync(dir, { recursive: true });
     // Generic stand-ins for shot b-roll, named the way a library would tag them.
     const clips = [
-      ["sunrise-sky.mp4", "gradients=s=1080x1920:c0=0x1F1A15:c1=0xB4442F:c2=0xF2C14E:n=3:speed=0.02:d=5:r=30", "morning light, hope, sky, waiting, dawn"],
+      ["sunrise-sky.mp4", "gradients=s=1080x1920:c0=0x1F1A15:c1=0xB4442F:c2=0xF2C14E:n=3:speed=0.02:seed=2:d=5:r=30", "morning light, hope, sky, waiting, dawn"],
       ["hands-season.mp4", "gradients=s=1080x1920:c0=0x2E3B2F:c1=0xF7F1E6:n=2:speed=0.03:seed=9:d=5:r=30", "hands, season, autumn leaves, patience"],
     ];
     for (const [f, src, tags] of clips) {
@@ -256,7 +256,7 @@ for (const job of frameJobs) {
     const pct = changed(now, gold);
     if (pct > TOL) {
       const sheet = join(OUT, `${job}-f${f}-diff.png`);
-      ffmpeg(["-i", gold, "-i", now, "-filter_complex", "[0:v]format=rgb24[g];[1:v]format=rgb24,split[n1][n2];[g]split[g1][g2];[g2][n2]blend=all_mode=difference,eq=brightness=0.1:contrast=3[d];[g1][n1][d]hstack=3", "-frames:v", "1", sheet]);
+      ffmpeg(["-i", gold, "-i", now, "-filter_complex", "[0:v]format=rgb24,split[g1][g2];[1:v]format=rgb24,split[n1][n2];[g2]format=gray[gg];[n2]format=gray[ng];[gg][ng]blend=all_mode=difference,eq=contrast=4,format=rgb24[d];[g1][n1][d]hstack=3", "-frames:v", "1", sheet]);
       fails.push(`frame ${f}: ${pct.toFixed(2)}% changed → ${sheet}`);
     }
   }

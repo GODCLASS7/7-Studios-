@@ -16,7 +16,7 @@
 // with the render time burned in, to read before sending the cut.
 // Appends the report to jobs/<job>/qc.md (not with --no-log, as the test runner uses). Exits 1 on any FAIL.
 
-import { appendFileSync } from "node:fs";
+import { appendFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { diskPath, ff, mapBox, parseArgs, pcm, popAt, readJson, ts, videoInfo } from "./lib/media.mjs";
 
@@ -27,6 +27,7 @@ if (!p || !render) {
   console.error("Usage: node scripts/cutcheck.mjs <job> <render.mp4>   (run edl.mjs first)");
   process.exit(1);
 }
+mkdirSync(join("out", job), { recursive: true });
 const info = videoInfo(render);
 const W = info.width;
 const H = info.height;
@@ -167,7 +168,8 @@ if (portrait) {
   }
   for (const e of p.effects || []) {
     if (e.kind === "liquid-glass") {
-      const b = { x1: W / 2 - 450 * u, x2: W / 2 + 450 * u, y1: e.cardY * H, y2: e.cardY * H + 610 * u };
+      const half = (portrait ? 410 : 450) * u;
+      const b = { x1: W / 2 - half, x2: W / 2 + half, y1: e.cardY * H, y2: e.cardY * H + 610 * u };
       if (outside(b)) out.push(`liquid-glass card at ${ts(e.from / fps)}`);
     }
   }
