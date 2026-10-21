@@ -448,7 +448,7 @@ const b64 = (file, type) => `data:${type};base64,${readFileSync(file).toString("
 
 // Cover frames: a mid-point frame from each video deliverable, plus stills.
 const covers = [];
-for (const d of deliveries.slice(0, 3)) {
+for (const d of [...deliveries].sort((a, b) => Number(b.isVideo) - Number(a.isVideo)).slice(0, 3)) {
   const img = join(outDir, "img", `${basename(d.name, extname(d.name))}.jpg`);
   const args = d.isVideo
     ? ["-hide_banner", "-loglevel", "error", "-y", "-ss", String(extra.cover?.[d.name] ?? (d.seconds * 0.42).toFixed(2)), "-i", d.file, "-frames:v", "1", "-vf", "scale=-2:720", "-q:v", "3", img]
@@ -527,7 +527,7 @@ const mdToHtml = (src) => {
 const fontData = b64("public/brand/fonts/Inter-Variable-latin.woff2", "font/woff2");
 const imagesHtml = sheetImgs.map((f) => `<figure><img src="${b64(f, "image/png")}"><figcaption>${basename(f)}</figcaption></figure>`).join("");
 const facts = [
-  ["Deliverables", deliveries.length ? deliveries.map((d) => d.name).join("<br>") : spec.deliverables.map((d) => d.name).join("<br>")],
+  ["Deliverables", spec.deliverables.map((d) => esc(d.name)).join("<br>")],
   ["Spec", main ? `${fmtS(main.seconds)} · ${main.fps} fps · ${main.codec?.toUpperCase()}${main.audio ? " + AAC" : ""}<br>${loud(main) || ""}${peak(main) ? ` · ${peak(main)}` : ""}` : "—"],
   ["Built with", `Motion Studio · Remotion ${remotion}<br>commit ${git} · ${new Date().toISOString().slice(0, 10)}`],
 ];
@@ -554,10 +554,10 @@ ul.checks>li::before{content:"";position:absolute;left:0;top:1.2mm;width:3mm;hei
 .frames{display:flex;gap:8mm;align-items:flex-start;margin-top:14mm}
 .frames .col{display:flex;flex-direction:column;gap:6mm}
 .frames .landscape{flex:1;min-width:0}
-.frames figure{margin:0;display:flex;flex-direction:column;gap:2.5mm}
+.frames figure{margin:0;display:flex;flex-direction:column;align-items:flex-start;gap:2.5mm}
 .frames img{border-radius:3mm;border:1px solid #3A362F;box-shadow:0 8mm 16mm rgba(0,0,0,.45);display:block}
 .frames .portrait img{height:122mm;width:auto}
-.frames .landscape img{width:100%;height:auto;max-height:58mm;object-fit:contain;object-position:left}
+.frames .landscape img{max-width:100%;width:auto;height:auto;max-height:var(--fit,58mm)}
 .frames.only-landscape .landscape img{max-height:none}
 .frames figcaption{font:800 7pt Inter;letter-spacing:.2em;color:#9A958C;text-transform:uppercase}
 .facts{position:absolute;left:18mm;right:18mm;bottom:26mm;display:grid;grid-template-columns:repeat(3,1fr);gap:8mm}
@@ -595,9 +595,12 @@ figcaption{font:700 7.5pt Inter;color:var(--muted);margin-top:1.5mm}
   <div class="lede">Everything an AI agent needs to rebuild or adapt this piece in Motion Studio: tools, assets, visual and motion system, shot lists, music, sound, mix, build commands and QA.</div>
   ${(() => {
     const fig = (c) => `<figure><img src="${b64(c.img, "image/jpeg")}"><figcaption>${esc(labelFor(c.d.file))}${c.d.width && c.d.height ? ` · ${c.d.width}×${c.d.height}` : ""}</figcaption></figure>`;
-    const tall = covers.filter((c) => (c.d.height || 0) > (c.d.width || 0));
-    const wide = covers.filter((c) => !tall.includes(c));
-    return `<div class="frames${tall.length ? "" : " only-landscape"}">${tall.length ? `<div class="col portrait">${tall.map(fig).join("")}</div>` : ""}${wide.length ? `<div class="col landscape">${wide.map(fig).join("")}</div>` : ""}</div>`;
+    const aspect = (c) => (c.d.width || 1) / (c.d.height || 1);
+    const tallest = [...covers].sort((a, b) => aspect(a) - aspect(b))[0];
+    if (!tallest || aspect(tallest) >= 1) return `<div class="frames only-landscape"><div class="col landscape">${covers.map(fig).join("")}</div></div>`;
+    const rest = covers.filter((c) => c !== tallest);
+    const each = rest.length ? (122 - 12 * (rest.length - 1)) / rest.length - 7 : 0;
+    return `<div class="frames"><div class="col portrait">${fig(tallest)}</div>${rest.length ? `<div class="col landscape" style="--fit:${each.toFixed(1)}mm">${rest.map(fig).join("")}</div>` : ""}</div>`;
   })()}
   <div class="facts">${facts.map(([k, v]) => `<div><b>${k}</b>${v}</div>`).join("")}</div>
   <div class="bar"></div>

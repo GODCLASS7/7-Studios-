@@ -316,7 +316,7 @@ export const PanelArt: React.FC<{
   const H = 900;
   const W = Math.round(H * aspect);
   const camera = panel.camera ?? "static";
-  const tag = H * 0.05;
+  const tag = Math.min(W, H) * 0.05;
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100%", backgroundColor: SKETCH.paper, overflow: "hidden" }}>

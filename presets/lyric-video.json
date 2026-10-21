@@ -1,0 +1,49 @@
+{
+  "name": "lyric-video",
+  "label": "Animated scripture / lyric video (The Wait Culture)",
+  "recipes": ["illustrated-type", "atmosphere"],
+  "brief": {
+    "Client / brand": "The Wait Culture",
+    "Goal (one sentence)": "Carry one scripture or lyric line by line so it can be read, felt and shared.",
+    "Deliverables": "ScriptureLyric 9:16 (Reels, Shorts, Status) + 16:9 (YouTube) + 4:5 scripture card",
+    "Where it will be used": "Instagram Reels, YouTube Shorts, WhatsApp Status, release posts",
+    "Must-say copy / CTA": "The exact verse or lyric, the reference and the translation (e.g. KJV)",
+    "Audio": "Beatless pad or the song itself (cleared); paper rustle per card",
+    "Look & feel references": "Ben Marriott: paper cut-outs, ink-bleed type, hand-drawn underline, motion on twos"
+  },
+  "deliverables": [
+    { "name": "Scripture/lyric 9:16", "type": "motion", "composition": "ScriptureLyric-9x16", "format": "9x16", "seconds": 20, "fps": 30, "preset": "4k", "complexity": "medium", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 },
+    { "name": "Scripture/lyric 16:9", "type": "motion", "composition": "ScriptureLyric-16x9", "format": "16x9", "seconds": 20, "fps": 30, "preset": "4k", "complexity": "medium", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 },
+    { "name": "Scripture card 4:5", "type": "still", "composition": "ScriptureCard-4x5", "count": 1, "preset": "still-4k", "complexity": "simple" }
+  ],
+  "storyboard": {
+    "format": "9x16",
+    "fps": 30,
+    "panels": [
+      { "id": "1", "title": "Phrase 1", "seconds": 3.5, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Paper strip lands on twos; the phrase inks in; emphasis word underlined.", "onScreenText": "<first phrase>", "audio": "Pad in; paper rustle", "draw": [{ "type": "rect", "x": 10, "y": 40, "w": 80, "h": 18, "fill": "#F8F2E6" }, { "type": "text", "x": 50, "y": 49, "text": "PHRASE 1", "size": 5 }, { "type": "text", "x": 50, "y": 10, "text": "OVERLINE", "size": 2.5, "weight": 700 }] },
+      { "id": "2", "title": "Phrase 2", "seconds": 3, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Previous strip pulled away; next strip lands.", "onScreenText": "<second phrase>", "audio": "Chord change; rustle", "draw": [{ "type": "rect", "x": 12, "y": 42, "w": 76, "h": 16, "fill": "#F8F2E6" }, { "type": "text", "x": 50, "y": 50, "text": "PHRASE 2", "size": 5 }] },
+      { "id": "3", "title": "Phrase 3…", "seconds": 3.5, "shot": "Graphic", "camera": "static", "source": "motion", "action": "One phrase per card for the rest of the text.", "onScreenText": "<more phrases>", "draw": [{ "type": "rect", "x": 10, "y": 40, "w": 80, "h": 18, "fill": "#F8F2E6" }, { "type": "text", "x": 50, "y": 49, "text": "PHRASE 3", "size": 5 }] },
+      { "id": "4", "title": "End card", "seconds": 3.5, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Reference inks in large; translation stamp; overline.", "onScreenText": "<Reference> · <Translation>", "audio": "Soft low hit; pad resolves", "draw": [{ "type": "rect", "x": 15, "y": 40, "w": 70, "h": 12, "fill": "#F8F2E6" }, { "type": "text", "x": 50, "y": 46, "text": "Book 1:1", "size": 6 }, { "type": "rect", "x": 40, "y": 56, "w": 20, "h": 5, "label": "KJV" }] }
+    ]
+  },
+  "spec": {
+    "hardRules": [
+      "Scripture text matches the stated translation word for word; the reference and translation are on screen.",
+      "Lyrics only for songs owned or cleared by The Wait Culture.",
+      "One phrase per card; one or two emphasis words per phrase, no more.",
+      "Portrait line breaks are set by hand with \"|\" so no line ends on an orphan word."
+    ],
+    "visualNotes": ["Recipe: illustrated-type (Ben Marriott) with atmosphere sound. Template ScriptureLyric."],
+    "motionVocabulary": [
+      { "name": "Cut-out on twos", "how": "CutoutStrip: torn-edge strip lands in 6 frames with a slight overshoot; positions held on twos." },
+      { "name": "Ink bleed", "how": "InkText: characters arrive blurred and scaled, then firm up; edge displacement settles from 9 to 1.6 and boils on twos." },
+      { "name": "Hand underline", "how": "HandUnderline: hand-wobbled path drawn with evolvePath over 12 frames after the emphasis word lands." },
+      { "name": "Pull away", "how": "Strip leaves up and off in 6 frames (ease-in), with a 3-frame breath before the next card." }
+    ],
+    "qaChecklist": [
+      "Every emphasis word appears in its phrase.",
+      "Text checked word for word against the translation.",
+      "Footer reference visible on every card; end card shows reference + translation."
+    ]
+  }
+}

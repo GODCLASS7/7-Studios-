@@ -1,0 +1,125 @@
+{
+  "job": "wait-isaiah-40-31",
+  "start": "2026-10-21T07:03:00.000Z",
+  "tz": "UTC",
+  "totalMin": [
+    55.5335311893788,
+    106.11303211075703
+  ],
+  "phases": [
+    {
+      "key": "brief",
+      "learnKey": "brief",
+      "label": "Brief, questions & assumptions",
+      "who": "Claude",
+      "low": 1.5,
+      "high": 3,
+      "learned": true
+    },
+    {
+      "key": "plan",
+      "learnKey": "plan",
+      "label": "Production plan & estimate",
+      "who": "Claude",
+      "low": 0.6666666666666666,
+      "high": 1.3333333333333333,
+      "learned": true
+    },
+    {
+      "key": "storyboard",
+      "learnKey": "storyboard",
+      "label": "Storyboard (6 panels) + animatic",
+      "who": "Claude",
+      "low": 3,
+      "high": 6,
+      "learned": true
+    },
+    {
+      "key": "gate-3",
+      "label": "Approve storyboard",
+      "who": "You",
+      "gate": true,
+      "low": 0,
+      "high": 0
+    },
+    {
+      "key": "style",
+      "learnKey": "style",
+      "label": "Style frames / design previews (3 deliverables)",
+      "who": "Claude",
+      "low": 15,
+      "high": 30,
+      "learned": false
+    },
+    {
+      "key": "gate-5",
+      "label": "Approve style frames",
+      "who": "You",
+      "gate": true,
+      "low": 0,
+      "high": 0
+    },
+    {
+      "key": "build",
+      "learnKey": "build",
+      "label": "Build compositions (motion + stills)",
+      "who": "Claude",
+      "low": 11.1,
+      "high": 22.2,
+      "learned": true
+    },
+    {
+      "key": "draft-render",
+      "learnKey": "draft-render",
+      "label": "Draft preview render",
+      "who": "Machine",
+      "low": 1.3250333333333333,
+      "high": 1.98755,
+      "learned": false
+    },
+    {
+      "key": "review-render",
+      "learnKey": "review-render",
+      "label": "1080p review cut",
+      "who": "Machine",
+      "low": 3.9580333333333337,
+      "high": 5.937050000000001,
+      "learned": false
+    },
+    {
+      "key": "gate-9",
+      "label": "Approve review cut",
+      "who": "You",
+      "gate": true,
+      "low": 0,
+      "high": 0
+    },
+    {
+      "key": "qc",
+      "learnKey": "qc",
+      "label": "QC & fixes",
+      "who": "Claude",
+      "low": 4.046511627906976,
+      "high": 11.534883720930234,
+      "learned": true
+    },
+    {
+      "key": "final-render",
+      "learnKey": "final-render",
+      "label": "Final masters (4k, 4k, still-4k)",
+      "who": "Machine",
+      "low": 13.223000513852778,
+      "high": 19.834500770779165,
+      "learned": true
+    },
+    {
+      "key": "delivery",
+      "learnKey": "delivery",
+      "label": "QC check & delivery",
+      "who": "Claude",
+      "low": 1.7142857142857142,
+      "high": 4.285714285714286,
+      "learned": true
+    }
+  ]
+}

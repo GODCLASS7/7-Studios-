@@ -4,6 +4,7 @@ import { DemoTitle } from "./videos/Demo/DemoTitle";
 import { Teaser } from "./videos/Teaser/Teaser";
 import { TeaserThumb } from "./videos/Teaser/Thumbnail";
 import { f, SCENES } from "./videos/Teaser/beats";
+import { calcScripture, isaiah4031, ScriptureLyric, scriptureSchema } from "./templates/ScriptureLyric/ScriptureLyric";
 import { calcAnimatic, StoryboardAnimatic } from "./storyboard/Animatic";
 import { sampleStoryboard } from "./storyboard/sample";
 import { storyboardSchema } from "./storyboard/schema";
@@ -54,6 +55,11 @@ export const RemotionRoot: React.FC = () => {
         height={1920}
       />
       <Still id="TeaserThumb" component={TeaserThumb} width={1280} height={720} />
+
+      {/* Template: animated scripture / lyric (style recipe "illustrated-type"). Pass any verse or lyric with --props. */}
+      <Composition id="ScriptureLyric-9x16" component={ScriptureLyric} schema={scriptureSchema} defaultProps={isaiah4031} calculateMetadata={calcScripture} durationInFrames={600} fps={30} width={1080} height={1920} />
+      <Composition id="ScriptureLyric-16x9" component={ScriptureLyric} schema={scriptureSchema} defaultProps={isaiah4031} calculateMetadata={calcScripture} durationInFrames={600} fps={30} width={1920} height={1080} />
+      <Still id="ScriptureCard-4x5" component={ScriptureLyric} schema={scriptureSchema} defaultProps={{ ...isaiah4031, stillPhrase: 0 }} width={1080} height={1350} />
 
       {/* Studio pipeline: storyboard approval sheet + timed animatic. */}
       <Still

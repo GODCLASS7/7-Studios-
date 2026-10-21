@@ -11,6 +11,10 @@ export const LOOKS = {
   film: "contrast(1.08) saturate(0.88) sepia(0.08) brightness(0.98)",
   noir: "grayscale(1) contrast(1.25) brightness(0.95)",
   faded: "contrast(0.9) saturate(0.85) brightness(1.06)",
+  // Worship / atmosphere: warm, soft contrast, lifted shadows (one house look for a whole series).
+  worship: "contrast(0.94) saturate(0.92) sepia(0.16) brightness(1.03)",
+  // Food: warm and appetising, rich reds and browns.
+  food: "contrast(1.1) saturate(1.22) sepia(0.08) brightness(1.02)",
 } as const;
 
 export type Look = keyof typeof LOOKS;

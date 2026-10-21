@@ -10,3 +10,6 @@ build
 # Per-machine benchmark and timing history (keep timings if you want estimates to learn across machines)
 production/bench.json
 jobs/*/.*.resolved.json
+
+# Frame captures for storyboard/frames sheets; `npm run storyboard` re-renders them every run.
+public/jobs/*/panels/

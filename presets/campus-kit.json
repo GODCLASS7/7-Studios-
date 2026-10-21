@@ -1,0 +1,33 @@
+{
+  "name": "campus-kit",
+  "label": "Campus Invasion recap kit (8 universities)",
+  "recipes": ["phone-first-volume", "hook-2s"],
+  "brief": {
+    "Client / brand": "Campus Invasion",
+    "Goal (one sentence)": "Every campus team posts a recap that looks like part of one movement.",
+    "Deliverables": "One 30 s 9:16 recap per campus (8), same look, fonts and end card",
+    "Where it will be used": "Instagram Reels, TikTok, WhatsApp Status",
+    "Must-say copy / CTA": "Campus name; Campus Invasion; next stop",
+    "Audio": "One cleared track for the series; captions burned in",
+    "Look & feel references": "Chibuzor / Fibman Beats / Kobbyshots phone-first; Mks.Vision 2-second hook"
+  },
+  "deliverables": [
+    { "name": "Campus recap ×8 (30 s each)", "type": "motion", "composition": "", "format": "9x16", "seconds": 240, "fps": 30, "preset": "review", "complexity": "simple", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 }
+  ],
+  "storyboard": {
+    "format": "9x16",
+    "fps": 30,
+    "panels": [
+      { "id": "1", "title": "Hook", "seconds": 2, "shot": "Close", "camera": "handheld", "source": "footage", "action": "Motion in frame 1: a crowd shout, a jump, a door flung open.", "onScreenText": "<Campus> is next", "audio": "Hit", "draw": [{ "type": "figure", "x": 50, "y": 90, "h": 70 }, { "type": "text", "x": 50, "y": 18, "text": "CAMPUS", "size": 8 }] },
+      { "id": "2", "title": "Arrival", "seconds": 6, "shot": "Wide", "camera": "pan-right", "source": "footage", "action": "Team arriving; campus landmark.", "audio": "Track builds", "draw": [{ "type": "horizon", "y": 70 }, { "type": "rect", "x": 55, "y": 30, "w": 35, "h": 40, "label": "landmark" }] },
+      { "id": "3", "title": "Moments", "seconds": 14, "shot": "Medium", "camera": "handheld", "source": "footage", "action": "Worship, conversations, prayer, fun; 1–2 s each.", "audio": "Track", "draw": [{ "type": "rect", "x": 8, "y": 20, "w": 40, "h": 28 }, { "type": "rect", "x": 52, "y": 20, "w": 40, "h": 28 }, { "type": "rect", "x": 8, "y": 52, "w": 40, "h": 28 }, { "type": "rect", "x": 52, "y": 52, "w": 40, "h": 28 }] },
+      { "id": "4", "title": "Message", "seconds": 5, "shot": "Close", "camera": "static", "source": "footage", "action": "One line from a student, captioned.", "onScreenText": "<quote>", "draw": [{ "type": "figure", "x": 50, "y": 95, "h": 70 }] },
+      { "id": "5", "title": "End card", "seconds": 3, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Campus Invasion · next stop.", "onScreenText": "Campus Invasion · next: <campus>", "draw": [{ "type": "text", "x": 50, "y": 48, "text": "CAMPUS INVASION", "size": 6 }] }
+    ]
+  },
+  "spec": {
+    "hardRules": ["Same grade, fonts, lower thirds and end card for every campus.", "Each team's footage and copy go in props; the template never changes per team.", "Only the cleared series track; no copyrighted music."],
+    "visualNotes": ["Recipe: phone-first-volume + hook-2s. One props file per campus: jobs/<id>/props/<campus>.json."],
+    "qaChecklist": ["A contact sheet of all 8 recaps shows one consistent look.", "Frame 1 has motion in every recap.", "Captions burned in and readable at phone size."]
+  }
+}

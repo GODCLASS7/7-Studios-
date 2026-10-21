@@ -79,6 +79,10 @@ const args = process.argv.slice(2);
 
 if (args[0] === "--log") {
   const [, job, phase, actual] = args;
+  if (!existsSync(join("jobs", job, "estimate.json"))) {
+    console.error(`No estimate for ${job} yet. Run: npm run estimate -- ${job}  (then log actual times against it)`);
+    process.exit(1);
+  }
   const est = JSON.parse(readFileSync(join("jobs", job, "estimate.json"), "utf8"));
   const row = est.phases.find((p) => p.key === phase);
   if (!row) {

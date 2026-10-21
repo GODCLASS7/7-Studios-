@@ -65,7 +65,7 @@ export const StoryboardSheet: React.FC<Storyboard> = (sb) => {
         {sb.panels.map((p, i) => (
           <div key={p.id} style={{ width: panelW }}>
             <div style={{ width: panelW, height: panelH, border: `4px solid ${SKETCH.ink}`, borderRadius: 10, overflow: "hidden", position: "relative" }}>
-              <PanelArt panel={p} aspect={ASPECT[sb.format]} showCamera={!frames} />
+              <PanelArt panel={p} aspect={ASPECT[sb.format]} showCamera={!frames} showTags={!frames} />
               <div
                 style={{
                   position: "absolute",

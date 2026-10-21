@@ -1,0 +1,18 @@
+{
+  "project": "The Wait Culture — Isaiah 40:31",
+  "client": "The Wait Culture",
+  "version": 1,
+  "date": "2026-10-21",
+  "format": "9x16",
+  "fps": 30,
+  "status": "approved",
+  "notes": "Illustrated-type recipe (Ben Marriott): paper cut-outs on twos, ink-bleed Fraunces, hand underline on one word per phrase. Pad changes chord with each card.",
+  "panels": [
+    { "id": "1", "title": "Wait", "seconds": 3.5, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Strip lands; phrase inks in; \"wait\" underlined in red.", "onScreenText": "But they that wait upon the LORD", "audio": "Pad in (D); paper rustle", "draw": [{ "type": "text", "x": 50, "y": 9, "text": "THE WAIT CULTURE", "size": 2.6, "weight": 700 }, { "type": "rect", "x": 12, "y": 41, "w": 76, "h": 14, "fill": "#F8F2E6" }, { "type": "text", "x": 50, "y": 46, "text": "But they that WAIT", "size": 4 }, { "type": "text", "x": 50, "y": 51, "text": "upon the LORD", "size": 4 }, { "type": "text", "x": 50, "y": 82, "text": "Isaiah 40:31", "size": 2.6, "weight": 500 }] },
+    { "id": "2", "title": "Renew", "seconds": 3, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Previous strip pulled away; next lands; \"renew\" underlined.", "onScreenText": "shall renew their strength;", "audio": "Bm; rustle", "draw": [{ "type": "rect", "x": 18, "y": 42, "w": 64, "h": 13, "fill": "#F8F2E6" }, { "type": "text", "x": 50, "y": 47, "text": "shall RENEW", "size": 4 }, { "type": "text", "x": 50, "y": 52, "text": "their strength;", "size": 4 }] },
+    { "id": "3", "title": "Wings", "seconds": 3.5, "shot": "Graphic", "camera": "static", "source": "motion", "action": "\"wings\" underlined.", "onScreenText": "they shall mount up with wings as eagles;", "audio": "G; rustle", "draw": [{ "type": "rect", "x": 8, "y": 41, "w": 84, "h": 14, "fill": "#F8F2E6" }, { "type": "text", "x": 50, "y": 46, "text": "they shall mount up", "size": 4 }, { "type": "text", "x": 50, "y": 51, "text": "with WINGS as eagles;", "size": 4 }] },
+    { "id": "4", "title": "Run", "seconds": 3, "shot": "Graphic", "camera": "static", "source": "motion", "action": "\"run\" underlined.", "onScreenText": "they shall run, and not be weary;", "audio": "A; rustle", "draw": [{ "type": "rect", "x": 12, "y": 42, "w": 76, "h": 13, "fill": "#F8F2E6" }, { "type": "text", "x": 50, "y": 47, "text": "they shall RUN,", "size": 4 }, { "type": "text", "x": 50, "y": 52, "text": "and not be weary;", "size": 4 }] },
+    { "id": "5", "title": "Walk", "seconds": 3.5, "shot": "Graphic", "camera": "static", "source": "motion", "action": "\"walk\" underlined.", "onScreenText": "and they shall walk, and not faint.", "audio": "D/F#; rustle", "draw": [{ "type": "rect", "x": 12, "y": 41, "w": 76, "h": 14, "fill": "#F8F2E6" }, { "type": "text", "x": 50, "y": 46, "text": "and they shall WALK,", "size": 4 }, { "type": "text", "x": 50, "y": 51, "text": "and not faint.", "size": 4 }] },
+    { "id": "6", "title": "End card", "seconds": 3.5, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Reference inks in; KJV stamp; overline; fade.", "onScreenText": "Isaiah 40:31 · KJV · THE WAIT CULTURE", "audio": "Dadd9; soft low hit; fade", "draw": [{ "type": "rect", "x": 14, "y": 40, "w": 72, "h": 11, "fill": "#F8F2E6" }, { "type": "text", "x": 50, "y": 46, "text": "Isaiah 40:31", "size": 6 }, { "type": "rect", "x": 41, "y": 55, "w": 18, "h": 4, "label": "KJV" }, { "type": "text", "x": 50, "y": 63, "text": "THE WAIT CULTURE", "size": 2.6, "weight": 700 }] }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "grill-reel",
+  "label": "Brothers on the Grill food reel",
+  "recipes": ["product-broll", "hook-2s"],
+  "brief": {
+    "Client / brand": "Brothers on the Grill",
+    "Goal (one sentence)": "Make people hungry and order today.",
+    "Deliverables": "10–15 s 9:16 reel",
+    "Where it will be used": "Instagram Reels, TikTok, WhatsApp Status",
+    "Must-say copy / CTA": "Item + price; how to order",
+    "Audio": "Sizzle, flame whoosh, plate hit; music under the SFX",
+    "Look & feel references": "Daniel Schiffer: speed ramps, slow-motion hero, sound design"
+  },
+  "deliverables": [
+    { "name": "Food reel 9:16", "type": "motion", "composition": "", "format": "9x16", "seconds": 12, "fps": 30, "preset": "4k", "complexity": "medium", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 }
+  ],
+  "storyboard": {
+    "format": "9x16",
+    "fps": 30,
+    "panels": [
+      { "id": "1", "title": "Flame hit", "seconds": 1.5, "shot": "Close", "camera": "static", "source": "footage", "action": "Flame flares over the grill (shot at 120 fps).", "audio": "Whoosh + sizzle", "draw": [{ "type": "horizon", "y": 70 }, { "type": "arrow", "x1": 50, "y1": 70, "x2": 50, "y2": 25, "label": "flame" }] },
+      { "id": "2", "title": "Slow-mo turn", "seconds": 3.5, "shot": "Macro", "camera": "push-in", "source": "footage", "action": "Kebab turned on the grill; ramp 3× → 0.3× on the turn.", "audio": "Sizzle swell", "draw": [{ "type": "rect", "x": 15, "y": 45, "w": 70, "h": 10, "label": "kebab" }] },
+      { "id": "3", "title": "Plating", "seconds": 3, "shot": "Medium", "camera": "tilt-down", "source": "footage", "action": "Onto the plate; match cut on the motion.", "audio": "Plate clink", "draw": [{ "type": "circle", "x": 50, "y": 55, "r": 25 }] },
+      { "id": "4", "title": "Hero", "seconds": 2, "shot": "Close", "camera": "orbit", "source": "footage", "action": "Plated hero, steam backlit.", "audio": "Music lift", "draw": [{ "type": "circle", "x": 50, "y": 52, "r": 28 }, { "type": "arrow", "x1": 40, "y1": 20, "x2": 45, "y2": 8, "label": "steam" }] },
+      { "id": "5", "title": "Price + order", "seconds": 2, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Item, price and the order line, big.", "onScreenText": "<Item> GH₵<price> · Order: <number>", "draw": [{ "type": "text", "x": 50, "y": 45, "text": "GH₵ PRICE", "size": 9 }, { "type": "text", "x": 50, "y": 60, "text": "ORDER NOW", "size": 5 }] }
+    ]
+  },
+  "spec": {
+    "hardRules": ["Real food, real prices: the price on screen matches the current menu.", "Anything slowed down was shot at 60–120 fps.", "Every visual hit has a sound hit."],
+    "visualNotes": ["Recipe: product-broll (Daniel Schiffer); SpeedRamp for ramps; Grade look=\"food\"."],
+    "motionVocabulary": [{ "name": "Speed ramp", "how": "SpeedRamp ramp=[[0,0],[0.5,1.5],[3,2.2],[3.5,3.7]]: 3× in, 0.28× on the turn, 3× out." }],
+    "qaChecklist": ["Ramps play without stutter.", "Price and order line readable at phone size.", "Loudness −14 LUFS; sizzle audible on phone speakers."]
+  }
+}

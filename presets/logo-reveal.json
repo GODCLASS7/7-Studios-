@@ -1,0 +1,33 @@
+{
+  "name": "logo-reveal",
+  "label": "D&D Brand Co. logo animation (client upsell)",
+  "recipes": ["illustrated-type"],
+  "brief": {
+    "Client / brand": "D&D Brand Co. client",
+    "Goal (one sentence)": "Give the client's new logo a 3–5 s signature reveal they can use everywhere.",
+    "Deliverables": "16:9 reveal (MP4) + transparent overlay (WebM alpha + ProRes 4444) + still",
+    "Where it will be used": "Video intros and outros, social, presentations",
+    "Must-say copy / CTA": "Logo + tagline (optional)",
+    "Audio": "Optional 1 s sound logo",
+    "Look & feel references": "Ben Marriott: shape morphs, ink and paper; or clean geometric build"
+  },
+  "deliverables": [
+    { "name": "Logo reveal 16:9", "type": "motion", "composition": "", "format": "16x9", "seconds": 4, "fps": 30, "preset": "4k", "complexity": "high", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 },
+    { "name": "Logo reveal alpha", "type": "motion", "composition": "", "format": "16x9", "seconds": 4, "fps": 30, "preset": "alpha", "complexity": "high", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 },
+    { "name": "Logo still", "type": "still", "composition": "", "count": 1, "preset": "still-4k", "complexity": "simple" }
+  ],
+  "storyboard": {
+    "format": "16x9",
+    "fps": 30,
+    "panels": [
+      { "id": "1", "title": "Build", "seconds": 1.5, "shot": "Graphic", "camera": "static", "source": "motion", "action": "The mark's shapes draw on or morph in (evolvePath / shape morph).", "draw": [{ "type": "circle", "x": 50, "y": 50, "r": 18 }, { "type": "arrow", "x1": 20, "y1": 80, "x2": 40, "y2": 60, "label": "draw on" }] },
+      { "id": "2", "title": "Resolve", "seconds": 1.5, "shot": "Graphic", "camera": "push-in", "source": "motion", "action": "Logo locks into place; wordmark slides in.", "audio": "Sound logo", "draw": [{ "type": "logo", "x": 30, "y": 40, "w": 40, "h": 18, "text": "LOGO" }] },
+      { "id": "3", "title": "Hold", "seconds": 1, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Hold with tagline; clean last frame for a still.", "onScreenText": "<tagline>", "draw": [{ "type": "logo", "x": 30, "y": 36, "w": 40, "h": 18, "text": "LOGO" }, { "type": "text", "x": 50, "y": 66, "text": "tagline", "size": 4, "weight": 500 }] }
+    ]
+  },
+  "spec": {
+    "hardRules": ["Use the client's vector logo (SVG); vectorise a raster logo with the Adobe connector's image_vectorize if needed.", "Brand colours exactly as the brand guide.", "Last frame equals the static logo (usable as a still)."],
+    "visualNotes": ["Recipe: illustrated-type (shape morphs with @remotion/paths) or a clean geometric build."],
+    "qaChecklist": ["Alpha exports composite cleanly over black and white.", "Logo proportions untouched.", "Reveal under 5 s."]
+  }
+}

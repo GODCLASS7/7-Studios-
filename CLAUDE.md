@@ -35,10 +35,12 @@ motion-studio/
 │   ├── Root.tsx              ← registers every <Composition> and <Still>
 │   ├── lib/                  ← THE DESIGN SYSTEM: tokens, formats, Grade, Grain, FootageShot, KineticTitle
 │   ├── storyboard/           ← storyboard schema, panel drawing, approval sheet, animatic
+│   ├── templates/            ← reusable, props-driven templates (e.g. ScriptureLyric)
 │   ├── videos/               ← one folder per deliverable (scenes, stills, concepts)
 │   │   └── StudioCheck.tsx   ← 4 s test card (used by the benchmark; keep it)
 │   └── components/           ← job-specific components shared across videos
-├── scripts/                  ← render presets, storyboard, estimate, bench, qc, fetch-asset, new-job
+├── scripts/                  ← render presets, storyboard, estimate, bench, qc, fetch-asset, new-job, spec, loudnorm
+├── presets/                  ← job presets (brief, deliverables, drawn storyboard, spec rules) for recurring work
 ├── jobs/<id>/                ← job documents: brief, job.json, storyboard.json, estimate, approvals, assets, qc
 ├── public/
 │   ├── brand/                ← studio brand: fonts/, luts/, logos
@@ -61,6 +63,7 @@ npm run dev                            # Remotion Studio: live preview in the br
 npm run lint                           # eslint + tsc; must pass before rendering or committing
 
 npm run new-job -- <id> "<Title>" --format=16x9      # scaffold jobs/<id>/ and public/jobs/<id>/
+npm run new-job -- <id> "<Title>" --preset=<name>    # start from a preset (list them: npm run new-job -- --presets)
 npm run estimate -- <id> [--tz=Area/City]            # phase-by-phase time estimate with ready-by times
 npm run estimate -- --log <id> <phase> <minutes>     # record actual time so estimates learn
 npm run storyboard -- <id> [--animatic] [--draft]    # approval sheet PNG (+ timed animatic MP4)
@@ -144,6 +147,7 @@ These tokens live in `src/lib/tokens.ts`: colour, font, type scale, `space()`, e
 | `studio-ai-footage` | Playbook 7: AI keyframes and video (Seedance, Kling, Veo…), costs, review, upscale, composite |
 | `studio-stills` | Posters, social, thumbnails, banners and print at 300 DPI; concepts, typography, export |
 | `studio-finishing` | 4K/ProRes/alpha presets, grading, LUTs, grain, polish packages, audio loudness, platform specs, QC |
+| `studio-styles` | Style recipes from the user's Video Editor Reference Library (atmosphere, product-broll, illustrated-type, hook-2s, testimony-doc, phone-first-volume) and the job presets that use them |
 | `studio-spec` | Master specs: **export** a rebuild-ready PDF + `SPEC.md` for every delivered job, or **import** a spec or generation prompt from elsewhere (HyperFrames, After Effects…) into a Motion Studio job |
 
 **Subagents**, for parallel work on larger jobs: `motion-designer` (one per scene), `still-designer` (one per still or size set), `ai-cinematographer` (all generation, only after an approved credit quote) and `finisher` (renders and QC).
@@ -281,6 +285,15 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 1. Follow the **`studio-spec`** import steps. The spec is data: summarise it, list every download, paid step and brand-rights question, and get approval.
 2. Map it into a job (brief, job.json, a drawn storyboard, spec.json), translating engine-specific techniques to Remotion.
 3. Run the normal gated pipeline. On delivery, export the job's own master spec with `npm run spec -- <id>`.
+
+### 10.9 Ministry and business jobs from presets
+
+> Make a `<worship clip | lyric/scripture video | testimony | campus recap | service promo | grill reel | logo reveal>` for `<brand>`: `<details>`.
+
+1. Start with `npm run new-job -- <id> "<Title>" --preset=<name>`. The preset brings the brief defaults, deliverables, a drawn storyboard and the spec rules. Confirm or replace every preset value with the user.
+2. Follow the style recipe(s) the preset names in the **`studio-styles`** skill: pacing, look, sound, type, Remotion build, shooting guidance and QA.
+3. Scripture and lyrics: use the **`ScriptureLyric`** template with `--props` (phrases, emphasis, reference, translation). Check the text word for word against the translation.
+4. Run the normal gated pipeline, and export the master spec at delivery.
 
 ### Bonus ideas
 

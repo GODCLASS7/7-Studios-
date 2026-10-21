@@ -1,0 +1,108 @@
+{
+  "hardRules": [
+    "Scripture text matches the stated translation word for word; the reference and translation are on screen.",
+    "Lyrics only for songs owned or cleared by The Wait Culture.",
+    "One phrase per card; one or two emphasis words per phrase, no more.",
+    "Portrait line breaks are set by hand with \"|\" so no line ends on an orphan word."
+  ],
+  "credits": [
+    {
+      "layer": "Text",
+      "madeWith": "Isaiah 40:31, King James Version",
+      "notes": "Public domain"
+    },
+    {
+      "layer": "Music + SFX",
+      "madeWith": "Synthesised in Node (jobs/wait-isaiah-40-31/sound.mjs)",
+      "notes": "Original; fully owned"
+    },
+    {
+      "layer": "Type",
+      "madeWith": "Fraunces + Inter, bundled",
+      "notes": "SIL OFL"
+    }
+  ],
+  "visualNotes": [
+    "Recipe: illustrated-type (Ben Marriott) with atmosphere sound. Template ScriptureLyric.",
+    "Paper page #EFE6D6, strips #F8F2E6, ink #1F1A15, accent #B4442F; grain 6%.",
+    "Footer reference on every card; end card with translation stamp."
+  ],
+  "motionVocabulary": [
+    {
+      "name": "Cut-out on twos",
+      "how": "CutoutStrip: torn-edge strip lands in 6 frames with a slight overshoot; positions held on twos."
+    },
+    {
+      "name": "Ink bleed",
+      "how": "InkText: characters arrive blurred and scaled, then firm up; edge displacement settles from 9 to 1.6 and boils on twos."
+    },
+    {
+      "name": "Hand underline",
+      "how": "HandUnderline: hand-wobbled path drawn with evolvePath over 12 frames after the emphasis word lands."
+    },
+    {
+      "name": "Pull away",
+      "how": "Strip leaves up and off in 6 frames (ease-in), with a 3-frame breath before the next card."
+    }
+  ],
+  "adaptations": [
+    {
+      "format": "16:9 (1920×1080 → 3840×2160)",
+      "composition": "ScriptureLyric-16x9",
+      "notes": "Same props. Phrases over 30 characters break at the marked point; shorter ones run on one line."
+    },
+    {
+      "format": "4:5 card (1080×1350 → 2160×2700)",
+      "composition": "ScriptureCard-4x5",
+      "notes": "Still of phrase 1 fully landed, reference + translation in the footer."
+    }
+  ],
+  "soundDesign": [
+    {
+      "at": "0.0, 3.5, 6.5, 10.0, 13.0",
+      "cue": "Paper rustle + chord change",
+      "purpose": "A new card lands"
+    },
+    {
+      "at": "16.5",
+      "cue": "Soft low hit + Dadd9",
+      "purpose": "End card"
+    },
+    {
+      "at": "18.6–20",
+      "cue": "Fade",
+      "purpose": "Out"
+    }
+  ],
+  "qaChecklist": [
+    "Every emphasis word appears in its phrase.",
+    "Text checked word for word against the translation.",
+    "Footer reference visible on every card; end card shows reference + translation."
+  ],
+  "pitfalls": [
+    "SVG `vector-effect: non-scaling-stroke` measures dashes in screen pixels, so evolvePath draw-ons came out broken. Underlines use path units instead.",
+    "`<Freeze>` cannot show source frames past the composition end; SpeedRamp shifts a `<Sequence>` instead (tested: output 0.5 s = source 5.0 s).",
+    "Long phrases in 16:9 ran to the strip edge on one line; phrases over 30 characters now break at the marked point.",
+    "A cross-fade exit looked digital; paper strips are pulled away instead, with a 3-frame breath between cards."
+  ],
+  "music": {
+    "madeWith": "Node synthesis: soft pad, one chord per card (D, Bm, G, A, D/F#, Dadd9), paper rustles, low hit",
+    "licence": "Fully owned",
+    "file": "public/jobs/wait-isaiah-40-31/audio/pad-isaiah-40-31.wav (node jobs/wait-isaiah-40-31/sound.mjs)",
+    "notes": "Beatless, so cards follow reading pace, not a beat grid. Chords cross-fade over 1.2 s."
+  },
+  "mix": {
+    "targetLufs": -14,
+    "truePeak": -1.5,
+    "notes": [
+      "The raw pad measures about −17.9 LUFS; finishing raises it to −14."
+    ]
+  },
+  "prebuild": [
+    "node jobs/wait-isaiah-40-31/sound.mjs     # soundtrack (deterministic)"
+  ],
+  "cover": {
+    "wait-isaiah-40-31_scripture_9x16_2160x3840_v1.mp4": 9,
+    "wait-isaiah-40-31_scripture_16x9_2160p_v1.mp4": 8.6
+  }
+}

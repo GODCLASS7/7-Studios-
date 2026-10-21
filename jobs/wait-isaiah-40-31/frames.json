@@ -1,0 +1,103 @@
+{
+  "kind": "frames",
+  "project": "The Wait Culture — Isaiah 40:31",
+  "client": "The Wait Culture",
+  "version": 1,
+  "date": "2026-10-21",
+  "format": "9x16",
+  "fps": 30,
+  "status": "approved",
+  "notes": "Final frames captured from the rendered ScriptureLyric-9x16 (4K), one per storyboard panel, for comparison with storyboard v1.",
+  "panels": [
+    {
+      "id": "1",
+      "title": "Wait",
+      "seconds": 3.5,
+      "shot": "Graphic",
+      "camera": "static",
+      "source": "motion",
+      "action": "Frame 80 (2.7 s). Strip lands; phrase inks in; \"wait\" underlined in red.",
+      "onScreenText": "But they that wait upon the LORD",
+      "audio": "Pad in (D); paper rustle",
+      "capture": {
+        "composition": "ScriptureLyric-9x16",
+        "frame": 80
+      }
+    },
+    {
+      "id": "2",
+      "title": "Renew",
+      "seconds": 3,
+      "shot": "Graphic",
+      "camera": "static",
+      "source": "motion",
+      "action": "Frame 175 (5.8 s). Previous strip pulled away; next lands; \"renew\" underlined.",
+      "onScreenText": "shall renew their strength;",
+      "audio": "Bm; rustle",
+      "capture": {
+        "composition": "ScriptureLyric-9x16",
+        "frame": 175
+      }
+    },
+    {
+      "id": "3",
+      "title": "Wings",
+      "seconds": 3.5,
+      "shot": "Graphic",
+      "camera": "static",
+      "source": "motion",
+      "action": "Frame 280 (9.3 s). \"wings\" underlined.",
+      "onScreenText": "they shall mount up with wings as eagles;",
+      "audio": "G; rustle",
+      "capture": {
+        "composition": "ScriptureLyric-9x16",
+        "frame": 280
+      }
+    },
+    {
+      "id": "4",
+      "title": "Run",
+      "seconds": 3,
+      "shot": "Graphic",
+      "camera": "static",
+      "source": "motion",
+      "action": "Frame 370 (12.3 s). \"run\" underlined.",
+      "onScreenText": "they shall run, and not be weary;",
+      "audio": "A; rustle",
+      "capture": {
+        "composition": "ScriptureLyric-9x16",
+        "frame": 370
+      }
+    },
+    {
+      "id": "5",
+      "title": "Walk",
+      "seconds": 3.5,
+      "shot": "Graphic",
+      "camera": "static",
+      "source": "motion",
+      "action": "Frame 475 (15.8 s). \"walk\" underlined.",
+      "onScreenText": "and they shall walk, and not faint.",
+      "audio": "D/F#; rustle",
+      "capture": {
+        "composition": "ScriptureLyric-9x16",
+        "frame": 475
+      }
+    },
+    {
+      "id": "6",
+      "title": "End card",
+      "seconds": 3.5,
+      "shot": "Graphic",
+      "camera": "static",
+      "source": "motion",
+      "action": "Frame 570 (19.0 s). Reference inks in; KJV stamp; overline; fade.",
+      "onScreenText": "Isaiah 40:31 · KJV · THE WAIT CULTURE",
+      "audio": "Dadd9; soft low hit; fade",
+      "capture": {
+        "composition": "ScriptureLyric-9x16",
+        "frame": 570
+      }
+    }
+  ]
+}

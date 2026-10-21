@@ -1,0 +1,38 @@
+{
+  "name": "worship-clip",
+  "label": "Worship With Me session clip",
+  "recipes": ["atmosphere"],
+  "brief": {
+    "Client / brand": "Worship With Me",
+    "Goal (one sentence)": "Carry the feeling of the session in under a minute so people come to the next one.",
+    "Deliverables": "9:16 clip, 30–60 s",
+    "Where it will be used": "Instagram Reels, TikTok, YouTube Shorts",
+    "Must-say copy / CTA": "Song title; next session date",
+    "Audio": "The live session audio leads; no added music over singing",
+    "Look & feel references": "Peter McKinnon: sound-led atmosphere, one house look"
+  },
+  "deliverables": [
+    { "name": "Worship clip 9:16", "type": "motion", "composition": "", "format": "9x16", "seconds": 45, "fps": 30, "preset": "4k", "complexity": "medium", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 }
+  ],
+  "storyboard": {
+    "format": "9x16",
+    "fps": 30,
+    "panels": [
+      { "id": "1", "title": "The room", "seconds": 6, "shot": "Wide", "camera": "push-in", "source": "footage", "action": "First chord rings; wide of the room, slow push-in.", "audio": "Room tone into the first chord", "draw": [{ "type": "horizon", "y": 70 }, { "type": "figure", "x": 30, "y": 70, "h": 22 }, { "type": "figure", "x": 50, "y": 70, "h": 24 }, { "type": "figure", "x": 70, "y": 70, "h": 22 }] },
+      { "id": "2", "title": "The voice", "seconds": 12, "shot": "Medium", "camera": "static", "source": "footage", "action": "Lead vocalist mid-phrase; cut only at the phrase end.", "onScreenText": "<Song title>", "audio": "Live vocal", "draw": [{ "type": "figure", "x": 50, "y": 85, "h": 55 }, { "type": "rect", "x": 10, "y": 76, "w": 50, "h": 6, "label": "song title" }] },
+      { "id": "3", "title": "Hands and faces", "seconds": 10, "shot": "Close", "camera": "handheld", "source": "footage", "action": "Raised hands and faces, held long enough to feel.", "audio": "Chorus", "draw": [{ "type": "circle", "x": 40, "y": 40, "r": 12 }, { "type": "circle", "x": 64, "y": 46, "r": 10 }] },
+      { "id": "4", "title": "The build", "seconds": 10, "shot": "Wide", "camera": "crane-up", "source": "footage", "action": "Bridge swells; reveal of the whole room.", "audio": "Bridge swell", "draw": [{ "type": "horizon", "y": 62 }, { "type": "figure", "x": 25, "y": 62, "h": 14 }, { "type": "figure", "x": 45, "y": 62, "h": 14 }, { "type": "figure", "x": 65, "y": 62, "h": 14 }, { "type": "figure", "x": 82, "y": 62, "h": 14 }] },
+      { "id": "5", "title": "End card", "seconds": 7, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Series title; next session date.", "onScreenText": "Worship With Me · <next date>", "audio": "Last chord rings out", "draw": [{ "type": "text", "x": 50, "y": 45, "text": "WORSHIP WITH ME", "size": 6 }, { "type": "text", "x": 50, "y": 56, "text": "next session", "size": 3.5, "weight": 500 }] }
+    ]
+  },
+  "spec": {
+    "hardRules": [
+      "One house look for the series: Grade look=\"worship\" (or the series LUT) on every clip.",
+      "Cut on the music: phrase ends and breaths, never mid-word or mid-note.",
+      "No added music or SFX over singing; lyrics on screen only if cleared."
+    ],
+    "visualNotes": ["Recipe: atmosphere (Peter McKinnon). Footage via FootageShot + Grade look=worship + Grain 0.05."],
+    "motionVocabulary": [{ "name": "Slow push", "how": "FootageShot move fromScale 1 → toScale 1.05 across the shot." }],
+    "qaChecklist": ["Grade matches the previous Worship With Me post side by side.", "Every cut lands on a phrase end or breath.", "Loudness −14 LUFS with the vocal clean."]
+  }
+}

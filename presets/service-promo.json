@@ -1,0 +1,33 @@
+{
+  "name": "service-promo",
+  "label": "Service theme teaser (Men's Month, Carols, 31st Night)",
+  "recipes": ["hook-2s", "illustrated-type"],
+  "brief": {
+    "Goal (one sentence)": "Stop the scroll and make people save the date.",
+    "Deliverables": "8–12 s 9:16 teaser + 16:9 + 4:5 poster",
+    "Where it will be used": "Reels, Status, YouTube, screens in church",
+    "Must-say copy / CTA": "Theme, date, time, venue",
+    "Audio": "Riser into a hit on the reveal",
+    "Look & feel references": "Mks.Vision practical transitions; Ben Marriott type"
+  },
+  "deliverables": [
+    { "name": "Teaser 9:16", "type": "motion", "composition": "", "format": "9x16", "seconds": 10, "fps": 30, "preset": "4k", "complexity": "medium", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 },
+    { "name": "Teaser 16:9", "type": "motion", "composition": "", "format": "16x9", "seconds": 10, "fps": 30, "preset": "4k", "complexity": "medium", "aiVideoShots": 0, "aiImages": 0, "upscaleShots": 0 },
+    { "name": "Poster 4:5", "type": "still", "composition": "", "count": 1, "preset": "still-4k", "complexity": "medium" }
+  ],
+  "storyboard": {
+    "format": "9x16",
+    "fps": 30,
+    "panels": [
+      { "id": "1", "title": "Hook", "seconds": 2, "shot": "Close", "camera": "static", "source": "footage", "action": "Practical transition in camera: lights switch, a turn or a door reveals the theme.", "audio": "Riser, 0.2 s silence, hit", "draw": [{ "type": "rect", "x": 15, "y": 25, "w": 70, "h": 50, "label": "door / light" }, { "type": "arrow", "x1": 20, "y1": 50, "x2": 80, "y2": 50, "label": "reveal" }] },
+      { "id": "2", "title": "Theme", "seconds": 3, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Theme title slams in on the hit.", "onScreenText": "<Theme>", "draw": [{ "type": "text", "x": 50, "y": 50, "text": "THEME", "size": 12 }] },
+      { "id": "3", "title": "Details", "seconds": 3, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Date, time and venue, one line each.", "onScreenText": "<Date> · <Time> · <Venue>", "draw": [{ "type": "text", "x": 50, "y": 40, "text": "DATE", "size": 6 }, { "type": "text", "x": 50, "y": 52, "text": "TIME", "size": 6 }, { "type": "text", "x": 50, "y": 64, "text": "VENUE", "size": 6 }] },
+      { "id": "4", "title": "End card", "seconds": 2, "shot": "Graphic", "camera": "static", "source": "motion", "action": "Church logo; loops back to the hook.", "draw": [{ "type": "logo", "x": 30, "y": 42, "w": 40, "h": 14, "text": "LOGO" }] }
+    ]
+  },
+  "spec": {
+    "hardRules": ["Motion or a reveal in frame 1; never open on a logo.", "Payoff visible by 2.0 s.", "Date, time and venue checked against the church calendar."],
+    "visualNotes": ["Recipes: hook-2s (practical transition shot in camera) + illustrated-type titles."],
+    "qaChecklist": ["The first 2 s make sense with sound off.", "Details readable at 0.5× scale.", "Loops cleanly from end to start."]
+  }
+}

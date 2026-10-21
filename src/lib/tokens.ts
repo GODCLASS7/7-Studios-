@@ -14,6 +14,11 @@ loadFont({
 });
 const inter = { fontFamily: `${INTER}, Helvetica, Arial, sans-serif` };
 
+// Fraunces: a warm variable serif for scripture, lyrics and editorial titles (SIL OFL).
+const FRAUNCES = "Fraunces";
+loadFont({ family: FRAUNCES, url: staticFile("brand/fonts/Fraunces-Variable-latin.woff2"), weight: "300 900", style: "normal" });
+loadFont({ family: FRAUNCES, url: staticFile("brand/fonts/Fraunces-Italic-Variable-latin.woff2"), weight: "300 900", style: "italic" });
+
 export const color = {
   bg: "#0B0B0D",
   surface: "#17171B",
@@ -28,6 +33,7 @@ export const color = {
 export const font = {
   display: inter.fontFamily,
   body: inter.fontFamily,
+  serif: `${FRAUNCES}, Georgia, "Times New Roman", serif`,
 } as const;
 
 // Type scale in px at the 1080p authoring size (rendered 2x for 4K).
