@@ -73,6 +73,10 @@ else
   echo ".env already exists; left as it is."
 fi
 
+# Unzipping can drop the "runnable" mark, and macOS may hold back a downloaded launcher.
+chmod +x "7 Studios.command" scripts/*.sh 2>/dev/null || true
+if $MAC; then xattr -d com.apple.quarantine "7 Studios.command" 2>/dev/null || true; fi
+
 say "History"
 if [ -d .git ]; then
   echo "Git history already there."
@@ -81,10 +85,6 @@ elif ! git --version >/dev/null 2>&1; then
 else
   git init -q && git add -A && git -c user.name="7-studios" -c user.email="studio@localhost" commit -qm "Start 7 Studios" && echo "Started a git history. Push it to a private repo for a backup (npm run doctor shows how)."
 fi
-
-# Unzipping can drop the "runnable" mark, and macOS may hold back a downloaded launcher.
-chmod +x "7 Studios.command" scripts/*.sh 2>/dev/null || true
-if $MAC; then xattr -d com.apple.quarantine "7 Studios.command" 2>/dev/null || true; fi
 
 say "Check"
 npm run --silent doctor || true
