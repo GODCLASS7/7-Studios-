@@ -437,7 +437,7 @@ const orbit = (edl.orbit || []).map((o) => {
 });
 
 // Inserts (src/inserts): app window, profile follow, file scroll.
-const INSERTS = ["app-window", "profile-follow", "file-scroll"];
+const INSERTS = ["app-window", "profile-follow", "file-scroll", "terminal"];
 const inserts = (edl.inserts || []).map((i) => {
   if (!INSERTS.includes(i.kind)) throw new Error(`Unknown insert "${i.kind}" (${INSERTS.join(", ")})`);
   if (i.credit === undefined && i.own === false) throw new Error(`insert ${i.kind}: someone else's content needs "credit": "@handle"`);

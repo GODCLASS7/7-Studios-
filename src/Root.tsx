@@ -23,6 +23,18 @@ import {
 } from "./templates/Tutorial/Tutorial";
 import { TestScreen } from "./videos/TestScreen";
 import {
+  ArtStyles,
+  artStylesDefaults,
+  artStylesSchema,
+  calcArtStyles,
+} from "./artstyles/ArtStyles";
+import {
+  calcSiteMorph,
+  SiteMorph,
+  siteMorphDefaults,
+  siteMorphSchema,
+} from "./templates/SiteMorph/SiteMorph";
+import {
   calcCarousel,
   Carousel,
   carouselDefaults,
@@ -302,6 +314,61 @@ export const RemotionRoot: React.FC = () => {
       />
 
       {/* Template: carousel posts, one slide per frame (npm run carousel -- <id> render). */}
+      <Composition
+        id="SiteMorph-1x1"
+        component={SiteMorph}
+        durationInFrames={960}
+        fps={60}
+        width={1080}
+        height={1080}
+        schema={siteMorphSchema}
+        defaultProps={siteMorphDefaults}
+        calculateMetadata={calcSiteMorph}
+      />
+      <Composition
+        id="SiteMorph-9x16"
+        component={SiteMorph}
+        durationInFrames={960}
+        fps={60}
+        width={1080}
+        height={1920}
+        schema={siteMorphSchema}
+        defaultProps={siteMorphDefaults}
+        calculateMetadata={calcSiteMorph}
+      />
+      <Composition
+        id="SiteMorph-16x9"
+        component={SiteMorph}
+        durationInFrames={960}
+        fps={60}
+        width={1920}
+        height={1080}
+        schema={siteMorphSchema}
+        defaultProps={siteMorphDefaults}
+        calculateMetadata={calcSiteMorph}
+      />
+      <Composition
+        id="ArtStyles-9x16"
+        component={ArtStyles}
+        durationInFrames={525}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={artStylesSchema}
+        defaultProps={artStylesDefaults}
+        calculateMetadata={calcArtStyles}
+      />
+      <Composition
+        id="ArtStyles-16x9"
+        component={ArtStyles}
+        durationInFrames={525}
+        fps={30}
+        width={1920}
+        height={1080}
+        schema={artStylesSchema}
+        defaultProps={artStylesDefaults}
+        calculateMetadata={calcArtStyles}
+      />
       <Composition
         id="Carousel-4x5"
         component={Carousel}
