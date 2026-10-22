@@ -3,8 +3,9 @@
 #
 #   bash scripts/install.sh
 #
-# Checks Node and ffmpeg (installs them with Homebrew on a Mac that has it; on Linux it
-# prints the command, since that needs your password), installs the packages, builds
+# Checks Node and ffmpeg (installs them with Homebrew on a Mac, and says how to get
+# Homebrew if it's missing; on Linux it prints the command, since that needs your
+# password), installs the packages, builds
 # the sound-effects pack, creates .env from the template (no keys: add your own), starts
 # a git history if there isn't one, and ends with `npm run doctor`. Safe to run again.
 set -euo pipefail
@@ -12,10 +13,27 @@ cd "$(dirname "$0")/.."
 
 say() { printf '\n▸ %s\n' "$*"; }
 have() { command -v "$1" >/dev/null 2>&1; }
+MAC=false; [ "$(uname)" = "Darwin" ] && MAC=true
+
+if $MAC; then
+  # Homebrew on Apple silicon lives in /opt/homebrew, which new Terminal windows only
+  # find once ~/.zprofile says so (Homebrew's own "next steps").
+  if ! have brew && [ -x /opt/homebrew/bin/brew ]; then eval "$(/opt/homebrew/bin/brew shellenv)"; fi
+  if [ -x /opt/homebrew/bin/brew ] && ! grep -qs "brew shellenv" "$HOME/.zprofile"; then
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zprofile"
+    echo "Added Homebrew to ~/.zprofile, so new Terminal windows find Node and ffmpeg."
+  fi
+  if ! have brew && { ! have node || ! have ffmpeg; }; then
+    echo "This Mac needs Homebrew first: it installs Node and ffmpeg. Paste this line, press Return and follow its steps:"
+    echo '  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+    echo "Then close Terminal, open it again in this folder and run: bash scripts/install.sh"
+    exit 1
+  fi
+fi
 
 say "Node"
 if ! have node; then
-  if [ "$(uname)" = "Darwin" ] && have brew; then
+  if $MAC; then
     brew install node@22 && brew link --overwrite node@22
   else
     echo "Node is not installed. Install Node 22 LTS from https://nodejs.org (or: sudo apt install nodejs npm), then run this again."
@@ -27,7 +45,7 @@ node --version
 
 say "ffmpeg"
 if ! have ffmpeg; then
-  if [ "$(uname)" = "Darwin" ] && have brew; then
+  if $MAC; then
     brew install ffmpeg
   else
     echo "ffmpeg is not installed. Run: sudo apt install ffmpeg   (or your system's package manager), then run this again."
@@ -56,14 +74,20 @@ else
 fi
 
 say "History"
-if [ ! -d .git ]; then
-  git init -q && git add -A && git -c user.name="7-studios" -c user.email="studio@localhost" commit -qm "Start 7 Studios" && echo "Started a git history. Push it to a private repo for a backup (npm run doctor shows how)."
-else
+if [ -d .git ]; then
   echo "Git history already there."
+elif ! git --version >/dev/null 2>&1; then
+  echo "Skipped: git isn't installed (on a Mac: xcode-select --install). The studio works without it."
+else
+  git init -q && git add -A && git -c user.name="7-studios" -c user.email="studio@localhost" commit -qm "Start 7 Studios" && echo "Started a git history. Push it to a private repo for a backup (npm run doctor shows how)."
 fi
+
+# Unzipping can drop the "runnable" mark, and macOS may hold back a downloaded launcher.
+chmod +x "7 Studios.command" scripts/*.sh 2>/dev/null || true
+if $MAC; then xattr -d com.apple.quarantine "7 Studios.command" 2>/dev/null || true; fi
 
 say "Check"
 npm run --silent doctor || true
 echo
 echo "Done. Open 7 Studios with: npm run app   (or double-click \"7 Studios.command\")"
-[ "$(uname)" = "Darwin" ] && echo "Put it in your Dock as an app: bash scripts/make-mac-app.sh"
+if $MAC; then echo "Put it in your Dock as an app: bash scripts/make-mac-app.sh"; fi

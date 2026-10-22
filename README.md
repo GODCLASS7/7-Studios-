@@ -51,7 +51,9 @@ Claude follows `.claude/skills/studio/SKILL.md`: an estimate with ready-by times
 
 ## Setting up a computer
 
-Unzip the project, open a terminal in its folder and paste one line:
+**Step by step, for a Mac:** [INSTALL.md](INSTALL.md) (Homebrew, the installer, opening the app, the Dock icon, and fixes for common problems).
+
+In short: unzip the project, open a terminal in its folder and paste one line:
 - Mac or Linux: `bash scripts/install.sh`
 - Windows (PowerShell): `powershell -ExecutionPolicy Bypass -File scripts\install.ps1`
 
