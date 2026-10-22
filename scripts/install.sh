@@ -24,9 +24,15 @@ if $MAC; then
     echo "Added Homebrew to ~/.zprofile, so new Terminal windows find Node and ffmpeg."
   fi
   if ! have brew && { ! have node || ! have ffmpeg; }; then
-    echo "This Mac needs Homebrew first: it installs Node and ffmpeg. Paste this line, press Return and follow its steps:"
+    echo "This Mac needs Homebrew first: it installs Node and ffmpeg."
+    if [ "$(uname -m)" = "arm64" ]; then
+      echo "  Easiest: download the .pkg file from https://github.com/Homebrew/brew/releases/latest and double-click it."
+      echo "  Or paste this line into Terminal and follow its steps:"
+    else
+      echo "  Paste this line into Terminal, press Return and follow its steps:"
+    fi
     echo '  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-    echo "Then close Terminal, open it again in this folder and run: bash scripts/install.sh"
+    echo "Then run this setup again."
     exit 1
   fi
 fi
@@ -74,8 +80,8 @@ else
 fi
 
 # Unzipping can drop the "runnable" mark, and macOS may hold back a downloaded launcher.
-chmod +x "7 Studios.command" scripts/*.sh 2>/dev/null || true
-if $MAC; then xattr -d com.apple.quarantine "7 Studios.command" 2>/dev/null || true; fi
+chmod +x "7 Studios.command" "Install 7 Studios.command" scripts/*.sh 2>/dev/null || true
+if $MAC; then xattr -d com.apple.quarantine "7 Studios.command" "Install 7 Studios.command" 2>/dev/null || true; fi
 
 say "History"
 if [ -d .git ]; then

@@ -53,7 +53,7 @@ Claude follows `.claude/skills/studio/SKILL.md`: an estimate with ready-by times
 
 **Step by step, for a Mac:** [INSTALL.md](INSTALL.md) (Homebrew, the installer, opening the app, the Dock icon, and fixes for common problems).
 
-In short: unzip the project, open a terminal in its folder and paste one line:
+In short, on a Mac with an Apple chip: install Homebrew with its `.pkg` file, unzip the project and double-click **Install 7 Studios.command**. Or open a terminal in the folder and paste one line:
 - Mac or Linux: `bash scripts/install.sh`
 - Windows (PowerShell): `powershell -ExecutionPolicy Bypass -File scripts\install.ps1`
 
