@@ -57,3 +57,7 @@ production/lora/
 app/ui/dist/
 production/app/
 public/uploads/
+
+# Backups made for delivery (zip and git bundle)
+7-studios-project.zip
+7-studios.bundle
