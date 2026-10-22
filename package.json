@@ -1,7 +1,7 @@
 {
-  "name": "motion-studio",
+  "name": "seven-studios",
   "version": "1.0.0",
-  "description": "Motion Studio: an agentic design studio for stills and motion graphics, from storyboard to 4K master",
+  "description": "7 Studios: an agentic design studio for stills and motion graphics, from storyboard to 4K master",
   "repository": {},
   "license": "UNLICENSED",
   "engines": {
@@ -20,9 +20,11 @@
     "@remotion/motion-blur": "4.0.537",
     "@remotion/noise": "4.0.537",
     "@remotion/paths": "4.0.537",
+    "@remotion/player": "4.0.537",
     "@remotion/shapes": "4.0.537",
     "@remotion/transitions": "4.0.537",
     "@remotion/zod-types": "4.0.537",
+    "playwright-core": "1.56.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remotion": "4.0.537",
@@ -32,9 +34,11 @@
     "@remotion/eslint-config-flat": "4.0.537",
     "@types/react": "19.2.7",
     "@types/web": "0.0.166",
+    "@vitejs/plugin-react": "5.2.0",
     "eslint": "10.12.0",
     "prettier": "3.8.1",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vite": "7.3.7"
   },
   "scripts": {
     "dev": "remotion studio",

@@ -57,7 +57,7 @@ fi
 
 say "History"
 if [ ! -d .git ]; then
-  git init -q && git add -A && git -c user.name="motion-studio" -c user.email="studio@localhost" commit -qm "Start Motion Studio" && echo "Started a git history. Push it to a private repo for a backup (npm run doctor shows how)."
+  git init -q && git add -A && git -c user.name="7-studios" -c user.email="studio@localhost" commit -qm "Start 7 Studios" && echo "Started a git history. Push it to a private repo for a backup (npm run doctor shows how)."
 else
   echo "Git history already there."
 fi

@@ -1,11 +1,11 @@
 ---
 name: studio-edit
-description: Edit real footage in Motion Studio from a word-level transcript - talking heads, interviews, testimonies, sermons, vlogs, podcasts. Covers transcription (ElevenLabs Scribe, local Whisper or an imported transcript), choosing the best takes, cutting fillers and dead air, punch-ins, word-by-word captions, overlays, premium talking-head effects (liquid glass graph, pixel-monitor screen push, over-the-shoulder zoom), face tracking and automatic reframing, voice cleanup, brand kits, music with beat-snapped graphics, b-roll cutaways, finding Shorts in a long video, client review pages with timestamped notes, cut checks at every edit, approval-only publishing and timed lyric cards for songs. Use whenever raw footage or a song is the input - "edit my footage", "cut this down", "remove the ums", "add captions", "make Shorts from this sermon", "reframe this for vertical", "clean up the audio", "lyric video for my song".
+description: Edit real footage in 7 Studios from a word-level transcript - talking heads, interviews, testimonies, sermons, vlogs, podcasts. Covers transcription (ElevenLabs Scribe, local Whisper or an imported transcript), choosing the best takes, cutting fillers and dead air, punch-ins, word-by-word captions, overlays, premium talking-head effects (liquid glass graph, pixel-monitor screen push, over-the-shoulder zoom), face tracking and automatic reframing, voice cleanup, brand kits, music with beat-snapped graphics, b-roll cutaways, finding Shorts in a long video, client review pages with timestamped notes, cut checks at every edit, approval-only publishing and timed lyric cards for songs. Use whenever raw footage or a song is the input - "edit my footage", "cut this down", "remove the ums", "add captions", "make Shorts from this sermon", "reframe this for vertical", "clean up the audio", "lyric video for my song".
 ---
 
 # Editing footage from the transcript
 
-The method comes from browser-use's **video-use** (MIT): the agent never watches the video. It **reads** it: a word-level transcript is the main view, and pictures are drawn only at decision points. Motion Studio keeps that method and runs it through its own pipeline, so every edit still gets a storyboard or plan gate, an estimate, 4K finishing, QC and a master spec.
+The method comes from browser-use's **video-use** (MIT): the agent never watches the video. It **reads** it: a word-level transcript is the main view, and pictures are drawn only at decision points. 7 Studios keeps that method and runs it through its own pipeline, so every edit still gets a storyboard or plan gate, an estimate, 4K finishing, QC and a master spec.
 
 ```
 transcribe → pack (takes.md) → choose takes ⏸ → autocut → edl → review render → cutcheck → ⏸ → finals → QC → spec
@@ -133,7 +133,7 @@ Three premium effects live in `src/effects/` (adapted from the "Effect of the Da
 
 ## 3c. Looks, words behind the head, inserts and sound
 
-The guide's "/video-edit" signature looks, rebuilt in Motion Studio (src/looks, src/inserts). Set them in `edl.json`:
+The guide's "/video-edit" signature looks, rebuilt in 7 Studios (src/looks, src/inserts). Set them in `edl.json`:
 
 ```json
 "look": "bold",
@@ -141,7 +141,7 @@ The guide's "/video-edit" signature looks, rebuilt in Motion Studio (src/looks, 
 "captions": { "emphasis": ["wait"], "punch": "auto" },
 "orbit": [{ "file": "jobs/<id>/reels/reel-1.mp4" }, { "file": "jobs/<id>/reels/other.mp4", "own": false, "credit": "@theirhandle" }],
 "inserts": [
-  { "kind": "app-window", "layer": "behind", "at": 2.2, "seconds": 3, "data": { "title": "Motion Studio", "lines": ["> /video-edit", "Rendering reel.mp4 ✓"] } },
+  { "kind": "app-window", "layer": "behind", "at": 2.2, "seconds": 3, "data": { "title": "7 Studios", "lines": ["> /video-edit", "Rendering reel.mp4 ✓"] } },
   { "kind": "profile-follow", "atWord": "follow", "seconds": 3, "y": 0.62, "data": { "name": "…", "handle": "@…", "followers": 12400, "avatar": "jobs/<id>/brand/avatar.jpg" } },
   { "kind": "file-scroll", "layer": "behind", "at": 6.6, "seconds": 2, "data": { "title": "…", "paragraphs": ["…"] } }
 ],

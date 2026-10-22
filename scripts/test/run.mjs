@@ -102,7 +102,7 @@ const node = (script, args) => run("node", [script, ...args]);
 const tail = (r) => `${r.stderr || ""}${r.stdout || ""}`.trim().split("\n").slice(-3).join(" | ");
 const ffmpeg = (args) => run("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", ...args]);
 
-console.log(`\nMotion Studio tests${FULL ? " (full)" : ""}${UPDATE ? " — updating golden results" : ""}\n`);
+console.log(`\n7 Studios tests${FULL ? " (full)" : ""}${UPDATE ? " — updating golden results" : ""}\n`);
 
 // ── lint ─────────────────────────────────────────────────────────────────────
 if (want("lint")) {

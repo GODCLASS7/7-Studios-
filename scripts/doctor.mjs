@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Is this computer ready to run Motion Studio? One table of checks, each with its fix.
+// Is this computer ready to run 7 Studios? One table of checks, each with its fix.
 //
 //   node scripts/doctor.mjs [--network]
 //
@@ -92,7 +92,7 @@ if (opt.network) {
 }
 
 const icon = { ok: "✅", warn: "⚠️ ", fail: "❌" };
-console.log("\nMotion Studio doctor\n");
+console.log("\n7 Studios doctor\n");
 for (const r of rows) console.log(`${icon[r.status]} ${r.area.padEnd(20)} ${r.detail}${r.status !== "ok" && r.fix ? `\n   → ${r.fix}` : ""}`);
 const fails = rows.filter((r) => r.status === "fail").length;
 console.log(`\n${fails ? `${fails} problem(s) to fix before rendering.` : "Ready. Warnings only turn off optional features."}`);

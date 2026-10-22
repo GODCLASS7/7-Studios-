@@ -1,6 +1,6 @@
 # Pilot: real footage before going live
 
-Every Motion Studio feature has passed its tests in the cloud. Those tests use **synthetic material**:
+Every 7 Studios feature has passed its tests in the cloud. Those tests use **synthetic material**:
 - the "voice" is tone bursts;
 - the speaker is a still photo with a camera drift;
 - the music and b-roll are generated test patterns.

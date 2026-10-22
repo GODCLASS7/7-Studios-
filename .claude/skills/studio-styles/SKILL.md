@@ -1,6 +1,6 @@
 ---
 name: studio-styles
-description: Style recipes for Motion Studio, built from the user's Video Editor Reference Library. Six recipes give concrete rules for look, pacing, sound, type, the Remotion build, shooting guidance and QA. Use when choosing or describing the look and feel of a job, when a brief names an editor or style (Peter McKinnon, Daniel Schiffer, Ben Marriott, Mks.Vision, Steven Ndukwu, CapCut/phone-first), or when starting a job from a preset in presets/.
+description: Style recipes for 7 Studios, built from the user's Video Editor Reference Library. Six recipes give concrete rules for look, pacing, sound, type, the Remotion build, shooting guidance and QA. Use when choosing or describing the look and feel of a job, when a brief names an editor or style (Peter McKinnon, Daniel Schiffer, Ben Marriott, Mks.Vision, Steven Ndukwu, CapCut/phone-first), or when starting a job from a preset in presets/.
 ---
 
 # Style recipes
@@ -136,7 +136,7 @@ When the user shares 3–5 videos whose editing they like (theirs or another cre
    - the hook.
 
    Show it and ask about anything unclear.
-5. **Once approved, save it** under *Learned recipes* below, in the same table format as recipes 1–6 (Pacing, Look, Sound, Type, Remotion, Shoot, QA). Put the measured numbers in the rules, and map each rule onto Motion Studio settings, such as `edl.json` captions, `autocut --pause`, punch-in `zoom`, a `Grade` look and recipe `hook-2s`. Name the source videos in a References line.
+5. **Once approved, save it** under *Learned recipes* below, in the same table format as recipes 1–6 (Pacing, Look, Sound, Type, Remotion, Shoot, QA). Put the measured numbers in the rules, and map each rule onto 7 Studios settings, such as `edl.json` captions, `autocut --pause`, punch-in `zoom`, a `Grade` look and recipe `hook-2s`. Name the source videos in a References line.
 
 ## Rebuilding a design reference (screenshot or screen recording → motion)
 
@@ -151,7 +151,7 @@ When the user shares a design they like (a section of a site from Awwwards, a po
    - motion: what moves, in what order, how far, with what easing and timing (in frames at 30 fps).
 
    Say what's licensed (fonts, photos, logos) and therefore can't be copied.
-3. **Map it onto Motion Studio** before writing new code:
+3. **Map it onto 7 Studios** before writing new code:
    - `Cards` for card line-ups and stats;
    - `TitleFX` styles for type moments;
    - `KineticTitle`, `paper.tsx` (cut-outs, ink) and `src/effects` for the rest;

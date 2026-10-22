@@ -3,7 +3,7 @@ import type { Storyboard } from "./schema";
 // Default props for the storyboard compositions in Studio. Real jobs pass
 // their own jobs/<id>/storyboard.json with --props.
 export const sampleStoryboard: Storyboard = {
-  project: "Motion Studio — Launch Teaser",
+  project: "7 Studios — Launch Teaser",
   client: "In-house",
   version: 1,
   date: "2026-10-20",

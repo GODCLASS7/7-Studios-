@@ -171,7 +171,7 @@ async function renderNotes() {
     const p = people[n.by];
     if (p) { const img = document.createElement("img"); img.src = p.avatarUrl; img.alt = ""; who.appendChild(img); }
     const nm = document.createElement("span");
-    nm.textContent = (p && p.name) || (n.by === "claude" ? "Motion Studio" : "Someone");
+    nm.textContent = (p && p.name) || (n.by === "claude" ? "7 Studios" : "Someone");
     who.appendChild(nm);
     top.append(chip, who);
     if (db && canWrite !== false) {

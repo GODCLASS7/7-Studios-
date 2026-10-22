@@ -45,7 +45,7 @@ if (-not (Test-Path ".env")) {
 Say "History"
 if (-not (Test-Path ".git")) {
   if (Have git) {
-    git init -q; git add -A; git -c user.name="motion-studio" -c user.email="studio@localhost" commit -qm "Start Motion Studio"
+    git init -q; git add -A; git -c user.name="7-studios" -c user.email="studio@localhost" commit -qm "Start 7 Studios"
     Write-Host "Started a git history. Push it to a private repo for a backup (npm run doctor shows how)."
   } else { Write-Host "Git isn't installed (winget install Git.Git): the project has no history or backup yet." }
 } else { Write-Host "Git history already there." }

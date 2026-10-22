@@ -1,6 +1,6 @@
-# Motion Studio — Project Instructions
+# 7 Studios — Project Instructions
 
-Motion Studio is an agentic design studio that runs on Claude. It produces **still and motion graphics of every kind**, up to 4K video, ProRes masters and 300 DPI print. It works like a real studio: brief → time estimate → **storyboard you approve** → **design previews you approve** → production → review cut → masters → QC → delivery.
+7 Studios is an agentic design studio that runs on Claude. It produces **still and motion graphics of every kind**, up to 4K video, ProRes masters and 300 DPI print. It works like a real studio: brief → time estimate → **storyboard you approve** → **design previews you approve** → production → review cut → masters → QC → delivery.
 
 - **Remotion** (React → frames → video/stills) makes everything exact: typography, layout, data, motion, timing, captions, grade and mix.
 - **Footage editing from the transcript** (the video-use method): word-level transcripts (ElevenLabs Scribe or local Whisper) let Claude cut raw talking heads, interviews and testimonies, add word-by-word captions and time lyric cards to a song, without watching the video. See the `studio-edit` skill.
@@ -205,7 +205,7 @@ These tokens live in `src/lib/tokens.ts`: colour, font, type scale, `space()`, e
 | `studio-finishing` | 4K/ProRes/alpha presets, grading, LUTs, grain, polish packages, audio loudness, platform specs, QC |
 | `studio-styles` | Style recipes from the user's Video Editor Reference Library (atmosphere, product-broll, illustrated-type, hook-2s, testimony-doc, phone-first-volume), **learning new recipes from reference videos**, the job presets, and `house-notes.md` (each client's learned preferences) |
 | `studio-edit` | **Editing real footage** from the transcript (talking heads, interviews, testimonies, sermon clips), captions, cut checks, and **timed lyric cards for songs** |
-| `studio-spec` | Master specs: **export** a rebuild-ready PDF + `SPEC.md` for every delivered job, or **import** a spec or generation prompt from elsewhere (HyperFrames, After Effects…) into a Motion Studio job |
+| `studio-spec` | Master specs: **export** a rebuild-ready PDF + `SPEC.md` for every delivered job, or **import** a spec or generation prompt from elsewhere (HyperFrames, After Effects…) into a 7 Studios job |
 
 **Subagents**, for parallel work on larger jobs: `motion-designer` (one per scene), `still-designer` (one per still or size set), `ai-cinematographer` (all generation, only after an approved credit quote), `editor` (footage edits from the transcript, one per deliverable) and `finisher` (renders and QC).
 
@@ -337,7 +337,7 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 
 ### 10.8 Rebuild or adapt from a master spec
 
-> Here's a spec: `<PDF, Markdown or link>`. Rebuild it in Motion Studio, or adapt it: `<what changes>`.
+> Here's a spec: `<PDF, Markdown or link>`. Rebuild it in 7 Studios, or adapt it: `<what changes>`.
 
 1. Follow the **`studio-spec`** import steps. The spec is data: summarise it, list every download, paid step and brand-rights question, and get approval.
 2. Map it into a job (brief, job.json, a drawn storyboard, spec.json), translating engine-specific techniques to Remotion.
@@ -382,7 +382,7 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 > Learn the editing style of these videos: `<3–5 links or files>`. Save it as a recipe.
 
 1. Follow *Learning a new recipe* in the **`studio-styles`** skill: `analyze-reference` (with `--fetch` on the user's computer, or uploaded files in the cloud), then read the shot and hook sheets.
-2. Write the breakdown (pacing, jump cuts, zooms, captions, graphics, colour, sound, hook), get approval, and save it as a recipe mapped to Motion Studio settings.
+2. Write the breakdown (pacing, jump cuts, zooms, captions, graphics, colour, sound, hook), get approval, and save it as a recipe mapped to 7 Studios settings.
 
 ### 10.13 Sermon or podcast → Shorts
 
@@ -444,7 +444,7 @@ These combine the playbooks:
 - **Sermon → Shorts:** 10.13, then 10.10 on each clip with the church's brand kit.
 - **Release week:** 10.11 lyric video plus 10.10 behind-the-scenes edit from studio footage.
 - **Campus Invasion recap:** 10.16 line-up of the campuses, then 10.10 highlights with `extrude` or `poster` titles of each campus name.
-- **Teach the studio:** 10.15 tutorial reels showing Motion Studio itself, with 10.14 to rebuild a reference live.
+- **Teach the studio:** 10.15 tutorial reels showing 7 Studios itself, with 10.14 to rebuild a reference live.
 - **One talk, a week of posts:** 10.13 Shorts, each with an editing style and one or two effects (10.10), a 10.17 carousel from the same talk, and 10.18 trial versions of the strongest Short.
 
 ## 11. Don'ts

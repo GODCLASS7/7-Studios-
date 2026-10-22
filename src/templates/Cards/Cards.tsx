@@ -552,7 +552,7 @@ const CardsInner: React.FC<CardsProps> = (p) => {
 // Placeholder line-up (facts about the studio itself), so the compositions open on something real.
 export const cardsDefaults: CardsProps = {
   fps: 30,
-  title: "Motion Studio",
+  title: "7 Studios",
   kicker: "What's inside",
   mode: "carousel",
   secondsPerCard: 1.6,

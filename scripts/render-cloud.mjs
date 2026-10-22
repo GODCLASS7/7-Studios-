@@ -45,7 +45,7 @@ const npx = (args, capture = false) => {
 
 if (cmd === "setup" || cmd === "sync") {
   if (cmd === "setup") npx(["functions", "deploy", "--memory=3009", "--disk=10240", "--timeout=900"]);
-  const outText = npx(["sites", "create", "src/index.ts", "--site-name=motion-studio"], true);
+  const outText = npx(["sites", "create", "src/index.ts", "--site-name=seven-studios"], true);
   const url = outText.match(/https:\/\/\S+\/index\.html/)?.[0] || outText.match(/https:\/\/\S+/)?.[0];
   if (!url) {
     console.error(`Couldn't read the site URL from:\n${outText}`);

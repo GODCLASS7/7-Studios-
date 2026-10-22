@@ -61,7 +61,7 @@ export const brandSchema = z
   .default(null);
 
 export const HOUSE_BRAND: Brand = {
-  name: "Motion Studio",
+  name: "7 Studios",
   accent: color.accent,
   punch: "#FFD60A",
   text: color.text,

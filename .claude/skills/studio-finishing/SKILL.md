@@ -1,6 +1,6 @@
 ---
 name: studio-finishing
-description: Finishing for Motion Studio deliverables, covering 4K/ProRes/alpha render presets, colour grading and LUTs, film grain against banding, motion blur, light leaks, audio mix and loudness, delivery specs per platform, and QC. Use when rendering finals, grading, mixing audio, or preparing files for a platform or editor.
+description: Finishing for 7 Studios deliverables, covering 4K/ProRes/alpha render presets, colour grading and LUTs, film grain against banding, motion blur, light leaks, audio mix and loudness, delivery specs per platform, and QC. Use when rendering finals, grading, mixing audio, or preparing files for a platform or editor.
 ---
 
 # Finishing: from "it plays" to "it's broadcast-clean"

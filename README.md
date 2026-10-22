@@ -1,6 +1,6 @@
-# Motion Studio
+# 7 Studios
 
-Motion Studio is an agentic design studio that runs on Claude. It makes still and motion graphics of every kind, up to 4K video, ProRes masters and 300 DPI print. It works like a real studio:
+7 Studios is an agentic design studio that runs on Claude. It makes still and motion graphics of every kind, up to 4K video, ProRes masters and 300 DPI print. It works like a real studio:
 
 **Brief → time estimate → storyboard you approve → design previews you approve → production → review cut → 4K masters → QC → delivery**
 
