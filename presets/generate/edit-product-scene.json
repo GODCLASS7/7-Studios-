@@ -1,0 +1,12 @@
+{
+  "id": "edit-product-scene",
+  "name": "Product into a scene",
+  "kind": "edit",
+  "category": "Edit",
+  "description": "Place a product shot into a styled scene.",
+  "prompt": "Place the product into {subject}. Keep the product's shape, label and colors exactly the same; add a natural contact shadow and matching light.",
+  "aspect": null,
+  "tags": [],
+  "params": {},
+  "tested": false
+}

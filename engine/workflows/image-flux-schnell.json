@@ -1,0 +1,117 @@
+{
+ "_7s": {
+  "name": "FLUX.1 schnell",
+  "kind": "image",
+  "quality": "draft",
+  "licence": "Apache 2.0 (schnell only; FLUX.1 dev is non-commercial)",
+  "notes": "Fast drafts in 4 steps. About 17 GB as the fp8 checkpoint: fits a 24 GB GPU or a 32 GB Mac.",
+  "needs": [
+   {
+    "file": "flux1-schnell-fp8.safetensors",
+    "folder": "models/checkpoints",
+    "from": "https://huggingface.co/Comfy-Org/flux1-schnell"
+   }
+  ]
+ },
+ "prompt": {
+  "1": {
+   "class_type": "CheckpointLoaderSimple",
+   "inputs": {
+    "ckpt_name": "flux1-schnell-fp8.safetensors"
+   }
+  },
+  "2": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "1",
+     1
+    ],
+    "text": ""
+   },
+   "_meta": {
+    "title": "7S:prompt"
+   }
+  },
+  "3": {
+   "class_type": "CLIPTextEncode",
+   "inputs": {
+    "clip": [
+     "1",
+     1
+    ],
+    "text": ""
+   },
+   "_meta": {
+    "title": "7S:negative"
+   }
+  },
+  "4": {
+   "class_type": "EmptySD3LatentImage",
+   "inputs": {
+    "width": 1024,
+    "height": 1024,
+    "batch_size": 1
+   },
+   "_meta": {
+    "title": "7S:width,height,batch"
+   }
+  },
+  "5": {
+   "class_type": "KSampler",
+   "inputs": {
+    "model": [
+     "1",
+     0
+    ],
+    "positive": [
+     "2",
+     0
+    ],
+    "negative": [
+     "3",
+     0
+    ],
+    "latent_image": [
+     "4",
+     0
+    ],
+    "seed": 0,
+    "steps": 4,
+    "cfg": 1,
+    "sampler_name": "euler",
+    "scheduler": "simple",
+    "denoise": 1
+   },
+   "_meta": {
+    "title": "7S:seed,steps"
+   }
+  },
+  "6": {
+   "class_type": "VAEDecode",
+   "inputs": {
+    "samples": [
+     "5",
+     0
+    ],
+    "vae": [
+     "1",
+     2
+    ]
+   }
+  },
+  "7": {
+   "class_type": "SaveImage",
+   "inputs": {
+    "images": [
+     "6",
+     0
+    ],
+    "filename_prefix": "7studios"
+   },
+   "_meta": {
+    "title": "7S:prefix"
+   }
+  }
+ }
+}

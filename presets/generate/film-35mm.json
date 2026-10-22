@@ -1,0 +1,16 @@
+{
+  "id": "film-35mm",
+  "name": "35mm film look",
+  "kind": "video",
+  "category": "Look",
+  "description": "Warm, grainy film look with gentle motion.",
+  "prompt": "{subject}. Shot on 35mm film, natural film grain, warm halation around highlights, gentle handheld motion, nostalgic color",
+  "aspect": "9x16",
+  "tags": [
+    "look"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

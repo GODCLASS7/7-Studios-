@@ -1,0 +1,15 @@
+{
+  "id": "night-city",
+  "name": "Night city",
+  "kind": "image",
+  "category": "Place",
+  "description": "Wet streets and city lights after rain.",
+  "prompt": "{subject}. Night city street after rain, wet reflections, warm and teal city lights, light mist, cinematic wide shot, moody atmosphere",
+  "aspect": "9x16",
+  "tags": [
+    "place",
+    "night"
+  ],
+  "params": {},
+  "tested": false
+}

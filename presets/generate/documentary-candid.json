@@ -1,0 +1,14 @@
+{
+  "id": "documentary-candid",
+  "name": "Documentary candid",
+  "kind": "image",
+  "category": "Lifestyle",
+  "description": "Honest, unposed moment with natural light.",
+  "prompt": "{subject}. Documentary photograph, candid unposed moment, natural available light, 35mm lens, real environment, authentic textures, slight film grain",
+  "aspect": "3x2",
+  "tags": [
+    "people"
+  ],
+  "params": {},
+  "tested": false
+}

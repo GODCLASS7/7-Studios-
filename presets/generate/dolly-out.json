@@ -1,0 +1,16 @@
+{
+  "id": "dolly-out",
+  "name": "Pull back reveal",
+  "kind": "video",
+  "category": "Camera",
+  "description": "The camera pulls back to reveal the scene.",
+  "prompt": "{subject}. The camera slowly pulls back to reveal the wider scene, smooth steady motion, cinematic reveal",
+  "aspect": "9x16",
+  "tags": [
+    "camera"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

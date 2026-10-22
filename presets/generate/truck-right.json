@@ -1,0 +1,16 @@
+{
+  "id": "truck-right",
+  "name": "Side tracking",
+  "kind": "video",
+  "category": "Camera",
+  "description": "Move sideways alongside the subject.",
+  "prompt": "{subject}. The camera tracks sideways alongside the subject at walking pace, smooth gimbal motion, foreground elements passing by",
+  "aspect": "9x16",
+  "tags": [
+    "camera"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

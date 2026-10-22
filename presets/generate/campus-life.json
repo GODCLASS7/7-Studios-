@@ -1,0 +1,15 @@
+{
+  "id": "campus-life",
+  "name": "Campus life",
+  "kind": "image",
+  "category": "Lifestyle",
+  "description": "Candid, bright student life on a campus.",
+  "prompt": "{subject}. Candid lifestyle photo on a university campus, bright natural daylight, students walking, trees and brick buildings, documentary style, vibrant but natural colors",
+  "aspect": "4x5",
+  "tags": [
+    "people",
+    "campus"
+  ],
+  "params": {},
+  "tested": false
+}

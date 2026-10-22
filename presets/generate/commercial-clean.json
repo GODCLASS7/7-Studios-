@@ -1,0 +1,17 @@
+{
+  "id": "commercial-clean",
+  "name": "Clean commercial",
+  "kind": "video",
+  "category": "Look",
+  "description": "Bright, polished advertising look.",
+  "prompt": "{subject}. Bright clean commercial look, polished lighting, smooth stabilized camera move, crisp detail, vibrant but natural color",
+  "aspect": "9x16",
+  "tags": [
+    "look",
+    "product"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

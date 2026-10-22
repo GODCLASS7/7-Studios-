@@ -1,0 +1,14 @@
+{
+  "id": "cinematic-portrait",
+  "name": "Cinematic portrait",
+  "kind": "image",
+  "category": "Portrait",
+  "description": "A film-still portrait with soft key light and shallow depth of field.",
+  "prompt": "{subject}. Cinematic portrait, 85mm lens, shallow depth of field, soft key light from the side, gentle rim light, natural skin texture, subtle film grain, muted color grade",
+  "aspect": "4x5",
+  "tags": [
+    "people"
+  ],
+  "params": {},
+  "tested": false
+}

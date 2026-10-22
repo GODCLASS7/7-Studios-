@@ -1,0 +1,16 @@
+{
+  "id": "food-sizzle",
+  "name": "Food sizzle",
+  "kind": "video",
+  "category": "Motion",
+  "description": "Steam, sizzle and drips for food.",
+  "prompt": "{subject}. Close-up of sizzling food, rising steam, glistening sauce dripping in slow motion, warm light, mouth-watering",
+  "aspect": "9x16",
+  "tags": [
+    "food"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

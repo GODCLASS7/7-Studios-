@@ -1,0 +1,12 @@
+{
+  "id": "edit-background",
+  "name": "New background",
+  "kind": "edit",
+  "category": "Edit",
+  "description": "Swap the background, keep the subject untouched.",
+  "prompt": "Replace the background with {subject}. Keep the subject's face, body, pose, clothing and edges exactly as they are; match the new background's light and perspective.",
+  "aspect": null,
+  "tags": [],
+  "params": {},
+  "tested": false
+}

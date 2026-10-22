@@ -1,0 +1,15 @@
+{
+  "id": "worship-stage",
+  "name": "Worship stage",
+  "kind": "image",
+  "category": "Event",
+  "description": "A stage in haze with beams of light over a crowd.",
+  "prompt": "{subject}. Worship night stage, atmospheric haze, beams of warm and blue light, silhouettes of raised hands in the foreground, concert photography, wide angle, deep shadows",
+  "aspect": "16x9",
+  "tags": [
+    "church",
+    "event"
+  ],
+  "params": {},
+  "tested": false
+}

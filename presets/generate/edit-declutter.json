@@ -1,0 +1,12 @@
+{
+  "id": "edit-declutter",
+  "name": "Remove clutter",
+  "kind": "edit",
+  "category": "Edit",
+  "description": "Clean up distracting objects.",
+  "prompt": "Remove {subject} and fill the area naturally so it looks untouched. Keep everything else exactly the same.",
+  "aspect": null,
+  "tags": [],
+  "params": {},
+  "tested": false
+}

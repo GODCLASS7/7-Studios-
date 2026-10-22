@@ -79,7 +79,9 @@
     "carousel": "node scripts/carousel.mjs",
     "variants": "node scripts/variants.mjs",
     "posts": "node scripts/posts.mjs",
-    "install:studio": "bash scripts/install.sh"
+    "install:studio": "bash scripts/install.sh",
+    "gen": "node scripts/gen.mjs",
+    "lora": "node scripts/engine/lora.mjs"
   },
   "allowScripts": {
     "esbuild": false

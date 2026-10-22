@@ -1,0 +1,15 @@
+{
+  "id": "editorial-fashion",
+  "name": "Editorial fashion",
+  "kind": "image",
+  "category": "Editorial",
+  "description": "A magazine fashion image with a bold pose.",
+  "prompt": "{subject}. High-fashion editorial photograph, bold pose, strong graphic composition, hard flash with crisp shadows, saturated backdrop, magazine quality",
+  "aspect": "4x5",
+  "tags": [
+    "people",
+    "fashion"
+  ],
+  "params": {},
+  "tested": false
+}

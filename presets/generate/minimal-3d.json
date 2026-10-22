@@ -1,0 +1,14 @@
+{
+  "id": "minimal-3d",
+  "name": "Minimal 3D object",
+  "kind": "image",
+  "category": "Art",
+  "description": "A soft, matte 3D render of a simple object.",
+  "prompt": "{subject}. Minimal 3D render, soft matte materials, pastel palette, soft global illumination, gentle shadows, clean background, isometric-friendly composition",
+  "aspect": "1x1",
+  "tags": [
+    "3d"
+  ],
+  "params": {},
+  "tested": false
+}

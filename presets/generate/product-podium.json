@@ -1,0 +1,14 @@
+{
+  "id": "product-podium",
+  "name": "Product on a podium",
+  "kind": "image",
+  "category": "Product",
+  "description": "The product on a sculptural podium with soft shadows.",
+  "prompt": "{subject}. Product standing on a minimal stone podium, soft directional light, long soft shadows, pastel set design, studio photography, clean composition, negative space for text",
+  "aspect": "4x5",
+  "tags": [
+    "product"
+  ],
+  "params": {},
+  "tested": false
+}

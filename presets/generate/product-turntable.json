@@ -1,0 +1,16 @@
+{
+  "id": "product-turntable",
+  "name": "Product turntable",
+  "kind": "video",
+  "category": "Motion",
+  "description": "The product turns slowly on a turntable.",
+  "prompt": "{subject}. The product rotates slowly on a turntable, studio lighting with moving reflections, seamless background, locked camera",
+  "aspect": "1x1",
+  "tags": [
+    "product"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

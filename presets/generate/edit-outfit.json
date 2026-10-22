@@ -1,0 +1,12 @@
+{
+  "id": "edit-outfit",
+  "name": "Change clothing",
+  "kind": "edit",
+  "category": "Edit",
+  "description": "Change an outfit's colour or style.",
+  "prompt": "Change the clothing to {subject}. Keep the face, hair, pose, body and background unchanged; keep fabric folds and lighting realistic.",
+  "aspect": null,
+  "tags": [],
+  "params": {},
+  "tested": false
+}

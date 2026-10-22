@@ -1,0 +1,14 @@
+{
+  "id": "food-macro",
+  "name": "Food close-up",
+  "kind": "image",
+  "category": "Food",
+  "description": "Appetising macro of food with steam and texture.",
+  "prompt": "{subject}. Close-up food photography, macro lens, rich texture, visible steam, glistening highlights, warm side light, dark moody background, shallow depth of field",
+  "aspect": "4x5",
+  "tags": [
+    "food"
+  ],
+  "params": {},
+  "tested": false
+}

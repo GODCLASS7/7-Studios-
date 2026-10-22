@@ -1,0 +1,48 @@
+{
+  "_note": "Premium models for the premium engine (fal.ai queue API, FAL_KEY in .env). Every entry is UNVERIFIED until you check, on the provider's model page: the endpoint id, the input names and the price per run. Set 'price' (USD per run) yourself; 7 Studios never guesses prices. Add any model: endpoint, kind, input template ({prompt} {negative} {seed} {size_name} {ratio} {seconds} {image} {end_image}), output path.",
+  "models": [
+    {
+      "id": "fal-flux-schnell",
+      "name": "FLUX.1 schnell (hosted)",
+      "kind": "image",
+      "endpoint": "fal-ai/flux/schnell",
+      "input": { "prompt": "{prompt}", "image_size": "{size_name}", "num_images": 1, "seed": "{seed}" },
+      "output": "images[0].url",
+      "price": null,
+      "verified": false
+    },
+    {
+      "id": "fal-flux-kontext",
+      "name": "FLUX.1 Kontext (edit, hosted)",
+      "kind": "edit",
+      "needsImage": true,
+      "endpoint": "fal-ai/flux-pro/kontext",
+      "input": { "prompt": "{prompt}", "image_url": "{image}", "seed": "{seed}" },
+      "output": "images[0].url",
+      "price": null,
+      "verified": false
+    },
+    {
+      "id": "fal-kling-i2v",
+      "name": "Kling image-to-video (hosted)",
+      "kind": "video",
+      "needsImage": true,
+      "endpoint": "fal-ai/kling-video/v2.1/standard/image-to-video",
+      "input": { "prompt": "{prompt}", "image_url": "{image}", "duration": "{seconds}", "negative_prompt": "{negative}" },
+      "output": "video.url",
+      "price": null,
+      "verified": false
+    },
+    {
+      "id": "fal-wan-i2v",
+      "name": "Wan image-to-video (hosted)",
+      "kind": "video",
+      "needsImage": true,
+      "endpoint": "fal-ai/wan-i2v",
+      "input": { "prompt": "{prompt}", "image_url": "{image}", "negative_prompt": "{negative}", "seed": "{seed}" },
+      "output": "video.url",
+      "price": null,
+      "verified": false
+    }
+  ]
+}

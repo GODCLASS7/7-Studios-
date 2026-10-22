@@ -43,3 +43,11 @@ public/jobs/*/carousel/
 # Trial versions the tests build from look-test's plan (npm run variants).
 jobs/look-test-t*/
 __pycache__/
+# 7 Studios engine: generated media, the gallery index, settings for this machine,
+# requests waiting for Claude, character images and training sets.
+public/gallery/
+public/characters/
+production/gallery.json
+production/engine.json
+production/claude-requests.json
+production/lora/

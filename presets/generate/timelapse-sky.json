@@ -1,0 +1,17 @@
+{
+  "id": "timelapse-sky",
+  "name": "Time-lapse sky",
+  "kind": "video",
+  "category": "Motion",
+  "description": "Clouds and light racing over a still scene.",
+  "prompt": "{subject}. Time-lapse: clouds race across the sky and the light shifts over the scene, static locked-off camera",
+  "aspect": "16x9",
+  "tags": [
+    "motion",
+    "place"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

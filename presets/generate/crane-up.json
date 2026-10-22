@@ -1,0 +1,16 @@
+{
+  "id": "crane-up",
+  "name": "Crane up",
+  "kind": "video",
+  "category": "Camera",
+  "description": "Rise from low to high over the scene.",
+  "prompt": "{subject}. The camera cranes up smoothly from a low angle to a high wide view, revealing the space, steady and cinematic",
+  "aspect": "9x16",
+  "tags": [
+    "camera"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

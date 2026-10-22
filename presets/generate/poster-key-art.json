@@ -1,0 +1,14 @@
+{
+  "id": "poster-key-art",
+  "name": "Poster key art",
+  "kind": "image",
+  "category": "Editorial",
+  "description": "A dramatic key-art image with room for a title.",
+  "prompt": "{subject}. Dramatic key art for a poster, strong central subject, cinematic lighting, atmospheric depth, clear empty space at the top for a title, epic scale",
+  "aspect": "4x5",
+  "tags": [
+    "poster"
+  ],
+  "params": {},
+  "tested": false
+}

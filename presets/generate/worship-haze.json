@@ -1,0 +1,17 @@
+{
+  "id": "worship-haze",
+  "name": "Worship haze",
+  "kind": "video",
+  "category": "Look",
+  "description": "Haze and moving light beams over a crowd.",
+  "prompt": "{subject}. Worship night: haze drifting through moving beams of light, silhouettes of a crowd with raised hands, slow camera drift, emotional atmosphere",
+  "aspect": "16x9",
+  "tags": [
+    "church",
+    "event"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

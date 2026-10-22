@@ -1,0 +1,17 @@
+{
+  "id": "parallax-still",
+  "name": "Living still",
+  "kind": "video",
+  "category": "Camera",
+  "description": "A photo comes alive with gentle parallax and motion.",
+  "prompt": "{subject}. Subtle motion: gentle parallax between foreground and background, hair and fabric moving slightly in a breeze, slow camera drift, otherwise calm",
+  "aspect": "9x16",
+  "tags": [
+    "camera",
+    "subtle"
+  ],
+  "params": {
+    "seconds": 4
+  },
+  "tested": false
+}

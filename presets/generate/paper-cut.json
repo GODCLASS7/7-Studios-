@@ -1,0 +1,14 @@
+{
+  "id": "paper-cut",
+  "name": "Paper cut-out",
+  "kind": "image",
+  "category": "Art",
+  "description": "Layered paper illustration with real shadows.",
+  "prompt": "{subject}. Layered paper cut-out illustration, stacked colored paper with real drop shadows, craft texture, depth between layers, warm palette",
+  "aspect": "4x5",
+  "tags": [
+    "illustration"
+  ],
+  "params": {},
+  "tested": false
+}

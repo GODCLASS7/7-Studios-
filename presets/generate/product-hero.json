@@ -1,0 +1,14 @@
+{
+  "id": "product-hero",
+  "name": "Product hero",
+  "kind": "image",
+  "category": "Product",
+  "description": "A premium product shot on a seamless background.",
+  "prompt": "{subject}. Premium product photography, centered hero shot on a seamless backdrop, softbox lighting with a gentle gradient, crisp reflections, subtle shadow, high detail, commercial look",
+  "aspect": "4x5",
+  "tags": [
+    "product"
+  ],
+  "params": {},
+  "tested": false
+}

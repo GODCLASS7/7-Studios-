@@ -1,0 +1,12 @@
+{
+  "id": "edit-golden-hour",
+  "name": "Golden hour relight",
+  "kind": "edit",
+  "category": "Edit",
+  "description": "Relight the scene as warm late-afternoon sun.",
+  "prompt": "Relight the image as golden hour: warm low sun, soft long shadows, glowing highlights. {subject}. Keep every person's identity, pose and expression unchanged.",
+  "aspect": null,
+  "tags": [],
+  "params": {},
+  "tested": false
+}

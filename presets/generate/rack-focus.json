@@ -1,0 +1,16 @@
+{
+  "id": "rack-focus",
+  "name": "Rack focus",
+  "kind": "video",
+  "category": "Camera",
+  "description": "Focus shifts from foreground to the subject.",
+  "prompt": "{subject}. Static camera, the focus racks smoothly from a blurred foreground object to the sharp subject behind it, cinematic",
+  "aspect": "9x16",
+  "tags": [
+    "camera"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

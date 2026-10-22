@@ -1,0 +1,17 @@
+{
+  "id": "push-in-macro",
+  "name": "Macro push-in",
+  "kind": "video",
+  "category": "Camera",
+  "description": "A slow push into fine detail.",
+  "prompt": "{subject}. Extreme close-up, the camera pushes in very slowly on the details, macro lens, shallow focus, rich texture",
+  "aspect": "9x16",
+  "tags": [
+    "camera",
+    "product"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

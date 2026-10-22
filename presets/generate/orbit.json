@@ -1,0 +1,16 @@
+{
+  "id": "orbit",
+  "name": "Orbit",
+  "kind": "video",
+  "category": "Camera",
+  "description": "The camera circles around the subject.",
+  "prompt": "{subject}. The camera orbits slowly around the subject in a smooth half circle, the subject stays centered, background parallax, cinematic",
+  "aspect": "9x16",
+  "tags": [
+    "camera"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

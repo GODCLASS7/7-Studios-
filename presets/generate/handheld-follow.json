@@ -1,0 +1,17 @@
+{
+  "id": "handheld-follow",
+  "name": "Handheld follow",
+  "kind": "video",
+  "category": "Camera",
+  "description": "Documentary handheld following the subject.",
+  "prompt": "{subject}. Handheld camera follows the subject from behind, natural slight shake, documentary feel, real light",
+  "aspect": "9x16",
+  "tags": [
+    "camera",
+    "documentary"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

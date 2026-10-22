@@ -1,0 +1,12 @@
+{
+  "id": "edit-season",
+  "name": "Change the season",
+  "kind": "edit",
+  "category": "Edit",
+  "description": "Turn the scene into another season.",
+  "prompt": "Change the season of the scene to {subject}, with matching light, foliage and weather. Keep the people and buildings unchanged.",
+  "aspect": null,
+  "tags": [],
+  "params": {},
+  "tested": false
+}

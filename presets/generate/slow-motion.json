@@ -1,0 +1,16 @@
+{
+  "id": "slow-motion",
+  "name": "Slow motion",
+  "kind": "video",
+  "category": "Motion",
+  "description": "Graceful slow motion of the action.",
+  "prompt": "{subject}. Slow motion, 120fps look, graceful flowing movement, particles and fabric drifting, cinematic lighting",
+  "aspect": "9x16",
+  "tags": [
+    "motion"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

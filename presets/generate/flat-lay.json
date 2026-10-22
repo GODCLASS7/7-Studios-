@@ -1,0 +1,15 @@
+{
+  "id": "flat-lay",
+  "name": "Flat lay",
+  "kind": "image",
+  "category": "Product",
+  "description": "Top-down arrangement on a styled surface.",
+  "prompt": "{subject}. Top-down flat lay, neatly arranged on a linen surface, soft daylight from a window, gentle shadows, balanced composition, editorial styling",
+  "aspect": "4x5",
+  "tags": [
+    "product",
+    "lifestyle"
+  ],
+  "params": {},
+  "tested": false
+}

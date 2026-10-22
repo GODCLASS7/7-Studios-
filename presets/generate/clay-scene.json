@@ -1,0 +1,15 @@
+{
+  "id": "clay-scene",
+  "name": "Clay scene",
+  "kind": "image",
+  "category": "Art",
+  "description": "A handmade claymation-style miniature scene.",
+  "prompt": "{subject}. Handmade clay miniature scene, visible fingerprints in the clay, soft studio light, tilt-shift depth of field, playful colors, stop-motion look",
+  "aspect": "1x1",
+  "tags": [
+    "3d",
+    "playful"
+  ],
+  "params": {},
+  "tested": false
+}

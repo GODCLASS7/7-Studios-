@@ -1,0 +1,17 @@
+{
+  "id": "drone-flyover",
+  "name": "Drone flyover",
+  "kind": "video",
+  "category": "Camera",
+  "description": "Fly forward over a landscape or venue.",
+  "prompt": "{subject}. Aerial drone shot flying smoothly forward over the scene, slight descent, wide view, golden light",
+  "aspect": "16x9",
+  "tags": [
+    "camera",
+    "aerial"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

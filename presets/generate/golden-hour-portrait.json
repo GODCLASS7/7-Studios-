@@ -1,0 +1,15 @@
+{
+  "id": "golden-hour-portrait",
+  "name": "Golden hour portrait",
+  "kind": "image",
+  "category": "Portrait",
+  "description": "Warm, low sun behind the subject, glowing edges.",
+  "prompt": "{subject}. Golden hour portrait, low warm sun behind the subject, glowing hair light, soft lens flare, creamy bokeh background, natural colors, 50mm",
+  "aspect": "4x5",
+  "tags": [
+    "people",
+    "warm"
+  ],
+  "params": {},
+  "tested": false
+}

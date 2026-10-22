@@ -1,0 +1,14 @@
+{
+  "id": "interior-architecture",
+  "name": "Interior",
+  "kind": "image",
+  "category": "Place",
+  "description": "A calm architectural interior in daylight.",
+  "prompt": "{subject}. Architectural interior photograph, calm daylight through large windows, clean lines, natural materials, wide angle with straight verticals, serene mood",
+  "aspect": "16x9",
+  "tags": [
+    "place"
+  ],
+  "params": {},
+  "tested": false
+}

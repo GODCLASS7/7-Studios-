@@ -1,0 +1,14 @@
+{
+  "id": "aerial-landscape",
+  "name": "Aerial landscape",
+  "kind": "image",
+  "category": "Place",
+  "description": "A drone view over a striking landscape.",
+  "prompt": "{subject}. Aerial drone photograph, top-down view, striking natural patterns, golden light, high detail, wide landscape",
+  "aspect": "16x9",
+  "tags": [
+    "place"
+  ],
+  "params": {},
+  "tested": false
+}

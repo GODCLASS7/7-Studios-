@@ -1,0 +1,16 @@
+{
+  "id": "dolly-in",
+  "name": "Slow dolly in",
+  "kind": "video",
+  "category": "Camera",
+  "description": "The camera glides slowly toward the subject.",
+  "prompt": "{subject}. The camera slowly dollies in toward the subject, smooth and steady, shallow depth of field, cinematic",
+  "aspect": "9x16",
+  "tags": [
+    "camera"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}

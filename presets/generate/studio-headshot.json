@@ -1,0 +1,15 @@
+{
+  "id": "studio-headshot",
+  "name": "Studio headshot",
+  "kind": "image",
+  "category": "Portrait",
+  "description": "Clean professional headshot on a plain backdrop.",
+  "prompt": "{subject}. Professional studio headshot, plain warm grey backdrop, large softbox key light, catchlights in the eyes, sharp focus on the eyes, neutral color, shoulders up",
+  "aspect": "4x5",
+  "tags": [
+    "people",
+    "business"
+  ],
+  "params": {},
+  "tested": false
+}

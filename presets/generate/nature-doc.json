@@ -1,0 +1,17 @@
+{
+  "id": "nature-doc",
+  "name": "Nature documentary",
+  "kind": "video",
+  "category": "Look",
+  "description": "Calm, majestic nature documentary shot.",
+  "prompt": "{subject}. Nature documentary shot, telephoto lens, calm majestic movement, natural light, fine detail, steady tripod",
+  "aspect": "16x9",
+  "tags": [
+    "look",
+    "nature"
+  ],
+  "params": {
+    "seconds": 5
+  },
+  "tested": false
+}
