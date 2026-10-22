@@ -4,6 +4,7 @@
 # Safe to run again.
 cd "$(dirname "$0")" || exit 1
 [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+for d in /opt/homebrew/opt/ffmpeg-full/bin /usr/local/opt/ffmpeg-full/bin; do [ -x "$d/ffmpeg" ] && PATH="$d:$PATH"; done; export PATH
 if ! bash scripts/install.sh; then
   echo
   echo "Setup stopped: the message above says what's missing. Fix it, then double-click this file again."

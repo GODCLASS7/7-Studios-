@@ -3,6 +3,7 @@
 # press Ctrl+C or close the window; nothing is shared with other computers.
 cd "$(dirname "$0")" || exit 1
 [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+for d in /opt/homebrew/opt/ffmpeg-full/bin /usr/local/opt/ffmpeg-full/bin; do [ -x "$d/ffmpeg" ] && PATH="$d:$PATH"; done; export PATH
 if curl -s -o /dev/null --max-time 1 http://127.0.0.1:7777/api/status; then
   echo "7 Studios is already running: opening it."
   open "http://127.0.0.1:7777"

@@ -3,7 +3,14 @@
 
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, dirname, extname, join } from "node:path";
+import { basename, delimiter, dirname, extname, join } from "node:path";
+
+// On a Mac, Homebrew's plain ffmpeg has no text filter (drawtext) for the check sheets;
+// ffmpeg-full has it but isn't on PATH by itself, so it goes first whenever it's installed.
+for (const d of ["/opt/homebrew/opt/ffmpeg-full/bin", "/usr/local/opt/ffmpeg-full/bin"]) {
+  const path = process.env.PATH || "";
+  if (existsSync(join(d, "ffmpeg")) && !path.split(delimiter).includes(d)) process.env.PATH = d + delimiter + path;
+}
 
 export const readJson = (p, fallback) => (existsSync(p) ? JSON.parse(readFileSync(p, "utf8")) : fallback);
 export const writeJson = (p, data) => {

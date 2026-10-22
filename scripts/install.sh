@@ -50,13 +50,23 @@ node -e 'const [a,b]=process.versions.node.split(".").map(Number); if(!(a>22||(a
 node --version
 
 say "ffmpeg"
-if ! have ffmpeg; then
-  if $MAC; then
-    brew install ffmpeg
-  else
-    echo "ffmpeg is not installed. Run: sudo apt install ffmpeg   (or your system's package manager), then run this again."
-    exit 1
+if $MAC; then
+  # Homebrew's plain ffmpeg has no text filter (drawtext), which the check sheets need:
+  # ffmpeg-full has it. It isn't on PATH by itself, so it goes first, here and in ~/.zprofile.
+  FULL="$(brew --prefix ffmpeg-full 2>/dev/null)/bin"
+  [ -x "$FULL/ffmpeg" ] && export PATH="$FULL:$PATH"
+  if ! { have ffmpeg && [[ "$(ffmpeg -hide_banner -filters 2>/dev/null)" == *drawtext* ]]; }; then
+    have brew || { echo "This Mac's ffmpeg can't draw text. Install Homebrew (see INSTALL.md), then run this again."; exit 1; }
+    brew install ffmpeg-full
+    export PATH="$FULL:$PATH"
   fi
+  if [ -x "$FULL/ffmpeg" ] && ! grep -qs "ffmpeg-full/bin" "$HOME/.zprofile"; then
+    echo "export PATH=\"$FULL:\$PATH\"" >> "$HOME/.zprofile"
+    echo "Added ffmpeg-full to ~/.zprofile, so new Terminal windows use it."
+  fi
+elif ! have ffmpeg; then
+  echo "ffmpeg is not installed. Run: sudo apt install ffmpeg   (or your system's package manager), then run this again."
+  exit 1
 fi
 ffmpeg -hide_banner -version | head -1
 

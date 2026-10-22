@@ -34,13 +34,13 @@ if (linuxGnu) add("Linux compositor", existsSync("node_modules/@remotion/composi
 
 // ffmpeg
 const f = sh("ffmpeg", ["-hide_banner", "-filters"]);
-if (f.status !== 0) add("ffmpeg", "fail", "not found on PATH", "brew install ffmpeg / apt install ffmpeg / winget install Gyan.FFmpeg");
+if (f.status !== 0) add("ffmpeg", "fail", "not found on PATH", process.platform === "darwin" ? "brew install ffmpeg-full" : "apt install ffmpeg / winget install Gyan.FFmpeg");
 else {
   const need = ["blackdetect", "scdet", "tile", "afftdn", "deesser", "agate", "loudnorm", "showwavespic", "alphamerge", "drawtext"];
   const miss = need.filter((n) => !new RegExp(`\\b${n}\\b`).test(f.stdout));
   const enc = sh("ffmpeg", ["-hide_banner", "-encoders"]).stdout || "";
   const missEnc = ["libx264", "libvpx-vp9", "aac"].filter((e) => !enc.includes(e));
-  add("ffmpeg", miss.length || missEnc.length ? "fail" : "ok", miss.length || missEnc.length ? `missing ${[...miss, ...missEnc].join(", ")}` : "full build", "Install a full ffmpeg build (brew install ffmpeg)");
+  add("ffmpeg", miss.length || missEnc.length ? "fail" : "ok", miss.length || missEnc.length ? `missing ${[...miss, ...missEnc].join(", ")}` : "full build", process.platform === "darwin" ? "brew install ffmpeg-full, then run the installer again (it puts ffmpeg-full first)" : "Install a full ffmpeg build (apt install ffmpeg / winget install Gyan.FFmpeg)");
 }
 
 // Fonts

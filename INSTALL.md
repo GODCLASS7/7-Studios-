@@ -149,6 +149,7 @@ Open the **7-studios** folder in Claude Code (desktop app or terminal) and descr
 | "Port 7777 is in use" | 7 Studios is already open: go to http://127.0.0.1:7777. Or start a second copy with `npm run app -- --port=7778` |
 | The first render takes a while to start | It's downloading its own headless Chrome (once, about 100 MB) |
 | Renders are slow | Normal on a MacBook Air for 4K: use the **draft** or **review** quality while you work, keep it plugged in, and render 4K at the end |
+| The check says **ffmpeg: missing drawtext** | Homebrew's standard ffmpeg leaves out text drawing. Double-click **Install 7 Studios.command** again: it installs **ffmpeg-full** and uses it from then on |
 | Anything else | Run `npm run doctor`: it lists what's missing and the fix for each |
 
 ## Getting updates from GitHub (optional)
