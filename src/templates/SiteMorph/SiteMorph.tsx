@@ -23,7 +23,7 @@ import { colourTrack, springTracks } from "../../lib/motion";
 // rendered and checked with npm run sitemorph. 60 fps.
 //
 // Rules it keeps: real copy and colours only (from the capture); every value is a
-// pure function of the frame; text enters ~70 ms after the shape starts moving;
+// pure function of the frame; text enters ~0.1 s after the shape starts moving;
 // one shared element (the indicator) carries across states.
 
 const stateSchema = z.object({
@@ -218,8 +218,10 @@ const StateFace: React.FC<{
   theme: SiteMorphProps["theme"];
   u: number;
   act: number;
-  life: number;
-}> = ({ s, theme, u, act, life }) => {
+  // Seconds since this state began, and until it ends.
+  since: number;
+  left: number;
+}> = ({ s, theme, u, act, since, left }) => {
   const d = layout(s);
   const W = d.w * u;
   const H = d.h * u;
@@ -228,8 +230,9 @@ const StateFace: React.FC<{
     ? `"${theme.display}", ${font.display}`
     : font.display;
   // Text enters ~70 ms after the shape starts moving, exits faster, with a little blur.
-  const enter = interpolate(life, [0.07, 0.3], [0, 1], clamp);
-  const exitT = interpolate(life, [0.86, 0.97], [0, 1], clamp);
+  // Timed in seconds, so a long state (a quote) enters as fast as a short one.
+  const enter = interpolate(since, [0.1, 0.34], [0, 1], clamp);
+  const exitT = interpolate(-left, [-0.14, -0.03], [0, 1], clamp);
   const tx: React.CSSProperties = {
     opacity: enter * (1 - exitT),
     filter: `blur(${(1 - enter + exitT) * 3}px)`,
@@ -592,7 +595,8 @@ const Morph: React.FC<SiteMorphProps> = (p) => {
   for (let i = 0; i < n; i++) if (t >= starts[i]) active = i;
   const s = p.states[active];
   const stateLen = (s.beats ?? p.beatsPerState) * beat;
-  const life = (t - starts[active]) / stateLen;
+  const since = t - starts[active];
+  const left = starts[active] + stateLen - t;
   // The accent states (button, toggle on, cta) fill with the accent colour.
   const fillOf = (st: MorphState) =>
     st.color ??
@@ -674,7 +678,7 @@ const Morph: React.FC<SiteMorphProps> = (p) => {
   const indNow = (() => {
     const g = geo(s);
     const rel = indicator(s, act);
-    const settled = interpolate(life, [0.18, 0.32], [0, 1], clamp);
+    const settled = interpolate(since, [0.18, 0.32], [0, 1], clamp);
     const target = {
       x: rel.x * g.w - g.w / 2,
       y: rel.y * g.h - g.h / 2,
@@ -768,7 +772,8 @@ const Morph: React.FC<SiteMorphProps> = (p) => {
             height: shape.h,
             borderRadius: shape.r,
             backgroundColor: fill,
-            boxShadow: `0 ${26 * u}px ${80 * u}px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.07)`,
+            // A softer shadow on a light page, where a dark one would look heavy.
+            boxShadow: `0 ${26 * u}px ${80 * u}px rgba(0,0,0,${isLight(p.theme.background) ? 0.13 : 0.45}), inset 0 0 0 1px ${isLight(p.theme.background) ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.07)"}`,
             overflow: "hidden",
           }}
         >
@@ -831,7 +836,14 @@ const Morph: React.FC<SiteMorphProps> = (p) => {
               top: shape.h / 2 - layout(s).h * u * 0.5,
             }}
           >
-            <StateFace s={s} theme={p.theme} u={u} act={act} life={life} />
+            <StateFace
+              s={s}
+              theme={p.theme}
+              u={u}
+              act={act}
+              since={since}
+              left={left}
+            />
           </div>
         </div>
         {p.cursor ? (
@@ -863,6 +875,13 @@ const Morph: React.FC<SiteMorphProps> = (p) => {
       ) : null}
     </AbsoluteFill>
   );
+};
+// Is a hex colour light (relative luminance above one half)?
+const isLight = (hex: string) => {
+  const h = hex.replace("#", "");
+  const f = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(f.slice(i, i + 2), 16) / 255);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.5;
 };
 // A quick settle for toggles and tabs (no overshoot).
 const springStepAct = (dt: number) =>

@@ -18,7 +18,7 @@
 
 import { appendFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
-import { diskPath, ff, mapBox, parseArgs, pcm, popAt, readJson, ts, videoInfo } from "./lib/media.mjs";
+import { diskPath, ff, labelFont, mapBox, parseArgs, pcm, popAt, readJson, ts, videoInfo } from "./lib/media.mjs";
 
 const { pos, opt } = parseArgs(process.argv.slice(2));
 const [job, render] = pos;
@@ -178,8 +178,8 @@ const sheet = join("out", job, `cutcheck-v${p.version}.png`);
 if (cuts.length) {
   const sel = cuts.flatMap((c) => [`eq(n\\,${c.frame - 1})`, `eq(n\\,${c.frame})`]).join("+");
   const rows = Math.ceil((cuts.length * 2) / 4);
-  const font = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf";
-  const label = `drawtext=fontfile=${font}:text='%{pts\\:hms}':x=12:y=12:fontsize=${Math.round(H / 28)}:fontcolor=white:box=1:boxcolor=black@0.6:boxborderw=8,`;
+  const font = labelFont();
+  const label = font ? `drawtext=fontfile='${font}':text='%{pts\\:hms}':x=12:y=12:fontsize=${Math.round(H / 28)}:fontcolor=white:box=1:boxcolor=black@0.6:boxborderw=8,` : "";
   let r = ff(["-i", render, "-vf", `${label}select='${sel}',scale=${portrait ? 270 : 480}:-2,tile=4x${rows}:padding=6:color=0x0B0B0D`, "-frames:v", "1", "-fps_mode", "passthrough", sheet]);
   if (r.status !== 0) r = ff(["-i", render, "-vf", `select='${sel}',scale=${portrait ? 270 : 480}:-2,tile=4x${rows}:padding=6:color=0x0B0B0D`, "-frames:v", "1", "-fps_mode", "passthrough", sheet]);
   add("Cut sheet", r.status === 0 ? "PASS" : "WARN", r.status === 0 ? `${sheet} (pairs: before | after, in cut order)` : "could not draw");

@@ -122,7 +122,15 @@ if (want("beats")) {
     const mean = errs.reduce((s, e) => s + e, 0) / Math.max(1, errs.length);
     const ok = b && Math.abs(b.bpm - bpm) <= 1.5 && mean <= 25;
     record("beats", `${bpm} BPM`, ok ? "pass" : "fail", b ? `found ${b.bpm} BPM, beats off by ${mean.toFixed(0)} ms on average (max ${Math.max(...errs).toFixed(0)})` : "no beat found");
+    // The bed accents every fourth beat from 0.25 s: that's the first downbeat.
+    const d0 = b?.downbeats?.[0];
+    record("beats", `${bpm} BPM downbeat`, d0 !== undefined && Math.abs(d0 - 0.25) <= 0.03 ? "pass" : "fail", `first downbeat at ${d0} s (expected 0.25)`);
   }
+  // A track trimmed to start on its kick: the first beat (and downbeat) is at the very start.
+  const trimmed = join(TMP, "beat-100-trim.wav");
+  spawnSync("ffmpeg", ["-loglevel", "error", "-y", "-i", join(TMP, "beat-100.wav"), "-ss", "0.25", trimmed]);
+  const tb = existsSync(trimmed) ? findBeats(trimmed) : null;
+  record("beats", "starts on the kick", tb && tb.downbeats[0] <= 0.04 ? "pass" : "fail", tb ? `first downbeat at ${tb.downbeats[0]} s (expected about 0)` : "no beat found");
 }
 
 // ── test material ────────────────────────────────────────────────────────────

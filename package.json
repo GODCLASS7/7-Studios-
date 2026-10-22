@@ -81,7 +81,10 @@
     "posts": "node scripts/posts.mjs",
     "install:studio": "bash scripts/install.sh",
     "gen": "node scripts/gen.mjs",
-    "lora": "node scripts/engine/lora.mjs"
+    "lora": "node scripts/engine/lora.mjs",
+    "site-capture": "node scripts/site-capture.mjs",
+    "sitemorph": "node scripts/sitemorph.mjs",
+    "loopcheck": "node scripts/loopcheck.mjs"
   },
   "allowScripts": {
     "esbuild": false

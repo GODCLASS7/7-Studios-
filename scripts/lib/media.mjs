@@ -39,6 +39,15 @@ export const ff = (args, opts = {}) => {
   if (r.error) throw new Error("ffmpeg not found on PATH. Install it (brew install ffmpeg / apt install ffmpeg).");
   return r;
 };
+// A bold font file for labels burned into check sheets (ffmpeg drawtext), on Linux or macOS.
+export const labelFont = () =>
+  [
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+    "/Library/Fonts/Arial Bold.ttf",
+    "/System/Library/Fonts/Helvetica.ttc",
+    "C:/Windows/Fonts/arialbd.ttf",
+  ].find((f) => existsSync(f)) || null;
 export const ffprobe = (file) => {
   const r = spawnSync("ffprobe", ["-v", "error", "-show_streams", "-show_format", "-of", "json", file], { encoding: "utf8" });
   if (r.status !== 0) throw new Error(`ffprobe could not read ${file}`);

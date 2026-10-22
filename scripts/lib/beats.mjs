@@ -67,19 +67,25 @@ export const findBeats = (file) => {
   }
   // Each grid beat moves to the strongest onset within ±3 hops (±70 ms), so small
   // tempo rounding never adds up to drift; the time is the middle of that hop.
+  // A track that starts on a kick has no rise before it, so that first beat scores
+  // nothing: keep a grid beat that falls within the first few hops (~90 ms).
+  const start = bestPhase - period >= -4 ? Math.max(0, bestPhase - period) : bestPhase;
   const beats = [];
-  for (let t = bestPhase; t < n; t += period) {
+  const peaks = [];
+  for (let t = start; t < n; t += period) {
     const c = Math.round(t);
     let at = c;
     for (let f = Math.max(1, c - 3); f <= Math.min(n - 1, c + 3); f++) if (onset[f] > onset[at] * 1.2) at = f;
     beats.push(Number((((at + 0.5) * hop + (win - hop) / 2) / rate).toFixed(3)));
+    // How loud the hit is (its energy peak), which also works for a hit at the very start.
+    peaks.push(Math.max(env[at] ?? -99, env[at + 1] ?? -99, env[at + 2] ?? -99));
   }
-  // Downbeats: of the four possible bar starts, the one with the strongest beats.
-  const strength = beats.map((b) => onset[Math.round((b * rate) / hop)] || 0);
+  // Downbeats: of the four possible bar starts, the one whose hits are loudest on average.
   let bar = 0;
-  let barBest = -1;
+  let barBest = -Infinity;
   for (let o = 0; o < 4; o++) {
-    const s = strength.filter((_, i) => i % 4 === o).reduce((t, v) => t + v, 0);
+    const own = peaks.filter((_, i) => i % 4 === o);
+    const s = own.length ? own.reduce((t, v) => t + v, 0) / own.length : -Infinity;
     if (s > barBest) (barBest = s), (bar = o);
   }
   const downbeats = beats.filter((_, i) => i % 4 === bar);

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lumen Notes: notes that write themselves into plans</title>
+<meta name="description" content="A fictional notes app used to test 7 Studios site capture.">
+<style>
+  :root { --bg:#F6F7FB; --surface:#FFFFFF; --ink:#0E1222; --muted:#5B6275; --accent:#2B5CFF; --on-accent:#FFFFFF; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family: Helvetica, Arial, sans-serif; }
+  nav { display:flex; justify-content:space-between; align-items:center; padding:22px 64px; background:var(--surface); border-bottom:1px solid #E3E6EF; }
+  nav .logo { font-weight:800; font-size:22px; }
+  nav a { color:var(--muted); text-decoration:none; margin-left:28px; font-size:15px; }
+  .btn { display:inline-block; background:var(--accent); color:var(--on-accent); border:0; border-radius:999px; padding:16px 30px; font-size:17px; font-weight:700; cursor:pointer; }
+  section { padding:96px 64px; }
+  .hero { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; }
+  .hero h1 { font-size:60px; line-height:1.05; margin:0 0 20px; letter-spacing:-0.02em; }
+  .hero p { font-size:20px; color:var(--muted); line-height:1.5; margin:0 0 32px; }
+  .hero img { width:100%; border-radius:24px; }
+  .stats { display:flex; gap:24px; background:var(--ink); color:#fff; }
+  .stat { flex:1; background:#1A2036; border-radius:20px; padding:36px; }
+  .stat b { display:block; font-size:54px; color:#7FA0FF; }
+  .stat span { color:#B6BDD3; font-size:16px; }
+  .lazy { opacity:0; transform:translateY(40px); transition:all .4s; }
+  .lazy.in { opacity:1; transform:none; }
+  [role=tablist] { display:inline-flex; background:#E8EBF5; border-radius:14px; padding:6px; gap:4px; }
+  [role=tab] { border:0; background:transparent; padding:12px 22px; border-radius:10px; font-size:16px; color:var(--muted); cursor:pointer; }
+  [role=tab][aria-selected=true] { background:var(--surface); color:var(--ink); font-weight:700; }
+  [role=tabpanel] { margin-top:28px; font-size:19px; color:var(--muted); max-width:640px; }
+  .pricing { display:flex; gap:24px; margin-top:28px; }
+  .plan { flex:1; background:var(--surface); border-radius:20px; padding:32px; border:1px solid #E3E6EF; }
+  .plan h3 { margin:0 0 8px; } .price { font-size:44px; font-weight:800; }
+  .switch { width:64px; height:36px; border-radius:999px; background:#C9CEDD; border:0; position:relative; cursor:pointer; vertical-align:middle; }
+  .switch::after { content:""; position:absolute; top:4px; left:4px; width:28px; height:28px; border-radius:50%; background:#fff; transition:left .2s; }
+  .switch[aria-checked=true] { background:var(--accent); } .switch[aria-checked=true]::after { left:32px; }
+  blockquote { font-size:30px; line-height:1.35; margin:0; max-width:820px; }
+  cite { display:block; margin-top:18px; color:var(--muted); font-style:normal; font-size:17px; }
+  .features ul { list-style:none; padding:0; font-size:20px; } .features li { padding:12px 0; border-bottom:1px solid #E3E6EF; }
+  .player { background:var(--ink); border-radius:20px; padding:28px; color:#fff; display:flex; align-items:center; gap:20px; max-width:720px; }
+  .player button { width:56px; height:56px; border-radius:50%; border:0; background:var(--accent); color:#fff; font-size:20px; }
+  footer { padding:72px 64px; background:var(--ink); color:#fff; text-align:center; }
+  footer h2 { font-size:44px; margin:0 0 24px; }
+</style>
+</head>
+<body>
+<nav><span class="logo">Lumen Notes</span><span><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></span></nav>
+<header class="hero">
+  <div>
+    <h1>Notes that turn into plans</h1>
+    <p>Write the way you think. Lumen sorts every note into tasks, dates and people, so the plan is ready when you are.</p>
+    <a class="btn" href="#start">Start free</a>
+  </div>
+  <img src="hero.svg" alt="The Lumen Notes editor">
+</header>
+<section class="stats" id="stats">
+  <div class="stat lazy"><b>12,400</b><span>teams plan in Lumen</span></div>
+  <div class="stat lazy"><b>3.2M</b><span>notes sorted every week</span></div>
+  <div class="stat lazy"><b>98%</b><span>of plans ready on time</span></div>
+</section>
+<section id="features" class="features">
+  <h2>Three ways to start</h2>
+  <div role="tablist" aria-label="Ways to start">
+    <button role="tab" aria-selected="true" aria-controls="p1" id="t1">Write</button>
+    <button role="tab" aria-selected="false" aria-controls="p2" id="t2">Speak</button>
+    <button role="tab" aria-selected="false" aria-controls="p3" id="t3">Import</button>
+  </div>
+  <div role="tabpanel" id="p1" aria-labelledby="t1">Type a thought and Lumen finds the task in it.</div>
+  <div role="tabpanel" id="p2" aria-labelledby="t2" hidden>Talk for a minute and get a tidy list back.</div>
+  <div role="tabpanel" id="p3" aria-labelledby="t3" hidden>Bring notes from any app in one step.</div>
+  <ul>
+    <li>Tasks found in plain writing</li>
+    <li>Dates pulled into your calendar</li>
+    <li>People tagged and reminded</li>
+    <li>Works offline on every device</li>
+  </ul>
+</section>
+<section id="demo">
+  <div class="player" aria-label="Product tour video"><button aria-label="Play">▶</button><div><b>Two-minute tour</b><br><span style="color:#B6BDD3">See a week planned from one page of notes</span></div></div>
+</section>
+<section id="pricing">
+  <h2>Pricing</h2>
+  <label>Yearly billing <button class="switch" role="switch" aria-checked="false" aria-label="Yearly billing"></button></label>
+  <div class="pricing">
+    <div class="plan"><h3>Starter</h3><div class="price">$0</div><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div>
+    <div class="plan"><h3>Team</h3><div class="price">$8</div><p>For teams who plan together, per person a month.</p></div>
+  </div>
+</section>
+<section id="quote">
+  <blockquote>"We stopped losing ideas in meetings. Everything we say ends up on the plan."<cite>Ada Mensah, Operations lead (fictional)</cite></blockquote>
+</section>
+<section id="faq">
+  <h2>Questions</h2>
+  <details><summary>Does it work offline?</summary><p>Yes. Notes sync when you're back online.</p></details>
+  <details><summary>Can I bring my notes?</summary><p>Import from text, Markdown or other apps.</p></details>
+</section>
+<footer id="start"><h2>Plan your week in one page</h2><a class="btn" href="#">Get Lumen free</a></footer>
+<script>
+  // Lazy section: only appears once scrolled into view (the capture must scroll first).
+  const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && e.target.classList.add("in")));
+  document.querySelectorAll(".lazy").forEach((el) => io.observe(el));
+  document.querySelectorAll("[role=tab]").forEach((t) => t.addEventListener("click", () => {
+    document.querySelectorAll("[role=tab]").forEach((x) => x.setAttribute("aria-selected", String(x === t)));
+    document.querySelectorAll("[role=tabpanel]").forEach((p) => (p.hidden = p.id !== t.getAttribute("aria-controls")));
+  }));
+  document.querySelector("[role=switch]").addEventListener("click", (e) => {
+    const s = e.currentTarget; const on = s.getAttribute("aria-checked") !== "true";
+    s.setAttribute("aria-checked", String(on));
+    document.querySelectorAll(".price")[1].textContent = on ? "$80" : "$8";
+  });
+</script>
+</body>
+</html>
