@@ -625,3 +625,5 @@ pre.log { margin: 0; font-family: var(--mono); font-size: 11.5px; line-height: 1
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
+.steps { margin: 0; padding-left: 20px; display: grid; gap: 6px; line-height: 1.5; }
+.steps li::marker { color: var(--gold-3); font-weight: 700; }

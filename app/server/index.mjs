@@ -347,6 +347,7 @@ const api = async (req, res, path, q) => {
       const body = await readBody(req);
       const patch = {};
       if (engine.ENGINES.includes(body.default)) patch.default = body.default;
+      if (body.mac && typeof body.mac.url === "string" && /^https?:\/\/[^\s]+$/.test(body.mac.url)) patch.mac = { url: body.mac.url };
       if (body.open) {
         patch.open = {};
         if (typeof body.open.url === "string" && /^https?:\/\/[^\s]+$/.test(body.open.url)) patch.open.url = body.open.url;

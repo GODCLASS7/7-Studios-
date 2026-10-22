@@ -6,6 +6,7 @@ import { Field, FileDrop, PageHead, RunView, Seg } from "../ui";
 
 type EngineCfg = {
   default: string;
+  mac: { url: string };
   open: { url: string; workflows: Record<string, { draft: string; final: string }>; gpuHourly: number };
   premium: Record<string, string | null>;
 };
@@ -14,6 +15,7 @@ type Request = { id: string; kind: string; prompt: string; status: string; creat
 
 const ENGINES: Record<string, { title: string; body: string }> = {
   demo: { title: "Demo", body: "Placeholders made on this computer. Free; not AI. For trying the studio." },
+  mac: { title: "This Mac (Draw Things)", body: "Real AI images, free, made on this Mac by the Draw Things app. Private; no account or credits. Images and edits." },
   open: { title: "Open models", body: "ComfyUI with FLUX, Qwen-Image and Wan 2.2: on this Mac (slow, drafts) or a rented GPU through an SSH tunnel." },
   premium: { title: "Premium", body: "Hosted models through fal.ai with your own key. Paid per run; you confirm each one." },
   claude: { title: "Claude + Higgsfield", body: "Leaves requests for Claude to run in chat (Seedance, Kling, Veo…), quoted in credits before anything is spent." },
@@ -39,7 +41,7 @@ const Settings: React.FC = () => {
     get<Request[]>("/api/requests").then(setRequests).catch(() => {});
   };
   useEffect(load, []);
-  const saveCfg = async (patch: { default?: string; open?: Partial<EngineCfg["open"]>; premium?: EngineCfg["premium"] }) => {
+  const saveCfg = async (patch: { default?: string; mac?: EngineCfg["mac"]; open?: Partial<EngineCfg["open"]>; premium?: EngineCfg["premium"] }) => {
     try {
       const r = await post<{ config: EngineCfg }>("/api/engine", patch);
       setCfg(r.config);
@@ -78,6 +80,33 @@ const Settings: React.FC = () => {
                 </button>
               ))}
             </div>
+          </div>
+
+          <div className="panel col">
+            <h3>This Mac (Draw Things): free AI images</h3>
+            <ol className="steps small">
+              <li>
+                Install <b>Draw Things</b>, free, from the Mac App Store (drawthings.ai). It runs on Macs with an Apple chip.
+              </li>
+              <li>
+                Open it and download a model: <b>FLUX.1 [schnell]</b> for quality, or a fast <b>SDXL</b> model (marked Lightning or Turbo) on 8 GB Macs. Make one image there to check it works.
+              </li>
+              <li>
+                In Draw Things, open <b>Settings → API Server</b>: protocol <b>HTTP</b>, port <b>7860</b>, and turn it on.
+              </li>
+              <li>
+                Choose <b>This Mac (Draw Things)</b> above, and keep Draw Things open while you generate.
+              </li>
+            </ol>
+            <div className="row" style={{ alignItems: "flex-end" }}>
+              <Field label="Draw Things address" hint="its API Server">
+                <input className="input" defaultValue={cfg.mac.url} onBlur={(e) => e.target.value !== cfg.mac.url && saveCfg({ mac: { url: e.target.value } })} />
+              </Field>
+              <button className="btn" onClick={() => task("engine-status")}>
+                <Icon name="check" /> Check the engines
+              </button>
+            </div>
+            <p className="note">The model, steps and quality are the ones chosen in Draw Things. Each image takes from a few seconds to a few minutes, depending on the model and your Mac.</p>
           </div>
 
           <div className="split">

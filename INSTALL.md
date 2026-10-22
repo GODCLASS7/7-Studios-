@@ -126,6 +126,17 @@ Open **7 Studios** from Launchpad, Spotlight or the Dock, or double-click **7 St
 cd ~/Documents/7-studios && npm run app
 ```
 
+## Real AI images, free
+
+7 Studios starts on the **Demo** engine: coloured placeholders, not AI. For real images at no cost, use the free **Draw Things** app on this Mac (Apple chip):
+
+1. Install **Draw Things** from the **Mac App Store** (free).
+2. Open it, pick a model from its list and download it: **FLUX.1 [schnell]** for the best quality, or a fast **SDXL** model (one marked Lightning or Turbo) if your Mac has 8 GB of memory. Make one image in Draw Things to check it works.
+3. In Draw Things, open **Settings → API Server**, set protocol **HTTP** and port **7860**, and turn it on.
+4. In 7 Studios, go to **Settings** and click **This Mac (Draw Things)**.
+
+Keep Draw Things open while you generate. Each image takes from a few seconds to a few minutes, depending on the model. It makes images and edits; video needs another engine.
+
 ## Adding your keys (optional)
 
 The app works without any keys: the **Demo** engine makes placeholders so you can try everything. For real AI images, video or ElevenLabs transcription:
@@ -150,6 +161,8 @@ Open the **7-studios** folder in Claude Code (desktop app or terminal) and descr
 | The first render takes a while to start | It's downloading its own headless Chrome (once, about 100 MB) |
 | Renders are slow | Normal on a MacBook Air for 4K: use the **draft** or **review** quality while you work, keep it plugged in, and render 4K at the end |
 | The check says **ffmpeg: missing drawtext** | Homebrew's standard ffmpeg leaves out text drawing. Double-click **Install 7 Studios.command** again: it installs **ffmpeg-full** and uses it from then on |
+| "Can't reach ComfyUI at http://127.0.0.1:8188" | The **Open models** engine is chosen, which needs ComfyUI. Choose **This Mac (Draw Things)** in Settings instead |
+| "Can't reach Draw Things" | Open Draw Things and check **Settings → API Server** is on (HTTP, port 7860) |
 | Anything else | Run `npm run doctor`: it lists what's missing and the fix for each |
 
 ## Getting updates from GitHub (optional)

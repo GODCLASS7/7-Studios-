@@ -91,11 +91,12 @@ Higgsfield is the studio's main AI render route. Use SetField **only** when the 
 
 ## 3b. The studio's own engine (`npm run gen`, the app's Image and Video studios)
 
-Four engines behind one command and one gallery (`production/gallery.json`); setup for each in `engine/README.md`.
+Five engines behind one command and one gallery (`production/gallery.json`); setup for each in `engine/README.md`.
 
 | Engine | What | Rules |
 |---|---|---|
 | `demo` | ffmpeg placeholders on the user's computer, marked "demo" | Never present them as AI or as finished work |
+| `mac` | Draw Things on the user's Mac (its API Server, `http://127.0.0.1:7860`), with the model chosen in Draw Things | Free and private; images and edits only. The free route to real images when the user has no credits. Tested against a stand-in server, not yet the real app |
 | `open` | ComfyUI with FLUX schnell, Qwen-Image, Qwen-Image-Edit, Wan 2.2 5B/14B (`engine/workflows/`) | On a rented GPU: quote the hourly price and expected hours first; connect only through an SSH tunnel; remind the user to switch it off. Workflows were tested against a stand-in server, not yet a real GPU |
 | `premium` | fal.ai with the user's `FAL_KEY` (`engine/models.json`) | Paid per run: quote from verified prices only, and wait for a yes. Endpoints and prices are unverified until the user checks them |
 | `claude` | A request in `production/claude-requests.json` that you run through Higgsfield | Same as §2: balance, quote, yes, generate, then `npm run gen -- import … --request=<id>` |

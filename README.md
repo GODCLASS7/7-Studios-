@@ -29,6 +29,7 @@ Plus the **Library** (everything made, with its prompt, look, engine, seed and c
 | Engine | What it is | Cost |
 |---|---|---|
 | Demo | Placeholders made on this computer, to try the app. Not AI | Free |
+| This Mac | Real AI images made on your Mac by the free Draw Things app (FLUX, SDXL…). Private, no account. Images and edits | Free |
 | Open | Open models (FLUX, Qwen-Image, Wan 2.2) in ComfyUI: on your Mac for drafts, or a rented GPU | Free per use; you pay for the machine |
 | Premium | Hosted models through fal.ai with your own key; you confirm the cost of each run | Paid per run |
 | Claude + Higgsfield | Requests Claude runs in chat (Seedance, Kling, Veo…), quoted in credits before anything is spent | Higgsfield credits |

@@ -4,6 +4,8 @@
 // Engines (engine/README.md has the setup for each):
 //   demo     placeholder results made locally with ffmpeg, clearly marked as demos,
 //            so the app can be tried before any engine is set up. Free, instant.
+//   mac      Draw Things, a free Mac app running image models on this Mac's Apple chip.
+//            Free per image, private; images and edits.
 //   open     ComfyUI running open models (Qwen-Image, FLUX schnell, Qwen-Image-Edit,
 //            Wan 2.2): on this Mac for drafts, or on a rented GPU. Free per use.
 //   premium  a hosted model API with your own key (FAL_KEY in .env). Paid per use.
@@ -26,12 +28,16 @@ export const PRESET_DIR = join("presets", "generate");
 export const CHAR_DIR = "characters";
 export const WORKFLOW_DIR = join("engine", "workflows");
 
-export const ENGINES = ["demo", "open", "premium", "claude"];
+export const ENGINES = ["demo", "mac", "open", "premium", "claude"];
 export const KINDS = ["image", "edit", "video"];
 
 const DEFAULT_CONFIG = {
   // Which engine a request uses when it doesn't name one.
   default: "demo",
+  mac: {
+    // Draw Things' API server (its Settings → API Server, HTTP).
+    url: "http://127.0.0.1:7860",
+  },
   open: {
     // ComfyUI's address: this Mac (http://127.0.0.1:8188) or a rented GPU's URL.
     url: "http://127.0.0.1:8188",
@@ -59,6 +65,7 @@ export const loadConfig = () => {
   return {
     ...DEFAULT_CONFIG,
     ...c,
+    mac: { ...DEFAULT_CONFIG.mac, ...(c.mac || {}) },
     open: { ...DEFAULT_CONFIG.open, ...(c.open || {}), workflows: { ...DEFAULT_CONFIG.open.workflows, ...(c.open?.workflows || {}) } },
     premium: { ...DEFAULT_CONFIG.premium, ...(c.premium || {}) },
   };
@@ -66,7 +73,7 @@ export const loadConfig = () => {
 export const saveConfig = (patch) => {
   const now = readJson(CONFIG_PATH, {});
   const next = { ...now, ...patch };
-  for (const k of ["open", "premium"]) if (patch[k]) next[k] = { ...(now[k] || {}), ...patch[k] };
+  for (const k of ["mac", "open", "premium"]) if (patch[k]) next[k] = { ...(now[k] || {}), ...patch[k] };
   writeJson(CONFIG_PATH, next);
   return loadConfig();
 };
@@ -255,6 +262,7 @@ export const summary = () => {
     presets: listPresets().length,
     characters: listCharacters().length,
     gallery: loadGallery().items.length,
+    macUrl: cfg.mac.url,
     openUrl: cfg.open.url,
     premiumKey: Boolean(process.env.FAL_KEY),
   };

@@ -1,14 +1,36 @@
 # The 7 Studios engine: setting up each way to generate
 
-7 Studios makes images and clips four ways. Choose the default in the app (Settings) or with
+7 Studios makes images and clips five ways. Choose the default in the app (Settings) or with
 `npm run gen -- engine set default=<engine>`. Check them all with `npm run gen -- engine`.
 
 | Engine | What it is | Cost | Quality |
 |---|---|---|---|
 | `demo` | Placeholders made with ffmpeg on your computer: gradients, colour shifts, a slow push into a still. Not AI. Marked "demo" everywhere | Free | For trying the app only |
+| `mac` | Draw Things, a free Mac app, running image models (FLUX schnell, SDXL…) on this Mac's Apple chip | Free | Good images and edits; no video here |
 | `open` | ComfyUI running open models: FLUX schnell and Qwen-Image (images), Qwen-Image-Edit (edits), Wan 2.2 5B and 14B (video) | Free per use; you pay for the machine | Good for images and edits; video is a step behind Seedance, Veo and Kling |
 | `premium` | Hosted models through fal.ai with your own key | Paid per run | Depends on the model you list |
 | `claude` | A request Claude runs in chat through Higgsfield (Seedance, Kling, Veo…) | Higgsfield credits, quoted first | The best available |
+
+## This Mac: Draw Things (free, the easy way to real AI images)
+
+Draw Things (drawthings.ai) is a free app for Macs with an Apple chip that runs image models on
+the Mac itself: no account, no credits, nothing leaves the computer. It's much lighter to set up
+than ComfyUI and runs on 8 GB MacBooks with a fast model.
+
+1. Install **Draw Things** from the Mac App Store.
+2. Open it and download a model from its model list. **FLUX.1 [schnell]** gives the best quality
+   (16 GB of memory or more is comfortable); a fast **SDXL** model (one marked Lightning or Turbo) is quicker and fits 8 GB.
+   Make one image in Draw Things to check the model works.
+3. In Draw Things, open **Settings → API Server**: protocol **HTTP**, port **7860**, and turn it on.
+4. In 7 Studios, choose **This Mac (Draw Things)** in Settings (or
+   `npm run gen -- engine set default=mac`). `npm run gen -- engine` shows whether it's reachable
+   and which model is loaded.
+
+The model, steps and sampler are the ones chosen in Draw Things; 7 Studios sends the prompt, the
+negative prompt, the size and the seed (`POST /sdapi/v1/txt2img`). An edit sends the picture too
+(`/sdapi/v1/img2img`) and re-draws it guided by the words, at strength 0.6 (a preset's
+`params.strength` changes it). Images and edits only: for video choose another engine. Tested
+against a stand-in server (`scripts/test/mock-drawthings.mjs`), not yet the real app.
 
 ## Open: ComfyUI
 

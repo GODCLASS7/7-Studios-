@@ -12,6 +12,7 @@ const clipPoster = (c: ClipMeta) => `/showcase/${c.name}.jpg`;
 
 const ENGINE_NOTE: Record<string, string> = {
   demo: "You're on the demo engine: images and clips are placeholders made on this computer, not AI. Choose your engine when you're ready.",
+  mac: "This Mac: free AI images made by the Draw Things app on your Mac's own chip. Keep Draw Things open with its API Server on.",
   open: "Open models: your ComfyUI with FLUX, Qwen and Wan, on this Mac or a rented GPU.",
   premium: "Premium: hosted models with your own key, paid per run, always confirmed first.",
   claude: "Claude + Higgsfield: requests Claude runs in chat, quoted in credits before anything is spent.",

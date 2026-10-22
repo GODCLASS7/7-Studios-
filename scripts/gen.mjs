@@ -2,7 +2,7 @@
 // 7 Studios generation from the command line (the app's Image and Video studios use the
 // same engine). Every result lands in the gallery: production/gallery.json + public/gallery/.
 //
-//   npm run gen -- image "<prompt>" [--preset=cinematic-portrait] [--engine=demo|open|premium|claude]
+//   npm run gen -- image "<prompt>" [--preset=cinematic-portrait] [--engine=demo|mac|open|premium|claude]
 //                  [--model=…] [--aspect=1x1|9x16|16x9|4x5] [--count=1-4] [--seed=…] [--quality=draft|final] [--character=<id>]
 //   npm run gen -- edit <image> "<instruction>" [--preset=edit-background] [--engine=…]
 //   npm run gen -- video [<start image>] "<prompt>" [--preset=dolly-in] [--seconds=5] [--end=<image>] [--engine=…]
@@ -12,6 +12,7 @@
 //   npm run gen -- requests                      (what's waiting for Claude)
 //   npm run gen -- engine                        (status of each engine)
 //   npm run gen -- engine check [workflow…]      (is ComfyUI ready for these workflows?)
+//   npm run gen -- engine set default=mac mac.url=http://127.0.0.1:7860   (Draw Things on this Mac, free)
 //   npm run gen -- engine set default=open open.url=http://127.0.0.1:8188 open.gpuHourly=0 premium.video=fal-kling-i2v
 //   npm run gen -- character add "<name>" --consent=self|permission|fictional [--note="…"] [--description="…"] --refs=a.jpg,b.jpg
 //   npm run gen -- character list
@@ -153,6 +154,8 @@ if (cmd === "image") {
     const { listModels } = await import("./engine/premium.mjs");
     console.log(`Default engine: ${cfg.default}`);
     console.log(`  demo     ready (placeholders, not AI)`);
+    const mac = await (await import("./engine/mac.mjs")).status(cfg);
+    console.log(`  mac      ${mac.ok ? `ready: Draw Things at ${mac.url}${mac.model ? `, model ${mac.model}` : ""}` : `not reachable at ${mac.url}: open Draw Things and turn on its API Server`}`);
     console.log(`  open     ${st.ok ? `ready: ComfyUI ${st.version || ""} at ${st.url}, ${st.device}` : `not reachable at ${st.url} (${st.error.split(". ")[0]})`}`);
     console.log(`  premium  ${process.env.FAL_KEY ? "key set" : "no key (FAL_KEY in .env)"}; ${listModels().length} models in engine/models.json (${listModels().filter((m) => m.verified).length} verified)`);
     console.log(`  claude   ${(await import("./engine/claude.mjs")).listRequests().filter((r) => r.status === "waiting").length} request(s) waiting; Claude runs them through Higgsfield after a credit quote`);

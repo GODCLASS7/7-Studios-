@@ -223,6 +223,7 @@ export const TASKS = {
     build: (a) => (/^p\d{1,6}$/.test(String(a.id || "")) ? { argv: ["scripts/posts.mjs", "cancel", a.id] } : fail("Unknown post.")),
   },
   "engine-check": { label: "Check the engines", build: () => ({ argv: ["scripts/gen.mjs", "engine", "check"] }) },
+  "engine-status": { label: "Which engines are ready", build: () => ({ argv: ["scripts/gen.mjs", "engine"] }) },
   doctor: { label: "Is this computer ready?", heavy: true, build: () => ({ argv: ["scripts/doctor.mjs"] }) },
   "lora-prepare": {
     label: "Prepare a LoRA training set",

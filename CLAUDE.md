@@ -5,7 +5,7 @@
 - **Remotion** (React → frames → video/stills) makes everything exact: typography, layout, data, motion, timing, captions, grade and mix.
 - **Footage editing from the transcript** (the video-use method): word-level transcripts (ElevenLabs Scribe or local Whisper) let Claude cut raw talking heads, interviews and testimonies, add word-by-word captions and time lyric cards to a song, without watching the video. See the `studio-edit` skill.
 - **The 7 Studios app** (`npm run app`): the studio as an app on the user's own computer, at `http://127.0.0.1:7777`, with seven studios (Image, Video, Edit, Motion, Carousel, Web, Publish), a Library and Settings. It runs the same scripts and engine as Claude does; see playbook 10.21.
-- **The studio's own engine** (`npm run gen`, the app's Image and Video studios): images, edits and clips from four engines (demo placeholders, open models in ComfyUI, hosted models with the user's key, or requests Claude runs through Higgsfield), with 42 presets, consent-recorded characters and a gallery. See `engine/README.md`.
+- **The studio's own engine** (`npm run gen`, the app's Image and Video studios): images, edits and clips from five engines (demo placeholders, free images on the user's Mac with Draw Things, open models in ComfyUI, hosted models with the user's key, or requests Claude runs through Higgsfield), with 42 presets, consent-recorded characters and a gallery. See `engine/README.md`.
 - **Generative models** reached through Claude's connectors make the realistic footage and imagery. Higgsfield is the main route, with Seedance, Kling, Veo, Cinema Studio, FLUX, Nano Banana, Seedream, GPT Image and Topaz upscaling. **SetField** is an optional local engine: offline, unlimited takes on your own GPU, at 480p/720p; set it per job with `"aiProvider": "setfield"`. See `.claude/skills/studio/providers.md`.
 
 These instructions are for anyone working in this repo, whether a person or Claude.
@@ -465,7 +465,7 @@ Each video in this studio is code. A headless browser renders it frame by frame,
 
 > Make `<n>` images of `<subject>` in the `<look>` look, then animate the best one with a `<camera move>`.
 
-1. Check the default engine (`npm run gen -- engine`). **Demo** makes placeholders only: say so. **Open** needs ComfyUI reachable (on a rented GPU only through an SSH tunnel; quote the GPU hours first). **Premium** is paid: quote the price of each run from `engine/models.json` (only `verified` prices) and wait for a yes. **Claude** leaves a request: run it through Higgsfield with the usual credit quote.
+1. Check the default engine (`npm run gen -- engine`). **Demo** makes placeholders only: say so. **Mac** needs the Draw Things app open with its API Server on (free; images and edits, no video). **Open** needs ComfyUI reachable (on a rented GPU only through an SSH tunnel; quote the GPU hours first). **Premium** is paid: quote the price of each run from `engine/models.json` (only `verified` prices) and wait for a yes. **Claude** leaves a request: run it through Higgsfield with the usual credit quote.
 2. `npm run gen -- image "<words>" --preset=<id> --count=<n>`; look at every result before showing it. Then `npm run gen -- video <gallery id> "<what moves>" --preset=<camera move>`.
 3. Characters only with a consent record (`self`, `permission` with who agreed and when, or `fictional`).
 4. Presets are starting recipes (`tested: false`): when one is tuned on the user's engine, set `tested: true`.

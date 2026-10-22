@@ -8,7 +8,7 @@ import { Empty, Field, FileDrop, Media, MediaPicker, Modal, PageHead, Progress, 
 
 type Kind = "image" | "video";
 const ASPECTS: Record<Kind, string[]> = { image: ["1x1", "4x5", "9x16", "16x9", "3x2"], video: ["9x16", "16x9", "1x1", "4x5"] };
-const ENGINE_LABEL: Record<string, string> = { demo: "Demo (free placeholder)", open: "Open models (ComfyUI)", premium: "Premium (your key, paid)", claude: "Claude + Higgsfield" };
+const ENGINE_LABEL: Record<string, string> = { demo: "Demo (free placeholder)", mac: "This Mac (Draw Things, free)", open: "Open models (ComfyUI)", premium: "Premium (your key, paid)", claude: "Claude + Higgsfield" };
 type Model = { id: string; kind: string; name?: string; price: number | null; verified: boolean; unit?: string };
 
 const Generate: React.FC<{ kind: Kind; q: URLSearchParams }> = ({ kind, q }) => {
@@ -50,8 +50,9 @@ const Generate: React.FC<{ kind: Kind; q: URLSearchParams }> = ({ kind, q }) => 
     loadItems();
   }, [kind]);
   useEffect(() => {
-    if (status && !engine) setEngine(status.engine.default);
-  }, [status, engine]);
+    // Draw Things makes images only, so the Video studio starts on the demo engine instead.
+    if (status && !engine) setEngine(kind === "video" && status.engine.default === "mac" ? "demo" : status.engine.default);
+  }, [status, engine, kind]);
   // When a generation finishes, the library has new items.
   const mine = gens.filter((g) => (g.req.kind === kind || (kind === "image" && g.req.kind === "edit")));
   const doneKey = mine.filter((g) => g.status !== "running").map((g) => g.id).join();
@@ -223,7 +224,7 @@ const Generate: React.FC<{ kind: Kind; q: URLSearchParams }> = ({ kind, q }) => 
             <div className="row">
               <Field label="Engine">
                 <select className="select" value={engine} onChange={(e) => setEngine(e.target.value)}>
-                  {(status?.engine.engines || ["demo"]).map((e) => (
+                  {(status?.engine.engines || ["demo"]).filter((e) => !(kind === "video" && e === "mac")).map((e) => (
                     <option key={e} value={e}>
                       {ENGINE_LABEL[e] || e}
                     </option>
@@ -268,6 +269,8 @@ const Generate: React.FC<{ kind: Kind; q: URLSearchParams }> = ({ kind, q }) => 
               </>
             ) : null}
             {engine === "demo" ? <div className="callout"><Icon name="info" /> The demo engine makes placeholders on this computer to try the studio. They're marked "demo" and aren't AI.</div> : null}
+            {engine === "mac" ? <div className="callout gold"><Icon name="info" /> Free, on this Mac: Draw Things must be open with its API Server on (Settings → API Server). The model is the one chosen in Draw Things.</div> : null}
+            {engine === "open" ? <div className="callout"><Icon name="info" /> Needs ComfyUI running with its model files (Settings → Open models). On a MacBook Air, use This Mac (Draw Things) instead.</div> : null}
             {engine === "claude" ? <div className="callout gold"><Icon name="info" /> This leaves a request for Claude. In Claude Code, say "run my 7 Studios requests": Claude quotes the Higgsfield credits and waits for your yes.</div> : null}
           </div>
         </div>
