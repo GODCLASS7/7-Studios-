@@ -321,6 +321,41 @@
       "frames": [
         100
       ]
+    },
+    "art-styles": {
+      "comp": "ArtStyles-9x16",
+      "durationInFrames": 525,
+      "frames": [
+        40,
+        115,
+        190,
+        265,
+        340,
+        415,
+        490
+      ]
+    },
+    "sitemorph": {
+      "comp": "SiteMorph-1x1",
+      "durationInFrames": 510,
+      "frames": [
+        40,
+        100,
+        160,
+        250,
+        340,
+        420,
+        500
+      ]
+    },
+    "terminal": {
+      "comp": "Terminal-9x16",
+      "durationInFrames": 270,
+      "frames": [
+        60,
+        150,
+        240
+      ]
     }
   },
   "shorts": [

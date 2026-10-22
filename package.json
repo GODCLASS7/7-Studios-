@@ -33,6 +33,7 @@
   "devDependencies": {
     "@remotion/eslint-config-flat": "4.0.537",
     "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
     "@types/web": "0.0.166",
     "@vitejs/plugin-react": "5.2.0",
     "eslint": "10.12.0",
@@ -44,7 +45,7 @@
     "dev": "remotion studio",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc",
+    "lint": "eslint src && tsc && tsc -p app/ui",
     "setup:cloud": "bash scripts/setup-cloud.sh",
     "render": "node scripts/render.mjs",
     "storyboard": "node scripts/storyboard.mjs",
@@ -84,7 +85,10 @@
     "lora": "node scripts/engine/lora.mjs",
     "site-capture": "node scripts/site-capture.mjs",
     "sitemorph": "node scripts/sitemorph.mjs",
-    "loopcheck": "node scripts/loopcheck.mjs"
+    "loopcheck": "node scripts/loopcheck.mjs",
+    "app": "node app/server/index.mjs",
+    "app:dev": "node app/dev.mjs",
+    "app:build": "vite build --config app/ui/vite.config.mjs"
   },
   "allowScripts": {
     "esbuild": false

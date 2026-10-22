@@ -31,6 +31,9 @@
 //   posts         the post queue refuses unapproved, changed or not-yet-due posts (on a scratch queue)
 //   frames        golden frames of every test edit (fx-test: all 18 effects), the title styles, the
 //                 tutorial, the cards, the carousel (and its 8 looks) and the 14 caption styles
+//   app (full)    the 7 Studios app end to end in a browser: every studio opens; Image, Video,
+//                 Motion, Web (capture → plan → render → beat and loop check), Edit and Publish
+//                 (queue and approve, on a scratch queue) work; the server's safety checks hold
 //   track (full)  face found in at least 95% of the moving 16:9 test take
 //   cutcheck (full) each test edit rendered and passed by the cut check
 //
@@ -78,6 +81,10 @@ const JOBS = {
   "fx-test": { tol: 0.4, footageJob: "look-test", fixture: [`--photo=${PHOTO}`], reels: "look-test", screen: "tutorial-test", frames: [48, 165, 228, 288, 325, 420, 465, 540, 675, 750, 810, 870, 939, 954, 1056, 1200, 1272, 1470, 1515] },
   "titles-reel": { comp: "Titles-9x16", dur: 480, frames: [36, 96, 156, 216, 276, 336, 396, 456] },
   cards: { comp: "Cards-9x16", dur: 255, frames: [40, 78, 125, 200] },
+  // Motion additions: each of the seven art styles mid-way, SiteMorph through its states, the terminal.
+  "art-styles": { comp: "ArtStyles-9x16", dur: 525, frames: [40, 115, 190, 265, 340, 415, 490] },
+  sitemorph: { comp: "SiteMorph-1x1", dur: 510, frames: [40, 100, 160, 250, 340, 420, 500] },
+  terminal: { comp: "Terminal-9x16", dur: 270, frames: [60, 150, 240] },
   "cards-stack": { comp: "Cards-16x9", props: "tests/fixtures/cards-stack.json", dur: 189, frames: [30, 60, 100, 160] },
   // Carousel Studio end to end: frames from the look-test take, a cut-out cover, the brand kit.
   "carousel-test": { comp: "Carousel-4x5", props: "jobs/carousel-test/.carousel.resolved.json", dur: 6, frames: [0, 1, 2, 3, 4, 5], carousel: true },
@@ -455,6 +462,17 @@ if (FULL && want("cutcheck")) {
     const rows = (c.stdout || "").split("\n").filter((l) => /❌|⚠️/.test(l)).map((l) => l.split("|")[1]?.trim());
     record("cutcheck", job, c.status === 0 ? "pass" : "fail", `${out} in ${((Date.now() - t0) / 1000).toFixed(0)} s; ${c.status === 0 ? "no FAIL" : "FAIL"}${rows.length ? ` (flagged: ${rows.join(", ")})` : ""}`);
   }
+}
+
+// ── the app, end to end (full, or --only=app) ───────────────────────────────
+if (ONLY ? ONLY.has("app") : FULL) {
+  const r = node("scripts/test/app.mjs", []);
+  const lines = (r.stdout || "").split("\n").filter((l) => l.startsWith("RESULT\t"));
+  for (const l of lines) {
+    const [, status, name, note] = l.split("\t");
+    record("app", name, status === "skip" ? "pass" : status, note || "");
+  }
+  if (!lines.length) record("app", "run", "fail", tail(r));
 }
 
 if (UPDATE || results.some((r) => r.status === "saved")) writeJson(MANIFEST, manifest);

@@ -54,3 +54,6 @@ production/gallery.json
 production/engine.json
 production/claude-requests.json
 production/lora/
+app/ui/dist/
+production/app/
+public/uploads/

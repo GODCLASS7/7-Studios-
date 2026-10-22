@@ -56,6 +56,12 @@ import {
   titleReelSchema,
 } from "./titles/TitleReel";
 import {
+  calcTerminalReel,
+  TerminalReel,
+  terminalReelDefaults,
+  terminalReelSchema,
+} from "./templates/TerminalReel/TerminalReel";
+import {
   calcCards,
   Cards,
   cardsDefaults,
@@ -368,6 +374,39 @@ export const RemotionRoot: React.FC = () => {
         schema={artStylesSchema}
         defaultProps={artStylesDefaults}
         calculateMetadata={calcArtStyles}
+      />
+      <Composition
+        id="Terminal-9x16"
+        component={TerminalReel}
+        schema={terminalReelSchema}
+        defaultProps={terminalReelDefaults}
+        calculateMetadata={calcTerminalReel}
+        durationInFrames={270}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="Terminal-16x9"
+        component={TerminalReel}
+        schema={terminalReelSchema}
+        defaultProps={terminalReelDefaults}
+        calculateMetadata={calcTerminalReel}
+        durationInFrames={270}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Terminal-1x1"
+        component={TerminalReel}
+        schema={terminalReelSchema}
+        defaultProps={terminalReelDefaults}
+        calculateMetadata={calcTerminalReel}
+        durationInFrames={270}
+        fps={30}
+        width={1080}
+        height={1080}
       />
       <Composition
         id="Carousel-4x5"
