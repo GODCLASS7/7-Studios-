@@ -1,0 +1,86 @@
+[
+  {
+    "name": "logo-intro",
+    "label": "Logo sting",
+    "template": "LogoIntro",
+    "ratio": "1 / 1"
+  },
+  {
+    "name": "logo-intro-dark",
+    "label": "Logo sting",
+    "template": "LogoIntro",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "art-one-line",
+    "label": "Art style · one-line",
+    "template": "ArtStyles",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "art-ascii",
+    "label": "Art style · ascii",
+    "template": "ArtStyles",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "art-pixel",
+    "label": "Art style · pixel",
+    "template": "ArtStyles",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "art-riso",
+    "label": "Art style · riso",
+    "template": "ArtStyles",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "art-hud",
+    "label": "Art style · hud",
+    "template": "ArtStyles",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "art-ink",
+    "label": "Art style · ink",
+    "template": "ArtStyles",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "sitemorph",
+    "label": "SiteMorph",
+    "template": "SiteMorph",
+    "ratio": "1 / 1"
+  },
+  {
+    "name": "sitemorph-site",
+    "label": "SiteMorph · a website",
+    "template": "SiteMorph",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "terminal",
+    "label": "Terminal",
+    "template": "Terminal",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "titles",
+    "label": "Cinematic titles",
+    "template": "Titles",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "cards",
+    "label": "Card line-up",
+    "template": "Cards",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "titles-wide",
+    "label": "Cinematic titles",
+    "template": "Titles",
+    "ratio": "16 / 9"
+  }
+]

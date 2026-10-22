@@ -58,10 +58,21 @@ const Motion: React.FC<{ q: URLSearchParams }> = ({ q }) => {
   return (
     <div className="page">
       <PageHead eyebrow="Studio 04" icon="motion" title="Motion" sub="Every template plays live as you type. Render it exactly, frame for frame, at any size up to 4K or ProRes." />
-      <div className="chips" style={{ marginBottom: 18 }}>
+      <div className="tpls">
         {TEMPLATES.map((t) => (
-          <button key={t.name} className={`chip ${t.name === tpl.name ? "on" : ""}`} onClick={() => setName(t.name)}>
-            <Icon name={t.icon} size={14} /> {t.label}
+          <button key={t.name} className={`tpl ${t.name === tpl.name ? "on" : ""}`} onClick={() => setName(t.name)} aria-pressed={t.name === tpl.name}>
+            <div className="vid">
+              {t.clip ? (
+                <video src={`/showcase/${t.clip}.mp4`} poster={`/showcase/${t.clip}.jpg`} muted loop playsInline autoPlay preload="metadata" />
+              ) : (
+                <div className="art" style={{ height: "100%", borderRadius: 0, display: "grid", placeItems: "center", color: "var(--gold-3)" }}>
+                  <Icon name={t.icon} size={34} />
+                </div>
+              )}
+            </div>
+            <b>
+              <Icon name={t.icon} size={14} /> {t.label}
+            </b>
           </button>
         ))}
       </div>

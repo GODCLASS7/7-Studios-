@@ -17,6 +17,7 @@ export const COMPOSITIONS = {
   Cards: ["9x16", "16x9", "1x1", "4x5"],
   SiteMorph: ["1x1", "9x16", "16x9"],
   Terminal: ["9x16", "16x9", "1x1"],
+  LogoIntro: ["16x9", "9x16", "1x1"],
   ScriptureLyric: ["9x16", "16x9"],
   Carousel: ["4x5", "1x1", "9x16"],
   FootageEdit: ["9x16", "16x9", "1x1", "4x5"],

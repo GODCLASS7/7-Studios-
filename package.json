@@ -88,7 +88,8 @@
     "loopcheck": "node scripts/loopcheck.mjs",
     "app": "node app/server/index.mjs",
     "app:dev": "node app/dev.mjs",
-    "app:build": "vite build --config app/ui/vite.config.mjs"
+    "app:build": "vite build --config app/ui/vite.config.mjs",
+    "app:showcase": "node scripts/app-showcase.mjs"
   },
   "allowScripts": {
     "esbuild": false

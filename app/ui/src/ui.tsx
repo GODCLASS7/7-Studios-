@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ago, fileName, get, isImage, isVideo, mediaUrl, upload, type FileEntry, type GalleryItem, type Job, type Run } from "./api";
 import { Icon, type IconName } from "./icons";
+import { Kinetic } from "./motion";
 import { useStore } from "./store";
 
 export const PageHead: React.FC<{ eyebrow?: string; icon?: IconName; title: string; sub?: string; children?: React.ReactNode }> = ({ eyebrow, icon, title, sub, children }) => (
@@ -12,7 +13,7 @@ export const PageHead: React.FC<{ eyebrow?: string; icon?: IconName; title: stri
           {eyebrow}
         </div>
       ) : null}
-      <h1>{title}</h1>
+      <Kinetic as="h1" text={title} base={400} peak={800} />
       {sub ? <p>{sub}</p> : null}
     </div>
     {children ? <div className="row">{children}</div> : null}

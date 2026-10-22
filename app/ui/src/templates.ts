@@ -10,6 +10,7 @@ import { calcScripture, isaiah4031, ScriptureLyric, scriptureSchema } from "../.
 import { calcSiteMorph, SiteMorph, siteMorphDefaults, siteMorphSchema } from "../../../src/templates/SiteMorph/SiteMorph";
 import { calcTerminalReel, TerminalReel, terminalReelDefaults, terminalReelSchema } from "../../../src/templates/TerminalReel/TerminalReel";
 import { calcTitleReel, TitleReel, titleReelDefaults, titleReelSchema } from "../../../src/titles/TitleReel";
+import { calcLogoIntro, LogoIntro, logoIntroDefaults, logoIntroSchema } from "../../../src/brand/LogoIntro";
 import type { IconName } from "./icons";
 
 export const SIZES: Record<string, [number, number]> = {
@@ -31,14 +32,17 @@ export type Template = {
   calc?: CalculateMetadataFunction<any>;
   formats: string[];
   fps: number;
+  /** A looping clip of it in app/ui/public/showcase (npm run app:showcase). */
+  clip?: string;
 };
 const t = (x: Template) => x;
 export const TEMPLATES: Template[] = [
-  t({ name: "ArtStyles", label: "Art styles", description: "One line of text or a picture in seven hand-made looks: one-line drawing, ASCII, pixel, sketch, riso, HUD and ink.", icon: "sparkle", component: ArtStyles, schema: artStylesSchema, defaults: artStylesDefaults, calc: calcArtStyles, formats: ["9x16", "16x9"], fps: 30 }),
-  t({ name: "Titles", label: "Cinematic titles", description: "Eight title styles, on colour, a picture, a clip or transparent for editors.", icon: "layers", component: TitleReel, schema: titleReelSchema, defaults: titleReelDefaults, calc: calcTitleReel, formats: ["9x16", "16x9", "1x1"], fps: 30 }),
-  t({ name: "Cards", label: "Card line-up", description: "Speakers, campuses, products or numbers as 3D cards in a carousel or a stack.", icon: "grid", component: Cards, schema: cardsSchema, defaults: cardsDefaults, calc: calcCards, formats: ["9x16", "16x9", "1x1", "4x5"], fps: 30 }),
-  t({ name: "SiteMorph", label: "SiteMorph", description: "A website told as one shape that morphs through its parts, with a cursor and camera, on the beat. Build one from a real site in the Web studio.", icon: "web", component: SiteMorph, schema: siteMorphSchema, defaults: siteMorphDefaults, calc: calcSiteMorph, formats: ["1x1", "9x16", "16x9"], fps: 60 }),
-  t({ name: "Terminal", label: "Terminal", description: "A command line that types, counts and clicks: for how-tos and product intros. Generic, no platform's look.", icon: "terminal", component: TerminalReel, schema: terminalReelSchema, defaults: terminalReelDefaults, calc: calcTerminalReel, formats: ["9x16", "16x9", "1x1"], fps: 30 }),
+  t({ name: "ArtStyles", label: "Art styles", description: "One line of text or a picture in seven hand-made looks: one-line drawing, ASCII, pixel, sketch, riso, HUD and ink.", icon: "sparkle", component: ArtStyles, schema: artStylesSchema, defaults: artStylesDefaults, calc: calcArtStyles, formats: ["9x16", "16x9"], fps: 30, clip: "art-pixel" }),
+  t({ name: "Titles", label: "Cinematic titles", description: "Eight title styles, on colour, a picture, a clip or transparent for editors.", icon: "layers", component: TitleReel, schema: titleReelSchema, defaults: titleReelDefaults, calc: calcTitleReel, formats: ["9x16", "16x9", "1x1"], fps: 30, clip: "titles" }),
+  t({ name: "Cards", label: "Card line-up", description: "Speakers, campuses, products or numbers as 3D cards in a carousel or a stack.", icon: "grid", component: Cards, schema: cardsSchema, defaults: cardsDefaults, calc: calcCards, formats: ["9x16", "16x9", "1x1", "4x5"], fps: 30, clip: "cards" }),
+  t({ name: "SiteMorph", label: "SiteMorph", description: "A website told as one shape that morphs through its parts, with a cursor and camera, on the beat. Build one from a real site in the Web studio.", icon: "web", component: SiteMorph, schema: siteMorphSchema, defaults: siteMorphDefaults, calc: calcSiteMorph, formats: ["1x1", "9x16", "16x9"], fps: 60, clip: "sitemorph" }),
+  t({ name: "Terminal", label: "Terminal", description: "A command line that types, counts and clicks: for how-tos and product intros. Generic, no platform's look.", icon: "terminal", component: TerminalReel, schema: terminalReelSchema, defaults: terminalReelDefaults, calc: calcTerminalReel, formats: ["9x16", "16x9", "1x1"], fps: 30, clip: "terminal" }),
+  t({ name: "LogoIntro", label: "Logo sting", description: "The 7 Studios mark drawing itself, the wordmark and the motto, in white and gold or gold on black. Change the words for your own sting.", icon: "sparkle", component: LogoIntro, schema: logoIntroSchema, defaults: logoIntroDefaults, calc: calcLogoIntro, formats: ["16x9", "9x16", "1x1"], fps: 30, clip: "logo-intro" }),
   t({ name: "ScriptureLyric", label: "Scripture & lyrics", description: "Verses and song lines as timed cards, word for word.", icon: "music", component: ScriptureLyric, schema: scriptureSchema, defaults: isaiah4031, calc: calcScripture, formats: ["9x16", "16x9"], fps: 30 }),
 ];
 export const CAROUSEL = t({ name: "Carousel", label: "Carousel", description: "Slides for a carousel post.", icon: "carousel", component: Carousel, schema: carouselSchema, defaults: carouselDefaults, calc: calcCarousel, formats: ["4x5", "1x1", "9x16"], fps: 30 });

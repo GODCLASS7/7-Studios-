@@ -52,16 +52,26 @@ export const Icon: React.FC<{ name: IconName; size?: number; className?: string;
     <path d={P[name]} />
   </svg>
 );
-export const Logo: React.FC<{ size?: number }> = ({ size = 30 }) => (
-  <svg width={size} height={size} viewBox="0 0 512 512" aria-hidden="true">
+// The 7 Studios mark: a white tile, a gold ring and a gold 7, with a light that
+// sweeps across now and then.
+export const Logo: React.FC<{ size?: number; className?: string }> = ({ size = 30, className }) => (
+  <svg className={className} width={size} height={size} viewBox="0 0 512 512" aria-hidden="true" style={{ filter: "drop-shadow(0 4px 10px rgba(150,105,20,.28))" }}>
     <defs>
       <linearGradient id="lg7" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#F3C969" />
-        <stop offset="1" stopColor="#C98E1E" />
+        <stop offset="0" stopColor="#F8E3A2" />
+        <stop offset="0.45" stopColor="#E8B44A" />
+        <stop offset="1" stopColor="#B98722" />
       </linearGradient>
+      <clipPath id="lc7">
+        <rect x="20" y="20" width="472" height="472" rx="112" />
+      </clipPath>
     </defs>
-    <rect width="512" height="512" rx="116" fill="#141417" />
-    <path d="M150 150 H362 L246 372" fill="none" stroke="url(#lg7)" strokeWidth="54" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M196 262 H316" stroke="url(#lg7)" strokeWidth="30" strokeLinecap="round" opacity="0.85" />
+    <rect x="20" y="20" width="472" height="472" rx="112" fill="#FFFFFF" />
+    <rect x="34" y="34" width="444" height="444" rx="100" fill="none" stroke="url(#lg7)" strokeWidth="10" />
+    <path d="M150 150 H362 L246 372" fill="none" stroke="url(#lg7)" strokeWidth="56" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M196 262 H316" stroke="url(#lg7)" strokeWidth="32" strokeLinecap="round" />
+    <g clipPath="url(#lc7)">
+      <rect className="logo-shine" x="-140" y="-40" width="90" height="600" fill="#FFFFFF" opacity="0.7" transform="skewX(-20)" />
+    </g>
   </svg>
 );

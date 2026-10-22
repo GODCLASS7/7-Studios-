@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { del, get, mediaUrl, patch, post, type Character, type GalleryItem, type Generation, type Preset } from "../api";
 import { Icon } from "../icons";
 import { go } from "../nav";
+import { PresetArt } from "../PresetArt";
 import { useStore } from "../store";
 import { Empty, Field, FileDrop, Media, MediaPicker, Modal, PageHead, Progress, Seg, Tile, useLocal } from "../ui";
 
@@ -209,6 +210,7 @@ const Generate: React.FC<{ kind: Kind; q: URLSearchParams }> = ({ kind, q }) => 
             <div className="presets">
               {shown.map((p) => (
                 <button key={p.id} className={`preset ${preset === p.id ? "on" : ""}`} onClick={() => setPreset(preset === p.id ? "" : p.id)} title={p.prompt}>
+                  <PresetArt id={p.id} kind={p.kind} />
                   <b>{p.name}</b>
                   <span>{p.description}</span>
                 </button>
@@ -284,7 +286,8 @@ const Generate: React.FC<{ kind: Kind; q: URLSearchParams }> = ({ kind, q }) => 
                   <div className="ratio shimmer" style={{ paddingTop: aspectPad(String(g.req.aspect || aspect)) }}>
                     <div className="pending" style={{ background: "transparent" }}>
                       <div style={{ width: "70%" }}>
-                        <div className="small" style={{ marginBottom: 8 }}>{g.note || g.stage}…</div>
+                        <div className="dreaming" style={{ marginBottom: 4 }}>Making the dream…</div>
+                        <div className="small" style={{ marginBottom: 8 }}>{g.note || g.stage}</div>
                         <Progress value={g.pct || null} />
                       </div>
                     </div>

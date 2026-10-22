@@ -53,6 +53,7 @@ motion-studio/
 │   ├── looks/                ← talking-head looks: bold, cool-girl, cool-dude (punch words, sparkles, orbiting reels)
 │   ├── inserts/              ← animated inserts: app window, profile follow, file scroll, terminal
 │   ├── artstyles/            ← ArtStyles: one line or picture in 7 looks (one-line, ascii, pixel, sketch, riso, hud, ink)
+│   ├── brand/                ← LogoIntro: the 7 Studios logo sting (mark, wordmark, motto), white and gold or gold on black
 │   ├── lib/motion.ts         ← closed-form springs, seamless loops, no-overshoot cursor steps, colour tracks
 │   ├── lib/brand.tsx         ← brand kits in edits (fonts, colours, end card)
 │   ├── videos/               ← one folder per deliverable (scenes, stills, concepts)
@@ -137,6 +138,7 @@ npm run posts -- add <file|slides> --platform=… --account=… --caption=… [-
 # The app and the engine
 npm run app [-- --port=7777 --no-open]               # 7 Studios on this computer (builds its interface after changes)
 npm run app:dev                                      # work on the interface with live reload (:5177)
+npm run app:showcase                                 # re-render the app's moving previews (app/ui/public/showcase) after changing a template
 bash scripts/make-mac-app.sh                         # "7 Studios.app" in ~/Applications (Mac)
 npm run gen -- image|edit|video …                    # generate with the engine (engine/README.md); requests, import, engine, character
 npm run lora -- prepare <name> <files…>              # a LoRA training set from footage you own (training on a rented GPU)
@@ -156,7 +158,7 @@ npm test [-- --full] [-- --update]                   # regression tests on the s
 npx remotion compositions              # list composition IDs
 ```
 
-**Templates you render with `--props`:** `FootageEdit-*` and `Tutorial-*` (from `jobs/<id>/.edl.resolved.json`), `Titles-*` (titles alone, e.g. transparent with `webm-alpha`), `Cards-*` (card line-ups), `Carousel-*` (via `npm run carousel`), `ScriptureLyric-*`, `ArtStyles-*` (9x16, 16x9), `SiteMorph-*` (1x1, 9x16, 16x9; via `npm run sitemorph`), `Terminal-*` (9x16, 16x9, 1x1). Each opens on a showcase in `npm run dev`, and the Motion studio in the app previews them live with a form read from each schema.
+**Templates you render with `--props`:** `FootageEdit-*` and `Tutorial-*` (from `jobs/<id>/.edl.resolved.json`), `Titles-*` (titles alone, e.g. transparent with `webm-alpha`), `Cards-*` (card line-ups), `Carousel-*` (via `npm run carousel`), `ScriptureLyric-*`, `ArtStyles-*` (9x16, 16x9), `SiteMorph-*` (1x1, 9x16, 16x9; via `npm run sitemorph`), `Terminal-*` (9x16, 16x9, 1x1), `LogoIntro-*` (16x9, 9x16, 1x1; the logo sting, with your own words). Each opens on a showcase in `npm run dev`, and the Motion studio in the app previews them live with a form read from each schema.
 
 **Render presets:** `draft` · `review` · `hd` (1080p final) · `4k` · `4k-hevc` · `master` (ProRes 422 HQ) · `alpha` (ProRes 4444) · `webm-alpha` · `still` · `still-4k` · `still-print`. See the `studio-finishing` skill.
 
@@ -485,6 +487,7 @@ The user may work in the app (`npm run app`) as well as in chat. Both use the sa
 1. Requests made with the app's Claude engine wait for you: handle them with 10.19 step 5.
 2. Posts approved in the app are approved (the user ticked "I've read this post" on the exact card). Posting still runs `npm run posts -- check <id>` first, as in 10.18.
 3. To change the app: `app/server/` (the API and its task whitelist in `tasks.mjs`) and `app/ui/src/` (one file per studio). Run `npm run lint` (it also checks the app) and `npm test -- --only=app` (the app end to end in a browser).
+4. The app's look: white and gold, tokens at the top of `app/ui/src/styles.css`; the opening logo sequence, kinetic type, marquees and clips in `app/ui/src/motion.tsx`; the moving look and camera-move previews in `app/ui/src/PresetArt.tsx`. The clips on Home and in Motion are real renders of the studio's templates: after changing a template, run `npm run app:showcase`. Every animation stops under reduced motion.
 
 ### Bonus ideas
 

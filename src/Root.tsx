@@ -56,6 +56,12 @@ import {
   titleReelSchema,
 } from "./titles/TitleReel";
 import {
+  calcLogoIntro,
+  LogoIntro,
+  logoIntroDefaults,
+  logoIntroSchema,
+} from "./brand/LogoIntro";
+import {
   calcTerminalReel,
   TerminalReel,
   terminalReelDefaults,
@@ -404,6 +410,39 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={terminalReelDefaults}
         calculateMetadata={calcTerminalReel}
         durationInFrames={270}
+        fps={30}
+        width={1080}
+        height={1080}
+      />
+      <Composition
+        id="LogoIntro-16x9"
+        component={LogoIntro}
+        schema={logoIntroSchema}
+        defaultProps={logoIntroDefaults}
+        calculateMetadata={calcLogoIntro}
+        durationInFrames={150}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="LogoIntro-9x16"
+        component={LogoIntro}
+        schema={logoIntroSchema}
+        defaultProps={logoIntroDefaults}
+        calculateMetadata={calcLogoIntro}
+        durationInFrames={150}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="LogoIntro-1x1"
+        component={LogoIntro}
+        schema={logoIntroSchema}
+        defaultProps={logoIntroDefaults}
+        calculateMetadata={calcLogoIntro}
+        durationInFrames={150}
         fps={30}
         width={1080}
         height={1080}

@@ -1,5 +1,6 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Icon, Logo, type IconName } from "./icons";
+import { MOTTO, Splash, useSpotlight } from "./motion";
 import { parse, STUDIOS } from "./nav";
 import { StoreProvider, useStore } from "./store";
 import { RunView } from "./ui";
@@ -25,6 +26,14 @@ const Shell: React.FC = () => {
   useEffect(() => {
     document.querySelector(".main")?.scrollTo({ top: 0 });
   }, [route.path]);
+  useSpotlight();
+  // The gold pill slides to whichever studio is open.
+  const navRef = useRef<HTMLElement>(null);
+  const [ind, setInd] = useState<{ top: number; height: number } | null>(null);
+  useLayoutEffect(() => {
+    const a = navRef.current?.querySelector<HTMLElement>("a.on");
+    setInd(a ? { top: a.offsetTop, height: a.offsetHeight } : null);
+  }, [route.path, status]);
   const busy = runs.filter((r) => r.status === "running" || r.status === "queued");
   const page = (() => {
     switch (route.path) {
@@ -58,16 +67,20 @@ const Shell: React.FC = () => {
   );
   return (
     <div className="shell">
+      <Splash />
       {!online ? <div className="offline">7 Studios isn't answering. Is it still running in the terminal? Reconnecting…</div> : null}
       <aside className="side">
         <a className="brand" href="#/home">
-          <Logo size={34} />
+          <Logo size={38} className="mark" />
           <div>
             <b>7 Studios</b>
-            <small>on this computer</small>
+            <small>
+              {MOTTO.a} {MOTTO.b} {MOTTO.c} {MOTTO.d}
+            </small>
           </div>
         </a>
-        <nav className="nav">
+        <nav className="nav" ref={navRef}>
+          <i className="ind" style={ind ? { top: ind.top, height: ind.height } : { opacity: 0 }} />
           {link("home", "Home", "home")}
           <div className="nav-label">Studios</div>
           {STUDIOS.map((s, i) => link(s.path, s.label, s.icon, String(i + 1).padStart(2, "0")))}
@@ -81,7 +94,7 @@ const Shell: React.FC = () => {
           </span>
           {status ? (
             <span className="small dim">
-              Engine: <b className="gold">{status.engine.default}</b> · v{status.version}
+              On this computer · engine <b className="gold">{status.engine.default}</b> · v{status.version}
             </span>
           ) : null}
         </div>

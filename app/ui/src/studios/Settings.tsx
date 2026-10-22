@@ -70,7 +70,7 @@ const Settings: React.FC = () => {
             <h3>Default engine</h3>
             <div className="studios" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
               {Object.entries(ENGINES).map(([id, e]) => (
-                <button key={id} className={`preset ${cfg.default === id ? "on" : ""}`} style={{ padding: 14 }} onClick={() => saveCfg({ default: id })}>
+                <button key={id} className={`preset text-only spot ${cfg.default === id ? "on" : ""}`} style={{ padding: 16 }} onClick={() => saveCfg({ default: id })}>
                   <b>
                     {e.title} {cfg.default === id ? <span className="badge gold">default</span> : null}
                   </b>
