@@ -154,7 +154,7 @@ const CarouselStudio: React.FC<{ q: URLSearchParams }> = ({ q }) => {
               <div className="strip">
                 {slides.map((s) => (
                   <a key={s} href={mediaUrl(s)} target="_blank" rel="noreferrer">
-                    <img src={`${mediaUrl(s)}?v=${ver}`} alt={s.split("/").pop()} style={{ height: 220 }} />
+                    <img src={`${mediaUrl(s)}?v=${ver}`} alt={s.split("/").pop()} style={{ height: 220, width: "auto", objectFit: "contain", background: "transparent" }} />
                   </a>
                 ))}
               </div>
