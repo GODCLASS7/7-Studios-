@@ -14,7 +14,8 @@ That proves the pipeline works end to end. It doesn't prove how it handles a rea
 3. Copy `.env.example` to `.env` and add your **ElevenLabs** key (Speech to Text: Access). Never paste keys into chat.
 4. Run `npm test`. Every check should pass. If a frame fails only because fonts render differently on your computer, look at the diff in `out/test/`. If the difference is only edge smoothing, run `npm test -- --update` once to make your computer's frames the reference.
 5. Run `npm run bench`, so time estimates use your computer's real speed.
-6. **Back up:** create a private GitHub repo and push. Until then, the project exists only on your computer.
+6. **Open the app:** `npm run app` (or double-click `7 Studios.command`). On a Mac, `bash scripts/make-mac-app.sh` puts **7 Studios** in Launchpad; keep it in the Dock. Open each studio once. In Settings, choose your engine (engine/README.md); until then the Image and Video studios make demo placeholders.
+7. **Back up:** create a private GitHub repo and push. Until then, the project exists only on your computer.
 
 ## 2. The five pilot jobs
 
@@ -32,6 +33,7 @@ Use material you have the rights to, and people who agreed to be filmed. Run eac
 - **Cloud render:** follow the steps in `scripts/render-cloud.mjs`, then render job 1 at `4k`. Compare the time and the AWS bill with a local render.
 - **AI b-roll:** for one line that `broll-suggest` couldn't match, get a credit quote, approve it, generate the clip and cut it in.
 - **Publishing:** post job 1 through vidIQ or Higgsfield, approving the exact post. A week later, pull the numbers and write one line into `house-notes.md`.
+- **In the app** (`npm run app`): animate your own website in the Web studio (capture, approve the plan, render, check); make one image and one clip on the engine you chose; render one Motion template at 4K; queue job 1 in Publish and approve it there. Pass when each result is one you'd use, and nothing is posted or paid for without your yes.
 - **New this round** (fold into jobs 1–3):
   - one or two effects from the pack on job 1 (`fx`, studio-edit §3g), checked frame by frame on real hair and movement;
   - an editing style (`"style": …`) and a caption style on job 2;
@@ -72,3 +74,7 @@ Each failure is a specific fix, not a reason to stop. Bring the log back to Clau
 - **Frame-break** has no clean background plate: inside the card is the shot with you in it, hidden behind your full-size cut-out. With big arm movements a second copy can show at the edges.
 - **Trial versions** render one by one: about 2.5 min per 17 s version on the cloud machine. Plan for it with 4–6 versions.
 - **Cloud rendering, AI footage and publishing** (including trial reels and scheduled posts) haven't been run against real accounts yet. The pilot is their first real test.
+- **The app** was tested end to end in headless Chromium on Linux (`npm test -- --only=app`), not yet in Safari or on a Mac; `make-mac-app.sh` and `7 Studios.command` haven't run on a Mac yet. Try each studio once and note anything odd.
+- **The open engine** was tested against a stand-in ComfyUI, not a real GPU; the first real run may need a workflow fix (`npm run gen -- engine check` names it). On a MacBook, open models are slow: drafts only, and the 14B video model needs a rented GPU.
+- **The premium engine** hasn't run against fal.ai yet, and its model ids and prices are unverified: check them on fal.ai, then run one cheap image first.
+- **Site capture** reads sites as a desktop browser does. Sites behind a login, a cookie wall or bot protection may capture partly; check `INVENTORY.md` and the section pictures before planning.

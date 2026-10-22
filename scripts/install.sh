@@ -65,4 +65,5 @@ fi
 say "Check"
 npm run --silent doctor || true
 echo
-echo "Done. Start the preview with: npm run dev"
+echo "Done. Open 7 Studios with: npm run app   (or double-click \"7 Studios.command\")"
+[ "$(uname)" = "Darwin" ] && echo "Put it in your Dock as an app: bash scripts/make-mac-app.sh"

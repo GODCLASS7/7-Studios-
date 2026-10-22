@@ -52,4 +52,4 @@ if (-not (Test-Path ".git")) {
 
 Say "Check"
 npm run --silent doctor
-Write-Host "`nDone. Start the preview with: npm run dev"
+Write-Host "`nDone. Open 7 Studios with: npm run app"

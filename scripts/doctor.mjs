@@ -56,6 +56,11 @@ add("Python", pyv && (Number(pyv[1]) > 3 || Number(pyv[2]) >= 10) ? "ok" : "warn
 add("Cutout / tracking", existsSync("production/matte-venv") && existsSync("production/models/selfie_multiclass_256x256.tflite") ? "ok" : "warn", existsSync("production/matte-venv") ? "environment ready" : "sets itself up on first npm run matte / track", "");
 const cv = existsSync("production/matte-venv") && sh(join("production", "matte-venv", process.platform === "win32" ? "Scripts/python.exe" : "bin/python"), ["-c", "import cv2"]).status === 0;
 add("Pins (OpenCV)", cv ? "ok" : "warn", cv ? "ready" : "installs itself on first npm run pin", "");
+// The app: its build tools and the engine it starts with.
+const appTools = ["vite", "@vitejs/plugin-react", "@remotion/player", "playwright-core"].filter((m) => !existsSync(`node_modules/${m}`));
+add("7 Studios app", appTools.length ? "fail" : "ok", appTools.length ? `missing ${appTools.join(", ")}` : "ready: npm run app", "npm i");
+const engineCfg = existsSync("production/engine.json") ? JSON.parse(readFileSync("production/engine.json", "utf8")) : { default: "demo" };
+add("Generation engine", engineCfg.default === "demo" ? "warn" : "ok", engineCfg.default === "demo" ? "demo (placeholders, not AI)" : `default: ${engineCfg.default}`, "Choose one in the app's Settings (engine/README.md)");
 add("Sound effects", existsSync("public/audio/sfx/pop.wav") ? "ok" : "warn", existsSync("public/audio/sfx/pop.wav") ? "pack built" : "not built", "npm run sfx");
 add("Cloud rendering", process.env.REMOTION_AWS_ACCESS_KEY_ID ? (existsSync("production/lambda.json") ? "ok" : "warn") : "warn", process.env.REMOTION_AWS_ACCESS_KEY_ID ? (existsSync("production/lambda.json") ? "set up" : "keys set; run setup") : "optional: no AWS keys", "See scripts/render-cloud.mjs");
 

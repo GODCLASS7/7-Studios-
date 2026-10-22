@@ -1,55 +1,70 @@
 # 7 Studios
 
-7 Studios is an agentic design studio that runs on Claude. It makes still and motion graphics of every kind, up to 4K video, ProRes masters and 300 DPI print. It works like a real studio:
+7 Studios is a creative studio that runs on your own computer, with Claude as the studio team. It makes images, video, edits, motion graphics, carousels and websites in motion, up to 4K video, ProRes masters and 300 DPI print.
 
-**Brief → time estimate → storyboard you approve → design previews you approve → production → review cut → 4K masters → QC → delivery**
+## Open the app
 
-- **Remotion** makes everything exact: typography, layouts, charts, captions, motion, timing, grade and audio.
-- **Generative models** reached through Claude's connectors make the realistic footage and imagery. Higgsfield gives access to Seedance, Kling, Veo, Cinema Studio, FLUX, Nano Banana, Seedream, GPT Image and Topaz.
-- **Ready-made motion templates:** cinematic title effects (8 styles, in footage or on transparency), tutorial reels (presenter plus screen recordings that zoom to each click), kinetic 3D card line-ups, and **Carousel Studio** (designed carousel posts in 8 looks, from a topic or from stills and cut-outs picked out of a video).
-- **Footage editing from the transcript:** talking heads, interviews, sermons and podcasts are cut from a word-level transcript. Captions in 16 styles, 12 one-pick editing styles, looks, an **effects pack of 18** (clones, frame break, god rays, rack focus, vertigo, doodles, freeze frames, green screen, callouts, checklists, counters, magazine cover, zoom-through…), face-tracked reframing, voice cleanup, brand kits, beat-synced music, b-roll, Shorts from long videos, cut checks, and a client review page with timestamped notes.
-- **Trial versions and posting:** several versions of one edit (hook, opening line, captions, pace, look) for testing, and an approved-post queue for scheduled posting, including Instagram trial reels. Nothing is posted without your approval of that exact post.
+```bash
+npm run app            # or double-click "7 Studios.command"
+```
 
-## Start a job
+7 Studios opens in your browser at `http://127.0.0.1:7777`. It runs only on this computer: nothing is hosted, and other computers can't reach it. On a Mac, `bash scripts/make-mac-app.sh` makes **7 Studios.app** with its icon, for Launchpad and the Dock.
 
-Open this folder in Claude Code and describe what you want. For example:
+| Studio | What it does |
+|---|---|
+| **01 Image** | Generate from a prompt, 18 looks and your characters (with a consent record); edit any picture with a sentence (6 edit recipes) |
+| **02 Video** | Animate a still with one of 18 camera moves and film looks, or describe the whole shot |
+| **03 Edit** | Cut talking heads, interviews and sermons by reading the transcript: tick the phrases, open with the best line; fillers out, no pops, captions to the word, a check of every cut |
+| **04 Motion** | Art styles (7 hand-made looks), cinematic titles, card line-ups, SiteMorph, terminal, scripture and lyrics: live previews as you type, rendered exactly up to 4K or ProRes |
+| **05 Carousel** | Carousel posts in 8 looks, with stills and cut-outs picked from a video |
+| **06 Web** | Paste a website: 7 Studios reads every section, its exact words, colours and fonts, and tells it as one shape morphing through its real parts on the beat, then checks every beat and the loop |
+| **07 Publish** | Trial versions of an edit, client review pages, phone copies, and the post queue: nothing is posted unless you approve that exact post |
+
+Plus the **Library** (everything made, with its prompt, look, engine, seed and cost) and **Settings** (engines, keys, this computer).
+
+### Engines: where images and clips come from
+
+| Engine | What it is | Cost |
+|---|---|---|
+| Demo | Placeholders made on this computer, to try the app. Not AI | Free |
+| Open | Open models (FLUX, Qwen-Image, Wan 2.2) in ComfyUI: on your Mac for drafts, or a rented GPU | Free per use; you pay for the machine |
+| Premium | Hosted models through fal.ai with your own key; you confirm the cost of each run | Paid per run |
+| Claude + Higgsfield | Requests Claude runs in chat (Seedance, Kling, Veo…), quoted in credits before anything is spent | Higgsfield credits |
+
+Setup for each is in [engine/README.md](engine/README.md). Every exact thing (type, logos, numbers, captions, layout, motion, grade, sound) is made by Remotion on your computer, never by an AI model.
+
+## Or ask Claude
+
+Open this folder in Claude Code and describe what you want:
 
 > Make a 20-second 16:9 launch teaser for <product>, with cinematic AI footage, kinetic titles on the beat and a 4K master.
 
-> Design an A3 poster and matching Instagram post for <event>.
+> Turn https://our-site.com into a looping 1:1 SiteMorph at 120 BPM.
 
 > Find the three best Shorts in this sermon and edit them with our brand kit.
 
-> Turn this reel into a 6-slide carousel in the glow look, with me cut out on the cover.
+> Run my 7 Studios requests.
 
-> Make three trial versions of this edit with different hooks, and queue the one I pick for Friday 6 pm.
+Claude follows `.claude/skills/studio/SKILL.md`: an estimate with ready-by times, a storyboard to approve, style frames to approve, then production, review, masters, checks and delivery.
 
-Claude follows `.claude/skills/studio/SKILL.md`. It sends you an estimate with ready-by times, a storyboard and animatic to approve, then style frames to approve, and only then builds, generates, renders, checks and delivers.
+## Setting up a computer
 
-## Commands
-
-**Setting up a computer:** unzip the project, open a terminal in its folder and paste one line:
+Unzip the project, open a terminal in its folder and paste one line:
 - Mac or Linux: `bash scripts/install.sh`
 - Windows (PowerShell): `powershell -ExecutionPolicy Bypass -File scripts\install.ps1`
 
 It checks Node and ffmpeg (installing them where it can), installs the packages, builds the sound pack, creates `.env` for your keys, starts a git history and runs the doctor.
 
 ```bash
-npm i && npm run setup:cloud     # setup:cloud only in Claude Code cloud containers
-npm run dev                      # Remotion Studio preview
-npm run new-job -- <id> "<Title>"
-npm run estimate -- <id>
-npm run storyboard -- <id> --animatic
-npm run render -- <Composition> <draft|review|4k|4k-hevc|master|alpha|webm-alpha|still|still-4k|still-print>
-npm run qc -- <file> --expect=3840x2160
-npm run bench
-npm run carousel -- <id> render  # carousel slides from jobs/<id>/carousel.json
-npm run variants -- <id> build --render   # trial versions of an edit
-npm run posts -- list            # the approved-post queue
+npm run app                      # the 7 Studios app
+npm run dev                      # Remotion Studio (every composition, for building)
+npm run gen -- image "a prompt" --preset=cinematic-portrait   # the engine from the command line
+npm run site-capture -- <url> <job>  &&  npm run sitemorph -- plan <job> --loop
+npm run render -- <Composition> <draft|review|4k|master|alpha|webm-alpha|still|…>
 npm run doctor                   # is this computer ready? (what's missing, and the fix)
-npm test                         # regression tests on the studio's own test material
+npm test                         # regression tests; npm test -- --full adds the app, end to end
 ```
 
-**First time on a new computer, or before going live:** run `npm run doctor`, then `npm test`, then follow [PILOT.md](PILOT.md) with real footage.
+**First time, or before going live:** `npm run doctor`, then `npm test`, then follow [PILOT.md](PILOT.md) with real material.
 
-See `CLAUDE.md` for the full reference. Note that some companies need a paid Remotion company licence: https://remotion.dev/license
+See `CLAUDE.md` for the full reference. Some companies need a paid Remotion company licence: https://remotion.dev/license

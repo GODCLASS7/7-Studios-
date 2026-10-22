@@ -61,6 +61,7 @@ If the user shares a spec, generation prompt or production document (a PDF, Mark
   - **Real footage** (talking heads, interviews, events): the `studio-edit` lane. Transcribe, pack, autocut, then `edl` into the `FootageEdit` template.
   - **AI video** (`studio-ai-footage` skill): photoreal people, places, products in motion, nature and cinematic b-roll.
   - **AI image:** photoreal stills, textures, environments and product shots.
+  - **The studio's engine** (`npm run gen`, CLAUDE.md 10.19): the same images and clips on the user's chosen engine (open models on their own GPU, hosted models with their key, or Higgsfield through you). Quote any cost first.
   - **Never let an AI model render final text, logos, numbers or UI.** Overlay those in Remotion.
 - Build compositions in `src/videos/<Name>/`, one scene per component, using the design system in `src/lib`. The pieces are tokens, formats, `Grade`, `Grain`, `FootageShot` and `KineticTitle`. Register every deliverable in `src/Root.tsx`.
 - Ready-made templates, before building from scratch:
@@ -69,6 +70,9 @@ If the user shares a spec, generation prompt or production document (a PDF, Mark
   - `Cards-*`: a kinetic 3D card line-up (carousel or stack) for speakers, campuses, products and stats.
   - `Tutorial-*`: a presenter plus screen recordings that zoom to each click.
   - `ScriptureLyric-*`: verses and songs.
+  - `ArtStyles-*`: one line or picture in 7 hand-made looks (one-line drawing, ASCII, pixel, sketch, riso, HUD, ink).
+  - `SiteMorph-*`: a website as one shape morphing through its real parts on the beat, from `npm run site-capture` + `npm run sitemorph` (CLAUDE.md 10.20).
+  - `Terminal-*`: a command line that types, counts and clicks, for how-tos and product intros.
   - `FootageEdit-*`: edits of real footage, with the effects pack (`fx`), 14 caption styles and 12 one-pick editing styles (studio-edit §3g–§3h), and trial versions (`npm run variants`).
 - For a job with 3 or more independent scenes or stills, hand them to subagents in parallel (`.claude/agents/`):
   - `motion-designer`, one per scene;
@@ -126,9 +130,14 @@ After every phase, send one line: what's done, how long it took against the esti
 
 Version everything (v1, v2, …), and never overwrite an approved version.
 
+## The 7 Studios app
+
+The user can do much of this themselves in the app (`npm run app`, CLAUDE.md 10.21): generate, edit footage from the transcript, preview and render templates, make carousels, animate their website, and approve posts. It works on the same jobs and files as you. When the user brings work from the app, pick it up from those files; requests left for you by the app's Claude engine are in `npm run gen -- requests`. The gates still apply to jobs you run.
+
 ## References
 
 - `providers.md`: every connected API or tool, what it's for, and the rules for using it.
 - `studio-ai-footage`, `studio-stills`, `studio-finishing`, `studio-edit` (footage and songs) and `studio-styles` (recipes, house notes) skills.
-- CLAUDE.md §10: the playbooks (10.1–10.18).
+- CLAUDE.md §10: the playbooks (10.1–10.21).
+- `engine/README.md`: setting up each generation engine (demo, open, premium, Claude).
 - Remotion skills: `remotion-best-practices` routes to the rest.

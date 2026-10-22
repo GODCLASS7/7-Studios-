@@ -89,6 +89,19 @@ Higgsfield is the studio's main AI render route. Use SetField **only** when the 
 6. Check each engine pack's licence in the app (under Licenses) for commercial use and territory. The Hero engine isn't licensed for local use in the US, EU, UK or South Korea.
 7. These capability figures come from SetField's own website (2026-10-20), not independent testing. Confirm them on the user's machine.
 
+## 3b. The studio's own engine (`npm run gen`, the app's Image and Video studios)
+
+Four engines behind one command and one gallery (`production/gallery.json`); setup for each in `engine/README.md`.
+
+| Engine | What | Rules |
+|---|---|---|
+| `demo` | ffmpeg placeholders on the user's computer, marked "demo" | Never present them as AI or as finished work |
+| `open` | ComfyUI with FLUX schnell, Qwen-Image, Qwen-Image-Edit, Wan 2.2 5B/14B (`engine/workflows/`) | On a rented GPU: quote the hourly price and expected hours first; connect only through an SSH tunnel; remind the user to switch it off. Workflows were tested against a stand-in server, not yet a real GPU |
+| `premium` | fal.ai with the user's `FAL_KEY` (`engine/models.json`) | Paid per run: quote from verified prices only, and wait for a yes. Endpoints and prices are unverified until the user checks them |
+| `claude` | A request in `production/claude-requests.json` that you run through Higgsfield | Same as §2: balance, quote, yes, generate, then `npm run gen -- import … --request=<id>` |
+
+Characters need a consent record. Presets are starting recipes (`tested: false`). A LoRA training set (`npm run lora -- prepare`) uses only footage the user owns or has permission for; training runs on a rented GPU, quoted first.
+
 ## 4. Other connectors (use when the job calls for them)
 
 | Connector | Use it for | Notes |
