@@ -82,5 +82,35 @@
     "label": "Cinematic titles",
     "template": "Titles",
     "ratio": "16 / 9"
+  },
+  {
+    "name": "logo-reveal",
+    "label": "Your logo, revealed",
+    "template": "LogoReveal",
+    "ratio": "1 / 1"
+  },
+  {
+    "name": "interaction",
+    "label": "Micro-interaction",
+    "template": "Interaction",
+    "ratio": "1 / 1"
+  },
+  {
+    "name": "hero",
+    "label": "Website hero",
+    "template": "Hero",
+    "ratio": "16 / 9"
+  },
+  {
+    "name": "explainer",
+    "label": "Explainer",
+    "template": "Explainer",
+    "ratio": "9 / 16"
+  },
+  {
+    "name": "product-demo",
+    "label": "Product demo",
+    "template": "ProductDemo",
+    "ratio": "16 / 9"
   }
 ]

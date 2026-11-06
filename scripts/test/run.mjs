@@ -85,6 +85,13 @@ const JOBS = {
   "art-styles": { comp: "ArtStyles-9x16", dur: 525, frames: [40, 115, 190, 265, 340, 415, 490] },
   sitemorph: { comp: "SiteMorph-1x1", dur: 510, frames: [40, 100, 160, 250, 340, 420, 500] },
   terminal: { comp: "Terminal-9x16", dur: 270, frames: [60, 150, 240] },
+  // The brand templates: a logo reveal mid-wipe and settled, the interaction through its states,
+  // the hero arriving and settled, each explainer beat and the end line, the demo's click, zoom and close.
+  "logo-reveal": { comp: "LogoReveal-16x9", dur: 90, frames: [12, 30, 89] },
+  interaction: { comp: "Interaction-1x1", dur: 120, frames: [20, 45, 52, 110] },
+  hero: { comp: "Hero-9x16", dur: 150, frames: [12, 40, 149] },
+  explainer: { comp: "Explainer-16x9", dur: 560, frames: [60, 200, 380, 540] },
+  "product-demo": { comp: "ProductDemo-16x9", dur: 246, frames: [70, 160, 240] },
   "cards-stack": { comp: "Cards-16x9", props: "tests/fixtures/cards-stack.json", dur: 189, frames: [30, 60, 100, 160] },
   // Carousel Studio end to end: frames from the look-test take, a cut-out cover, the brand kit.
   "carousel-test": { comp: "Carousel-4x5", props: "jobs/carousel-test/.carousel.resolved.json", dur: 6, frames: [0, 1, 2, 3, 4, 5], carousel: true },

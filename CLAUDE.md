@@ -45,7 +45,8 @@ motion-studio/
 │   ├── storyboard/           ← storyboard schema, panel drawing, approval sheet, animatic
 │   ├── templates/            ← reusable, props-driven templates: ScriptureLyric (verses, songs), FootageEdit (edits of real footage),
 │   │                           Tutorial (presenter + screen recordings), Cards (kinetic 3D card line-ups), Carousel (carousel posts),
-│   │                           SiteMorph (a website as one morphing shape, 60 fps), TerminalReel (the terminal insert, full frame)
+│   │                           SiteMorph (a website as one morphing shape, 60 fps), TerminalReel (the terminal insert, full frame);
+│   │                           the brand templates: LogoReveal, Interaction, HeroIntro, Explainer, ProductDemo (playbook 10.22)
 │   ├── titles/               ← TitleFX: 8 cinematic title styles (in edits, or alone on transparency via Titles-*)
 │   ├── fx/                   ← the effects pack: 18 effects for edits ("fx" in edl.json)
 │   ├── captions/             ← 14 caption styles for edits
@@ -55,6 +56,8 @@ motion-studio/
 │   ├── artstyles/            ← ArtStyles: one line or picture in 7 looks (one-line, ascii, pixel, sketch, riso, hud, ink)
 │   ├── brand/                ← LogoIntro: the 7 Studios logo sting (mark, wordmark, motto), white and gold or gold on black
 │   ├── lib/motion.ts         ← closed-form springs, seamless loops, no-overshoot cursor steps, colour tracks
+│   ├── lib/feel.ts           ← the motion brief: feel (calm, precise, playful, energetic), reduced motion, typefaces, reading time
+│   ├── lib/pointer.tsx       ← the pointer for demos and interactions (arrow or tap, press and ring)
 │   ├── lib/brand.tsx         ← brand kits in edits (fonts, colours, end card)
 │   ├── videos/               ← one folder per deliverable (scenes, stills, concepts)
 │   │   └── StudioCheck.tsx   ← 4 s test card (used by the benchmark; keep it)
@@ -158,7 +161,7 @@ npm test [-- --full] [-- --update]                   # regression tests on the s
 npx remotion compositions              # list composition IDs
 ```
 
-**Templates you render with `--props`:** `FootageEdit-*` and `Tutorial-*` (from `jobs/<id>/.edl.resolved.json`), `Titles-*` (titles alone, e.g. transparent with `webm-alpha`), `Cards-*` (card line-ups), `Carousel-*` (via `npm run carousel`), `ScriptureLyric-*`, `ArtStyles-*` (9x16, 16x9), `SiteMorph-*` (1x1, 9x16, 16x9; via `npm run sitemorph`), `Terminal-*` (9x16, 16x9, 1x1), `LogoIntro-*` (16x9, 9x16, 1x1; the logo sting, with your own words). Each opens on a showcase in `npm run dev`, and the Motion studio in the app previews them live with a form read from each schema.
+**Templates you render with `--props`:** `FootageEdit-*` and `Tutorial-*` (from `jobs/<id>/.edl.resolved.json`), `Titles-*` (titles alone, e.g. transparent with `webm-alpha`), `Cards-*` (card line-ups), `Carousel-*` (via `npm run carousel`), `ScriptureLyric-*`, `ArtStyles-*` (9x16, 16x9), `SiteMorph-*` (1x1, 9x16, 16x9; via `npm run sitemorph`), `Terminal-*` (9x16, 16x9, 1x1), `LogoIntro-*` (16x9, 9x16, 1x1; the logo sting, with your own words), and the brand templates of playbook 10.22: `LogoReveal-*`, `Interaction-*`, `Hero-*`, `Explainer-*` and `ProductDemo-*` (16x9, 9x16, 1x1 each). Each opens on a showcase in `npm run dev`, and the Motion studio in the app previews them live with a form read from each schema.
 
 **Render presets:** `draft` · `review` · `hd` (1080p final) · `4k` · `4k-hevc` · `master` (ProRes 422 HQ) · `alpha` (ProRes 4444) · `webm-alpha` · `still` · `still-4k` · `still-print`. See the `studio-finishing` skill.
 
@@ -488,6 +491,31 @@ The user may work in the app (`npm run app`) as well as in chat. Both use the sa
 2. Posts approved in the app are approved (the user ticked "I've read this post" on the exact card). Posting still runs `npm run posts -- check <id>` first, as in 10.18.
 3. To change the app: `app/server/` (the API and its task whitelist in `tasks.mjs`) and `app/ui/src/` (one file per studio). Run `npm run lint` (it also checks the app) and `npm test -- --only=app` (the app end to end in a browser).
 4. The app's look: white and gold, tokens at the top of `app/ui/src/styles.css`; the opening logo sequence, kinetic type, marquees and clips in `app/ui/src/motion.tsx`; the moving look and camera-move previews in `app/ui/src/PresetArt.tsx`. The clips on Home and in Motion are real renders of the studio's templates: after changing a template, run `npm run app:showcase`. Every animation stops under reduced motion.
+
+### 10.22 Brand motion: logo, interaction, hero, explainer, product demo
+
+> Make a `<logo reveal | micro-interaction | website hero | explainer | product demo>` for `<brand>`: `<the brief>`.
+
+Five small templates for one clear brand moment each. Start every one from a short motion brief, written into `jobs/<id>/brief.md`:
+
+| Brief line | What it decides |
+|---|---|
+| Audience, placement, the one message | What the asset must make clear, and its format (reel 9:16, site 16:9, feed 1:1) |
+| Colours and typeface | Exact hex values; `typeface`: inter, fraunces, jakarta or anton |
+| Feel | `feel`: calm, precise, playful or energetic (pace, spring and travel in `src/lib/feel.ts`) |
+| Reference, and its job | What a reference decides (the layout, the pace), never a request to copy it |
+| Keep unchanged | Logo files, exact words, product details, real screens |
+| Avoid | Effects or visuals that don't fit |
+
+Summarise the direction and suggest one approach; flag anything essential that's missing before building (⏸).
+
+1. **Logo reveal** (`LogoReveal-*`): the client's logo file under `public/` (SVG, or vectorise a raster with the Adobe connector), `reveal` mask, fade, scale or rise, optional exact tagline, 2 to 4 s. The logo is never redrawn; the last frame is the clean still; `background: "transparent"` with the `alpha` or `webm-alpha` preset for an overlay. Check the first and last frames.
+2. **Micro-interaction** (`Interaction-*`): one action and its confirming response: `kind` button (with optional loading), toggle or like; `label` and `doneLabel` exact. The response never relies on colour alone. It's a demonstration clip; a working control on a real website is built and tested separately (keyboard focus, touch).
+3. **Website hero** (`Hero-*`): exact headline, line and button; `animate` picks the one element with the main movement (headline, visual or button). Render 16:9 for desktop and 9:16 for mobile; the last frame is the static hero and must work on its own. With no visual, a marked placeholder shows; never invent product claims.
+4. **Explainer** (`Explainer-*`): one idea in two to four beats (situation, how it's solved, outcome) using only verified facts. Each beat's time comes from its word count; the tiles turn each line into a visible action (`scatter`, `sort`, `check`, `grow`, `connect`, `stack`) or show a supplied image. Show the beat plan first (⏸).
+5. **Product demo** (`ProductDemo-*`): the real screens (`public/jobs/<id>/screens/`), one journey: per step the screen, the target as fractions of the screen, `click` or `point`, an exact caption, an optional zoom; the pause before the click is the step's length. Only supplied screens are shown (a crossfade between them, never an invented in-between); list missing screens instead of filling them in. Show the step list and timing first (⏸).
+
+Every template has `reducedMotion` (movement becomes short fades): render a reduced version too when the asset goes on a website. Review with one change at a time ("keep the layout, hold the end longer, remove the bounce"), re-render, compare. On delivery say exactly what each file is (an MP4, an alpha overlay, a still); never call a preview a finished export.
 
 ### Bonus ideas
 

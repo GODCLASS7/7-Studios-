@@ -17,7 +17,7 @@ The app is white and gold and always moving: a wall of clips made by the studio'
 | **01 Image** | Generate from a prompt, 18 looks and your characters (with a consent record); edit any picture with a sentence (6 edit recipes) |
 | **02 Video** | Animate a still with one of 18 camera moves and film looks, or describe the whole shot |
 | **03 Edit** | Cut talking heads, interviews and sermons by reading the transcript: tick the phrases, open with the best line; fillers out, no pops, captions to the word, a check of every cut |
-| **04 Motion** | Art styles (7 hand-made looks), cinematic titles, card line-ups, SiteMorph, terminal, a logo sting, scripture and lyrics: live previews as you type, rendered exactly up to 4K or ProRes |
+| **04 Motion** | Art styles (7 hand-made looks), cinematic titles, card line-ups, SiteMorph, terminal, a logo sting, scripture and lyrics, and five brand templates (your logo revealed, a micro-interaction, a website hero, an explainer, a product demo): live previews as you type, rendered exactly up to 4K or ProRes |
 | **05 Carousel** | Carousel posts in 8 looks, with stills and cut-outs picked from a video |
 | **06 Web** | Paste a website: 7 Studios reads every section, its exact words, colours and fonts, and tells it as one shape morphing through its real parts on the beat, then checks every beat and the loop |
 | **07 Publish** | Trial versions of an edit, client review pages, phone copies, and the post queue: nothing is posted unless you approve that exact post |

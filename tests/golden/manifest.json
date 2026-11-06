@@ -356,6 +356,53 @@
         150,
         240
       ]
+    },
+    "logo-reveal": {
+      "comp": "LogoReveal-16x9",
+      "durationInFrames": 90,
+      "frames": [
+        12,
+        30,
+        89
+      ]
+    },
+    "interaction": {
+      "comp": "Interaction-1x1",
+      "durationInFrames": 120,
+      "frames": [
+        20,
+        45,
+        52,
+        110
+      ]
+    },
+    "hero": {
+      "comp": "Hero-9x16",
+      "durationInFrames": 150,
+      "frames": [
+        12,
+        40,
+        149
+      ]
+    },
+    "explainer": {
+      "comp": "Explainer-16x9",
+      "durationInFrames": 560,
+      "frames": [
+        60,
+        200,
+        380,
+        540
+      ]
+    },
+    "product-demo": {
+      "comp": "ProductDemo-16x9",
+      "durationInFrames": 246,
+      "frames": [
+        70,
+        160,
+        240
+      ]
     }
   },
   "shorts": [

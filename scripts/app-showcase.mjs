@@ -31,6 +31,12 @@ const CLIPS = [
   { name: "titles", label: "Cinematic titles", comp: "Titles-9x16", frames: [0, 239], scale: 0.4, ratio: "9 / 16" },
   { name: "cards", label: "Card line-up", comp: "Cards-9x16", frames: [0, 254], scale: 0.4, ratio: "9 / 16" },
   { name: "titles-wide", label: "Cinematic titles", comp: "Titles-16x9", frames: [240, 419], scale: 0.3, ratio: "16 / 9" },
+  // The brand templates: logo reveal, micro-interaction, website hero, explainer, product demo.
+  { name: "logo-reveal", label: "Your logo, revealed", comp: "LogoReveal-1x1", frames: [0, 89], scale: 0.45, ratio: "1 / 1" },
+  { name: "interaction", label: "Micro-interaction", comp: "Interaction-1x1", frames: [0, 119], scale: 0.45, ratio: "1 / 1" },
+  { name: "hero", label: "Website hero", comp: "Hero-16x9", frames: [0, 149], scale: 0.3, ratio: "16 / 9" },
+  { name: "explainer", label: "Explainer", comp: "Explainer-9x16", frames: [0, 559], scale: 0.4, ratio: "9 / 16" },
+  { name: "product-demo", label: "Product demo", comp: "ProductDemo-16x9", frames: [0, 245], scale: 0.3, ratio: "16 / 9" },
 ];
 const only = opt.only ? new Set(String(opt.only).split(",")) : null;
 const chrome = await browserPath();

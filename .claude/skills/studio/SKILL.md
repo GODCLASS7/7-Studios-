@@ -21,7 +21,7 @@ If the user shares a spec, generation prompt or production document (a PDF, Mark
 1. `npm run new-job -- <job-id> "<Title>" --format=<16x9|9x16|1x1|4x5|21x9>`. If the job matches a preset (worship clip, lyric/scripture video, testimony, campus recap, service promo, grill reel, logo reveal), add `--preset=<name>` and follow its style recipes in the `studio-styles` skill.
 2. Fill `jobs/<id>/brief.md` from what the user gave you. If they gave a URL, scrape it for copy, brand colours, fonts and logo (playbook 10.4 in CLAUDE.md, and `providers.md`).
 3. Ask **one** round of questions, only about things you cannot sensibly assume. Write every assumption into the brief's "Assumptions" line and tell the user what you assumed.
-4. Pick the matching playbook(s) from CLAUDE.md §10.
+4. Pick the matching playbook(s) from CLAUDE.md §10. For a logo reveal, micro-interaction, website hero, explainer or product demo, write the short motion brief of playbook 10.22 (audience and placement, the one message, colours and typeface, feel, what each reference decides, what stays unchanged, what to avoid) and summarise the direction before building.
 5. Read the client's section in `.claude/skills/studio-styles/house-notes.md` and apply those preferences by default.
 6. **Raw footage or a song is the input?** Run the `studio-edit` skill for transcription, take selection, cutting, captions and cut checks, inside these phases. Put `rawMinutes` (minutes of footage to review) or `"lyricSync": true` on the deliverable, so the estimate includes them.
 
